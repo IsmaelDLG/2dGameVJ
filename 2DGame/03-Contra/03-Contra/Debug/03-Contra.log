@@ -1,8 +1,7 @@
-﻿  Game.cpp
-  MyXMLConverter.cpp
+﻿  main.cpp
   Player.cpp
   Generando código...
-C:\Users\Isma\Documents\GitHub\2dGameVJ\2DGame\03-Contra\03-Contra\MyXMLConverter.cpp(11): warning C4715:  'MyXMLConverter::convertToMyLevelFile': no todas las rutas de acceso de control devuelven un valor
+  LINK : no se encontró C:\Users\Isma\Documents\GitHub\2dGameVJ\2DGame\03-Contra\Debug\03-Contra.exe o no lo generó el último vínculo incremental; ejecutando vínculo completo
 SOIL.lib(image_DXT.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(image_DXT.obj)' o en 'C:\Users\Isma\Documents\GitHub\2dGameVJ\2DGame\03-Contra\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
 SOIL.lib(image_helper.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(image_helper.obj)' o en 'C:\Users\Isma\Documents\GitHub\2dGameVJ\2DGame\03-Contra\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
 SOIL.lib(SOIL.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(SOIL.obj)' o en 'C:\Users\Isma\Documents\GitHub\2dGameVJ\2DGame\03-Contra\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
