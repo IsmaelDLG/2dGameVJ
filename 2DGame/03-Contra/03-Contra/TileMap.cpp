@@ -83,12 +83,22 @@ bool TileMap::loadLevel(const string &levelFile)
 		for(int i=0; i<mapSize.x; i++)
 		{
 			fin.get(tile);
-			if(tile == ' ')
+			
+			//coma
+			if (tile == ',')
+				fin.get(tile);
+			//enf of coma
+			
+			if(tile == '0')
 				map[j*mapSize.x+i] = 0;
 			else
 				map[j*mapSize.x+i] = tile - int('0');
 		}
+
 		fin.get(tile);
+
+		if (tile == ',')
+			fin.get(tile);
 #ifndef _WIN32
 		fin.get(tile);
 #endif

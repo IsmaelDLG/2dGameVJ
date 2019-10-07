@@ -1,9 +1,8 @@
-﻿  main.cpp
-  Player.cpp
+﻿  Scene.cpp
+  TileMap.cpp
   Generando código...
-  LINK : no se encontró C:\Users\Isma\Documents\GitHub\2dGameVJ\2DGame\03-Contra\Debug\03-Contra.exe o no lo generó el último vínculo incremental; ejecutando vínculo completo
-SOIL.lib(image_DXT.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(image_DXT.obj)' o en 'C:\Users\Isma\Documents\GitHub\2dGameVJ\2DGame\03-Contra\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
-SOIL.lib(image_helper.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(image_helper.obj)' o en 'C:\Users\Isma\Documents\GitHub\2dGameVJ\2DGame\03-Contra\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
-SOIL.lib(SOIL.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(SOIL.obj)' o en 'C:\Users\Isma\Documents\GitHub\2dGameVJ\2DGame\03-Contra\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
-SOIL.lib(stb_image_aug.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(stb_image_aug.obj)' o en 'C:\Users\Isma\Documents\GitHub\2dGameVJ\2DGame\03-Contra\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
-  03-Contra.vcxproj -> C:\Users\Isma\Documents\GitHub\2dGameVJ\2DGame\03-Contra\Debug\03-Contra.exe
+SOIL.lib(image_DXT.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(image_DXT.obj)' o en 'C:\Users\ismae\Documents\GitHub\2dGameVJ\2DGame\03-Contra\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
+SOIL.lib(image_helper.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(image_helper.obj)' o en 'C:\Users\ismae\Documents\GitHub\2dGameVJ\2DGame\03-Contra\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
+SOIL.lib(SOIL.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(SOIL.obj)' o en 'C:\Users\ismae\Documents\GitHub\2dGameVJ\2DGame\03-Contra\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
+SOIL.lib(stb_image_aug.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(stb_image_aug.obj)' o en 'C:\Users\ismae\Documents\GitHub\2dGameVJ\2DGame\03-Contra\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
+  03-Contra.vcxproj -> C:\Users\ismae\Documents\GitHub\2dGameVJ\2DGame\03-Contra\Debug\03-Contra.exe
