@@ -19,7 +19,7 @@ public:
 private:
 	Level(const string& levelFile, const glm::vec2& minCoords, ShaderProgram& program);
 
-	void loadLayers();
+	void loadLayers(const glm::vec2& minCoords, ShaderProgram& program);
 
 private:
 

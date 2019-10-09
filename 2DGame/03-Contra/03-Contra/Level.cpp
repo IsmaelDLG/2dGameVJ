@@ -20,29 +20,23 @@ Level::~Level()
 
 Level::Level(const string& levelName, const glm::vec2& minCoords, ShaderProgram& program)
 {
-	path = "images/" + levelName + ".txt";
+	path = "levels/" + levelName + ".txt";
 	
-	try
-	{
-		loadLayers();
-	}
-	catch (const char* msh)
-	{
-		cout << msh << endl;
-	}
+	loadLayers(minCoords, program);
+
 }
 
-void Level::loadLayers()
+void Level::loadLayers(const glm::vec2& minCoords, ShaderProgram& program)
 {
 
 	//Carrego layers
 	{
 		//carregar totes les capes
-		layer1 = TileMap::createTileMap(path, 1);
+		layer1 = TileMap::createTileMap(path, "1", minCoords, program);
 
-		layer2 = TileMap::createTileMap(path, 2);
+		layer2 = TileMap::createTileMap(path, "2", minCoords, program);
 
-		layer3 = TileMap::createTileMap(path, 3);
+		layer3 = TileMap::createTileMap(path, "3", minCoords, program);
 	}
 }
 

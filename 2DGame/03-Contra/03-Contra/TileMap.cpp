@@ -8,10 +8,11 @@
 using namespace std;
 
 
-TileMap *TileMap::createTileMap(const string& file, unsigned int layer)
+TileMap *TileMap::createTileMap(const string& file, string layer, const glm::vec2& minCoords, ShaderProgram& program)
 {
 	TileMap *map = new TileMap();
 	map->loadMap(file, layer);
+	map->prepareArrays(minCoords, program);
 	return map;
 }
 
@@ -43,7 +44,7 @@ int TileMap::getTileSize()
 	return tileSize;
 }
 
- void TileMap::loadMap(const string& file, unsigned int layer)
+ void TileMap::loadMap(const string& file, string layer)
 {
 	ifstream fin;
 	string line, tilesheetFile;
@@ -78,7 +79,7 @@ int TileMap::getTileSize()
 
 	getline(fin,line);
 
-	while (line.compare(0, 6, "layer" + (layer - '0'))) getline(fin, line);
+	while (line.compare(0, 6, "layer" + layer )) getline(fin, line);
 
 	map = new int[(mapSize.x * mapSize.y)*3];
 
@@ -92,9 +93,7 @@ int TileMap::getTileSize()
 			if (tile == ',')
 				fin.get(tile);
 			//enf of coma
-			
-			if(tile == '0')
-				map[j*mapSize.x+i] = 0;
+
 			else
 				map[j*mapSize.x+i] = tile - int('0');
 		}
