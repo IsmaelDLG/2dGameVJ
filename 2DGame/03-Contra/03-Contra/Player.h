@@ -18,7 +18,7 @@ public:
 	void update(int deltaTime);
 	void render();
 	
-	void setTileMap(TileMap *tileMap);
+	void setMap(Level* myMap);
 	void setPosition(const glm::vec2 &pos);
 	
 private:
@@ -27,7 +27,7 @@ private:
 	int jumpAngle, startY;
 	Texture spritesheet;
 	Sprite *sprite;
-	TileMap *map;
+	Level *map;
 
 };
 

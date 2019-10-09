@@ -116,9 +116,9 @@ void Player::render()
 	sprite->render();
 }
 
-void Player::setTileMap(TileMap *tileMap)
+void Player::setMap(Level *myMap)
 {
-	map = tileMap;
+	map = myMap;
 }
 
 void Player::setPosition(const glm::vec2 &pos)
