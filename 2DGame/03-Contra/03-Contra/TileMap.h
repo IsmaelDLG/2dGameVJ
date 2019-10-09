@@ -18,17 +18,14 @@ class TileMap
 
 public:
 	// Tile maps can only be created inside an OpenGL context
-	static TileMap *createTileMap();
-	void loadLevel(ifstream fin);
-
-
+	static TileMap *createTileMap(const string& file, unsigned int layer);
+	void loadMap(const string& image, unsigned int layer);
 	~TileMap();
 
 	void render() const;
 	void free();
+	int getTileSize();
 	
-	int getTileSize() const { return tileSize; }
-
 	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
@@ -39,13 +36,14 @@ private:
 
 
 private:
+	
 	GLuint vao;
 	GLuint vbo;
-	GLint posLocation, texCoordLocation;
-	glm::ivec2 position, mapSize, tilesheetSize;
+	glm::ivec2 mapSize;
 	int tileSize, blockSize;
+	GLint posLocation, texCoordLocation;
+	glm::vec2 tileTexSize, tilesheetSize;
 	Texture tilesheet;
-	glm::vec2 tileTexSize;
 	int *map;
 
 };

@@ -1,4 +1,4 @@
-TILEMAP
+LEVEL
 36 10							--Size of tile map in tiles
 32 32							--Tile size & block size
 images/MapTiles/terrain01.png 				--Tilesheet

@@ -14,25 +14,16 @@ public:
 	void render() const;
 	void free();
 
-	int getTileSize() const { return tileSize; }
+	int getTileSize() const { return layer1->getTileSize(); }
 
 private:
 	Level(const string& levelFile, const glm::vec2& minCoords, ShaderProgram& program);
 
-	void loadLayers(unsigned int layer);
-	void prepareArrays(const glm::vec2& minCoords, ShaderProgram& program);
+	void loadLayers();
 
 private:
 
-	GLuint vao;
-	GLuint vbo;
-	GLint posLocation, texCoordLocation;
-	glm::ivec2 position, mapSize, tilesheetSize;
-	int tileSize, blockSize;
-	Texture tilesheet;
-	glm::vec2 tileTexSize;
-
-	//Layer 1 is front layer.
+	//Layer 1 is front layer
 	TileMap* layer1;
 	//Layer 2 is player layer, it contains collisions.
 	TileMap* layer2;
