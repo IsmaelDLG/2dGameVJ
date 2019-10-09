@@ -106,6 +106,7 @@ int TileMap::getTileSize()
 		fin.get(tile);
 #endif
 	}	
+	fin.close();
 }
 
 void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
