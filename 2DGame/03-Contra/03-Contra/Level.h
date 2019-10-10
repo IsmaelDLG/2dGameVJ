@@ -14,7 +14,7 @@ public:
 	void render() const;
 	void free();
 
-	int getTileSize() const { return layer1->getTileSize(); }
+	int getTileSize() const { return layer2->getTileSize(); }
 
 private:
 	Level(const string& levelFile, const glm::vec2& minCoords, ShaderProgram& program);

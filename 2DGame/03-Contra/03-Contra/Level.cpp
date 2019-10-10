@@ -15,7 +15,7 @@ Level::~Level()
 {
 	layer1->~TileMap();
 	layer2->~TileMap();
-	layer3->~TileMap();
+	//layer3->~TileMap();
 }
 
 Level::Level(const string& levelName, const glm::vec2& minCoords, ShaderProgram& program)
@@ -36,7 +36,7 @@ void Level::loadLayers(const glm::vec2& minCoords, ShaderProgram& program)
 
 		layer2 = TileMap::createTileMap(path, "2", minCoords, program);
 
-		layer3 = TileMap::createTileMap(path, "3", minCoords, program);
+		//layer3 = TileMap::createTileMap(path, "3", minCoords, program);
 	}
 }
 
@@ -57,7 +57,7 @@ bool Level::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int
 
 void Level::render() const
 {
-	layer3->render();
+	//layer3->render();
 	layer2->render();
 	//pendent d'arreglar
 	layer1->render();
@@ -65,7 +65,7 @@ void Level::render() const
 
 void Level::free()
 {
-	layer3->free();
+	//layer3->free();
 	layer2->free();
 	//pendent d'arreglar
 	layer1->free();

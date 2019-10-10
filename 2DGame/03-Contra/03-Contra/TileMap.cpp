@@ -44,7 +44,7 @@ int TileMap::getTileSize()
 	return tileSize;
 }
 
- void TileMap::loadMap(const string& file, string layer)
+ void TileMap::loadMap(const string& file, const string &layer)
 {
 	ifstream fin;
 	string line, tilesheetFile;
@@ -79,7 +79,7 @@ int TileMap::getTileSize()
 
 	getline(fin,line);
 
-	while (line.compare(0, 6, "layer" + layer )) getline(fin, line);
+ 	while (line.compare(0, 6, "layer" + layer )) getline(fin, line);
 
 	map = new int[(mapSize.x * mapSize.y)*3];
 
@@ -88,13 +88,12 @@ int TileMap::getTileSize()
 		for(int i=0; i<mapSize.x; i++)
 		{
 			fin.get(tile);
-			
 			//coma
 			if (tile == ',')
 				fin.get(tile);
 			//enf of coma
 
-			else
+			if(tile >= '0' && tile <= '9')
 				map[j*mapSize.x+i] = tile - int('0');
 		}
 
@@ -106,7 +105,7 @@ int TileMap::getTileSize()
 		fin.get(tile);
 #endif
 	}	
-	fin.close();
+ 	fin.close();
 }
 
 void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
@@ -118,7 +117,7 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 	halfTexel = glm::vec2(0.5f / tilesheet.width(), 0.5f / tilesheet.height());
 	for(int j=0; j<mapSize.y; j++)
 	{
-		for(int i=0; i<mapSize.x; i++)
+ 		for(int i=0; i<mapSize.x; i++)
 		{
 			tile = map[j * mapSize.x + i];
 			if(tile != 0)
