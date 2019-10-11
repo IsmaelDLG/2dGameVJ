@@ -54,20 +54,20 @@ void Level::loadLayers(const glm::vec2& minCoords, ShaderProgram& program)
 	
 	//Carrego layers
 	{
+		//glm::vec2 coordZero = glm::vec2(0.0f, 0.0f);
 
 		//carregar totes les capes
 		backText2 = new Texture();
 		backText2->loadFromFile(pathToBackground2, TEXTURE_PIXEL_FORMAT_RGB);
 		background2 = Sprite::createSprite(glm::vec2(mapSize.x * blockSize, mapSize.y * blockSize), glm::vec2(1.0f, 1.0f), backText2, &program);
+		background2->setPosition(minCoords);
 		//La resta de capes es renderitzen minCoords més enllà, idkwhy.
+		
+		foreground = TileMap::createTileMap(pathToTileMap, "1", minCoords, program);
 
-		glm::vec2 coordZero = glm::vec2(0.0f, 0.0f);
+		collision = TileMap::createTileMap(pathToTileMap, "2", minCoords, program);
 
-		foreground = TileMap::createTileMap(pathToTileMap, "1", coordZero, program);
-
-		collision = TileMap::createTileMap(pathToTileMap, "2", coordZero, program);
-
-		background1 = TileMap::createTileMap(pathToTileMap, "3", coordZero, program);
+		background1 = TileMap::createTileMap(pathToTileMap, "3", minCoords, program);
 	}
 }
 
@@ -86,14 +86,17 @@ bool Level::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int
 	return collision->collisionMoveDown(pos, size, posY);
 }
 
-void Level::render() const
+void Level::renderLayers() const
 {
-	//aqui back2 fa algo
-	background2->render();
-	//pendent d'arreglar
+	//pendent d'arreglar	texProgram.setUniformMatrix4f("modelview", modelview);
 	background1->render();
 	collision->render();
 	foreground->render();
+}
+
+void Level::renderBackground2() const
+{
+	background2->render();
 }
 
 void Level::free()

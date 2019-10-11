@@ -13,7 +13,8 @@ public:
 	bool collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size) const;
 	bool collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const;
 
-	void render() const;
+	void renderLayers() const;
+	void renderBackground2() const;
 	void free();
 
 	int getTileSize() const { return tileSize; }
