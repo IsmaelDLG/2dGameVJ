@@ -20,6 +20,7 @@ public:
 	
 	void setMap(Level* myMap);
 	void setPosition(const glm::vec2 &pos);
+	glm::vec2 getPlayerPos() { return posPlayer; }
 	
 private:
 	bool bJumping;

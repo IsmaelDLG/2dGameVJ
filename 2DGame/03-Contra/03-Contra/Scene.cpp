@@ -9,7 +9,7 @@
 #define SCREEN_Y 16
 
 #define INIT_PLAYER_X_TILES 4
-#define INIT_PLAYER_Y_TILES 25
+#define INIT_PLAYER_Y_TILES 5
 
 
 Scene::Scene()
@@ -36,6 +36,21 @@ void Scene::init()
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setMap(map);
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+
+	playerPos = player->getPlayerPos();
+	offsetMaxX = (map->getTileSize() * map->getMapsize().x) - CAMERA_WIDTH;
+	offsetMaxY = (map->getTileSize() * map->getMapsize().y) - CAMERA_HEIGHT;
+	offsetMinX = 0;
+	offsetMinY = 0;
+
+	cameraX = (playerPos.x) - (CAMERA_WIDTH / 2);
+	cameraY = (playerPos.y) - (CAMERA_HEIGHT / 2);
+	if (cameraX > offsetMaxX) cameraX = offsetMaxX;
+	else if (cameraX < offsetMinX) cameraX = offsetMinX;
+	if (cameraY > offsetMaxY) cameraY = offsetMaxY;
+	else if (cameraY < offsetMinY) cameraY = offsetMinY;
+	projection = glm::translate(projection, glm::vec3(-cameraX, -cameraY, 0.f));
+
 	currentTime = 0.0f;
 }
 
@@ -43,6 +58,22 @@ void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
+	if ((player->getPlayerPos().x - playerPos.x != 0) || (player->getPlayerPos().y - playerPos.y != 0)) {
+		playerPos = player->getPlayerPos();
+		projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
+		cameraX = (playerPos.x) - (CAMERA_WIDTH / 2);
+		cameraY = (playerPos.y) - (CAMERA_HEIGHT / 2);
+		if (cameraX > offsetMaxX) cameraX = offsetMaxX;
+		else if (cameraX < offsetMinX) cameraX = offsetMinX;
+		if (cameraY > offsetMaxY) cameraY = offsetMaxY;
+		else if (cameraY < offsetMinY) cameraY = offsetMinY;
+	}
+	else {
+		cameraX = 0.f;
+		cameraY = 0.f;
+	}
+
+	projection = glm::translate(projection, glm::vec3(-cameraX, -cameraY, 0.f));
 }
 
 void Scene::render()
