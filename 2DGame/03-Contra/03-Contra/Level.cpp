@@ -13,14 +13,16 @@ Level* Level::loadLevel(const string& levelName, const glm::vec2& minCoords, Sha
 
 Level::~Level()
 {
-	layer1->~TileMap();
-	layer2->~TileMap();
-	//layer3->~TileMap();
+	foreground->~TileMap();
+	collision->~TileMap();
+	background1->~TileMap();
+	//no se si backgrround2 ha de fer algo
+	background2->~Sprite();
 }
 
 Level::Level(const string& levelName, const glm::vec2& minCoords, ShaderProgram& program)
 {
-	path = "levels/" + levelName + ".txt";
+	pathToTileMap = "levels/" + levelName + ".txt";
 	
 	loadLayers(minCoords, program);
 
@@ -28,45 +30,78 @@ Level::Level(const string& levelName, const glm::vec2& minCoords, ShaderProgram&
 
 void Level::loadLayers(const glm::vec2& minCoords, ShaderProgram& program)
 {
+	//carrego variables de nivell
+	ifstream fin;
+	string line, tilesheetFile;
+	stringstream sstream;
 
+	fin.open(pathToTileMap.c_str());
+	if (!fin.is_open())
+		throw "Couldn't open file!";
+	getline(fin, line);
+	if (line.compare(0, 5, "LEVEL") != 0)
+		throw "Not a level file!";
+	getline(fin, line);
+	sstream.str(line);
+	sstream >> mapSize.x >> mapSize.y;
+	getline(fin, line);
+	sstream.str(line);
+	sstream >> tileSize >> blockSize;
+	getline(fin, line);
+	sstream.str(line);
+	sstream >> pathToBackground2;
+	fin.close();
+	
 	//Carrego layers
 	{
+
 		//carregar totes les capes
-		layer1 = TileMap::createTileMap(path, "1", minCoords, program);
+		backText2 = new Texture();
+		backText2->loadFromFile(pathToBackground2, TEXTURE_PIXEL_FORMAT_RGB);
+		background2 = Sprite::createSprite(glm::vec2(mapSize.x * blockSize, mapSize.y * blockSize), glm::vec2(1.0f, 1.0f), backText2, &program);
+		//La resta de capes es renderitzen minCoords més enllà, idkwhy.
 
-		layer2 = TileMap::createTileMap(path, "2", minCoords, program);
+		glm::vec2 coordZero = glm::vec2(0.0f, 0.0f);
 
-		//layer3 = TileMap::createTileMap(path, "3", minCoords, program);
+		foreground = TileMap::createTileMap(pathToTileMap, "1", coordZero, program);
+
+		collision = TileMap::createTileMap(pathToTileMap, "2", coordZero, program);
+
+		background1 = TileMap::createTileMap(pathToTileMap, "3", coordZero, program);
 	}
 }
 
 bool Level::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size) const
 {
-	return layer2->collisionMoveLeft(pos,size);
+	return collision->collisionMoveLeft(pos,size);
 }
 
 bool Level::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size) const
 {
-	return layer2->collisionMoveRight(pos, size);
+	return collision->collisionMoveRight(pos, size);
 }
 
 bool Level::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const
 {
-	return layer2->collisionMoveDown(pos, size, posY);
+	return collision->collisionMoveDown(pos, size, posY);
 }
 
 void Level::render() const
 {
-	//layer3->render();
-	layer2->render();
+	//aqui back2 fa algo
+	background2->render();
 	//pendent d'arreglar
-	layer1->render();
+	background1->render();
+	collision->render();
+	foreground->render();
 }
 
 void Level::free()
 {
-	//layer3->free();
-	layer2->free();
+	//no se si ha de fer algo la back2
+	background2->free();
 	//pendent d'arreglar
-	layer1->free();
+	background1->render();
+	collision->free();
+	foreground->free();
 }

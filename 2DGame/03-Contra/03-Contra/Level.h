@@ -2,6 +2,8 @@
 #define _LEVEL_INCLUDE
 
 #include "TileMap.h"
+#include "Sprite.h"
+#include "Texture.h"
 class Level {
 public:
 	static Level* loadLevel(const string& levelName, const glm::vec2& minCoords, ShaderProgram& program);
@@ -14,7 +16,7 @@ public:
 	void render() const;
 	void free();
 
-	int getTileSize() const { return layer2->getTileSize(); }
+	int getTileSize() const { return tileSize; }
 
 private:
 	Level(const string& levelFile, const glm::vec2& minCoords, ShaderProgram& program);
@@ -22,14 +24,18 @@ private:
 	void loadLayers(const glm::vec2& minCoords, ShaderProgram& program);
 
 private:
+	glm::ivec2 mapSize;
+	int tileSize, blockSize;
 
 	//Layer 1 is front layer
-	TileMap* layer1;
+	TileMap* foreground;
 	//Layer 2 is player layer, it contains collisions.
-	TileMap* layer2;
+	TileMap* collision;
 	//Layer 3 is background layer.
-	TileMap* layer3;
+	TileMap* background1;
+	Texture* backText2;
+	Sprite* background2;
 
-	string path;
+	string pathToTileMap, pathToBackground2;
 };
 #endif // _LEVEL_INCLUDE

@@ -6,10 +6,10 @@
 
 
 #define SCREEN_X 32
-#define SCREEN_Y 16
+#define SCREEN_Y 16*6
 
 #define INIT_PLAYER_X_TILES 4
-#define INIT_PLAYER_Y_TILES 25
+#define INIT_PLAYER_Y_TILES 2
 
 
 Scene::Scene()
@@ -30,7 +30,7 @@ Scene::~Scene()
 void Scene::init()
 {
 	initShaders();
-	map = Level::loadLevel("test02", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	map = Level::loadLevel("test03", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));

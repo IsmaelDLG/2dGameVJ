@@ -64,6 +64,8 @@ int TileMap::getTileSize()
 	sstream.str(line);
 	sstream >> tileSize >> blockSize;
 	getline(fin, line);
+	//no ens cal el background texture
+	getline(fin, line);
 	sstream.str(line);
 	sstream >> tilesheetFile;
 	tilesheet.loadFromFile(tilesheetFile, TEXTURE_PIXEL_FORMAT_RGBA);
@@ -214,33 +216,3 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 	
 	return false;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
