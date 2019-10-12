@@ -5,11 +5,11 @@
 #include "Game.h"
 
 
-#define SCREEN_X 32
-#define SCREEN_Y 16
+#define SCREEN_X 0
+#define SCREEN_Y 0
 
 #define INIT_PLAYER_X_TILES 4
-#define INIT_PLAYER_Y_TILES 2
+#define INIT_PLAYER_Y_TILES 6
 
 
 
@@ -59,6 +59,30 @@ void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
+	
+	//projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
+	/*if ((player->getPlayerPos().x - cameraX) < (CAMERA_WIDTH / 3)) {
+		projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
+		cameraX = player->getPlayerPos().x - (CAMERA_WIDTH / 3);
+	}
+	else cameraX = 0.f;
+	if ((player->getPlayerPos().x - cameraX) > (2 * (CAMERA_WIDTH / 3))) {
+		projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
+		cameraX = player->getPlayerPos().x - (2 * (CAMERA_WIDTH / 3));
+	}
+	else cameraX = 0.f;
+	if ((player->getPlayerPos().y - cameraY) < (CAMERA_WIDTH / 3)) {
+		projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
+		cameraY = player->getPlayerPos().y - (CAMERA_HEIGHT / 3);
+	}
+	else cameraY = 0.f;
+	if ((player->getPlayerPos().y - cameraY) > (2 * (CAMERA_WIDTH / 3))) {
+		projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
+		cameraY = player->getPlayerPos().y - (2 * (CAMERA_HEIGHT / 3));
+	}
+	else cameraY = 0.f;
+	*/
+	
 	if ((player->getPlayerPos().x - playerPos.x != 0) || (player->getPlayerPos().y - playerPos.y != 0)) {
 		playerPos = player->getPlayerPos();
 		projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
@@ -73,8 +97,10 @@ void Scene::update(int deltaTime)
 		cameraX = 0.f;
 		cameraY = 0.f;
 	}
+	
 
 	projection = glm::translate(projection, glm::vec3(-cameraX, -cameraY, 0.f));
+	
 }
 
 void Scene::render()
