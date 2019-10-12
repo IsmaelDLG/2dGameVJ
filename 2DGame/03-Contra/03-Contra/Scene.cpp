@@ -57,18 +57,42 @@ void Scene::init()
 
 void Scene::update(int deltaTime)
 {
+	playerPos = player->getPlayerPos();
 	currentTime += deltaTime;
 	player->update(deltaTime);
-	
-	//projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
-	/*if ((player->getPlayerPos().x - cameraX) < (CAMERA_WIDTH / 3)) {
+	if (player->getPlayerPos().x < offsetMinX) {
+		glm::vec2 posRestri(offsetMinX, player->getPlayerPos().y);
+		player->setPosition(posRestri);
+	}
+
+	/*
+	if (player->getPlayerPos().y > playerPos.y) {
+		if ((player->getPlayerPos().y - cameraY) > (CAMERA_HEIGHT / 3)) {
+			cameraVy = 1;
+			projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
+		}
+		else cameraVy = 0;
+	}
+	else {
+		if ((player->getPlayerPos().y - cameraY) < (2 * CAMERA_HEIGHT / 3)) {
+			cameraVy = -1;
+			projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
+		}
+		else cameraVy = 0;
+	}
+	cameraY += cameraVy;
+	if (cameraY >= player->getPlayerPos().y - (2 * CAMERA_HEIGHT / 3)) cameraY = player->getPlayerPos().y - (2 * CAMERA_HEIGHT / 3);
+	if (cameraY <= player->getPlayerPos().y - (CAMERA_HEIGHT / 3)) cameraY = player->getPlayerPos().y - (CAMERA_HEIGHT / 3);
+	*/
+	/*
+	if ((player->getPlayerPos().x - cameraX) < (CAMERA_WIDTH / 3)) {
 		projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 		cameraX = player->getPlayerPos().x - (CAMERA_WIDTH / 3);
 	}
 	else cameraX = 0.f;
 	if ((player->getPlayerPos().x - cameraX) > (2 * (CAMERA_WIDTH / 3))) {
 		projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
-		cameraX = player->getPlayerPos().x - (2 * (CAMERA_WIDTH / 3));
+		cameraX = player->getPlayerPos().x - (2 * (CAMERA_WIDTH / 3))-32.f;
 	}
 	else cameraX = 0.f;
 	if ((player->getPlayerPos().y - cameraY) < (CAMERA_WIDTH / 3)) {
@@ -78,26 +102,27 @@ void Scene::update(int deltaTime)
 	else cameraY = 0.f;
 	if ((player->getPlayerPos().y - cameraY) > (2 * (CAMERA_WIDTH / 3))) {
 		projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
-		cameraY = player->getPlayerPos().y - (2 * (CAMERA_HEIGHT / 3));
+		cameraY = player->getPlayerPos().y - (2 * (CAMERA_HEIGHT / 3))-1.f;
 	}
 	else cameraY = 0.f;
 	*/
 	
+	
 	if ((player->getPlayerPos().x - playerPos.x != 0) || (player->getPlayerPos().y - playerPos.y != 0)) {
 		playerPos = player->getPlayerPos();
 		projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
-		cameraX = (playerPos.x) - (CAMERA_WIDTH / 2);
+		cameraX = (playerPos.x) - (CAMERA_WIDTH / 3);
 		cameraY = (playerPos.y) - (CAMERA_HEIGHT / 2);
 		if (cameraX > offsetMaxX) cameraX = offsetMaxX;
 		else if (cameraX < offsetMinX) cameraX = offsetMinX;
 		if (cameraY > offsetMaxY) cameraY = offsetMaxY;
 		else if (cameraY < offsetMinY) cameraY = offsetMinY;
+		offsetMinX = cameraX;
 	}
 	else {
 		cameraX = 0.f;
 		cameraY = 0.f;
 	}
-	
 
 	projection = glm::translate(projection, glm::vec3(-cameraX, -cameraY, 0.f));
 	
