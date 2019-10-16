@@ -19,7 +19,7 @@ public:
 
 
 	int getTileSize() const { return tileSize; }
-	glm::vec2 getMapsize() const { return layer2->getMapsize(); }
+	glm::vec2 getMapsize() const { return mapSize; }
 
 private:
 	Level(const string& levelFile, const glm::vec2& minCoords, ShaderProgram& program);

@@ -40,7 +40,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.25, 0.25f));
 		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.25, 0.5f));
 		
-	sprite->changeAnimation(0);
+	sprite->changeAnimation(1);
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	

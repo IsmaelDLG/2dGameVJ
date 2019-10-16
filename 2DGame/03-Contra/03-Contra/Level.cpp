@@ -60,7 +60,6 @@ void Level::loadLayers(const glm::vec2& minCoords, ShaderProgram& program)
 		backText2 = new Texture();
 		backText2->loadFromFile(pathToBackground2, TEXTURE_PIXEL_FORMAT_RGB);
 		background2 = Sprite::createSprite(glm::vec2(mapSize.x * blockSize, mapSize.y * blockSize), glm::vec2(1.0f, 1.0f), backText2, &program);
-		background2->setPosition(minCoords);
 		//La resta de capes es renderitzen minCoords més enllà, idkwhy.
 		
 		foreground = TileMap::createTileMap(pathToTileMap, "1", minCoords, program);
