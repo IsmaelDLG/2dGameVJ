@@ -17,7 +17,9 @@ public:
 	void renderBackground2() const;
 	void free();
 
+
 	int getTileSize() const { return tileSize; }
+	glm::vec2 getMapsize() const { return layer2->getMapsize(); }
 
 private:
 	Level(const string& levelFile, const glm::vec2& minCoords, ShaderProgram& program);

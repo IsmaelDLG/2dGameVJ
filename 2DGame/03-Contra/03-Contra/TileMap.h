@@ -25,6 +25,7 @@ public:
 	void render() const;
 	void free();
 	int getTileSize();
+	glm::vec2 getMapsize() const { return mapSize; }
 	
 	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
