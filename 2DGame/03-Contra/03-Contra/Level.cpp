@@ -14,21 +14,20 @@ Level* Level::loadLevel(const glm::vec2& minCoords, ShaderProgram& program)
 
 Level::~Level()
 {
-	foreground->~TileMap();
-	collision->~TileMap();
-	background1->~TileMap();
-	//no se si backgrround2 ha de fer algo
-	background2->~Sprite();
+	front->~TileMap();
+	collision->~CollisionMap();
+	back->~TileMap();
+	background->~Sprite();
 }
 
 Level::Level(const glm::vec2& minCoords, ShaderProgram& program)
 {
-	pathToTileMap = "levels/test03.txt";
+	pathToTileMap = "levels/test04.txt";
+	loadMapData();
 	loadLayers(minCoords, program);
 }
 
-void Level::loadLayers(const glm::vec2& minCoords, ShaderProgram& program)
-{
+void Level::loadMapData() {
 	//carrego variables de nivell
 	ifstream fin;
 	string line, tilesheetFile;
@@ -48,25 +47,25 @@ void Level::loadLayers(const glm::vec2& minCoords, ShaderProgram& program)
 	sstream >> tileSize >> blockSize;
 	getline(fin, line);
 	sstream.str(line);
-	sstream >> pathToBackground2;
+	sstream >> pathToBackground;
+	getline(fin, line);
+	sstream.str(line);
+	sstream >> pathToCollisionMap;
 	fin.close();
-	
+}
+
+void Level::loadLayers(const glm::vec2& minCoords, ShaderProgram& program)
+{
 	//Carrego layers
-	{
-		//glm::vec2 coordZero = glm::vec2(0.0f, 0.0f);
-
-		//carregar totes les capes
-		backText2 = new Texture();
-		backText2->loadFromFile(pathToBackground2, TEXTURE_PIXEL_FORMAT_RGB);
-		background2 = Sprite::createSprite(glm::vec2(mapSize.x * blockSize, mapSize.y * blockSize), glm::vec2(1.0f, 1.0f), backText2, &program);
-		//La resta de capes es renderitzen minCoords més enllà, idkwhy.
+	Texture* backText = new Texture();
+	backText->loadFromFile(pathToBackground, TEXTURE_PIXEL_FORMAT_RGB);
+	background = Sprite::createSprite(glm::vec2(mapSize.x * blockSize, mapSize.y * blockSize),
+		glm::vec2(1.0f, 1.0f), backText, &program);
 		
-		foreground = TileMap::createTileMap(pathToTileMap, "1", minCoords, program);
+	front = TileMap::createTileMap(pathToTileMap, "1", minCoords, program);
+	back = TileMap::createTileMap(pathToTileMap, "2", minCoords, program);
 
-		collision = TileMap::createTileMap(pathToTileMap, "2", minCoords, program);
-
-		background1 = TileMap::createTileMap(pathToTileMap, "3", minCoords, program);
-	}
+	collision = CollisionMap::loadCollisionMap(pathToCollisionMap, minCoords, program);
 }
 
 bool Level::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size) const
@@ -84,25 +83,16 @@ bool Level::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int
 	return collision->collisionMoveDown(pos, size, posY);
 }
 
-void Level::renderLayers() const
+void Level::render() const
 {
-	//pendent d'arreglar	texProgram.setUniformMatrix4f("modelview", modelview);
-	background1->render();
-	collision->render();
-	foreground->render();
-}
-
-void Level::renderBackground2() const
-{
-	background2->render();
+	front->render();
+	back->render();
+	background->render();
 }
 
 void Level::free()
 {
-	//no se si ha de fer algo la back2
-	background2->free();
-	//pendent d'arreglar
-	background1->render();
-	collision->free();
-	foreground->free();
+	background->free();
+	back->render();
+	front->free();
 }

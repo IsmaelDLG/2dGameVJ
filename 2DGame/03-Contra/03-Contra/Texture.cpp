@@ -1,6 +1,7 @@
 #include <SOIL.h>
+#include <fstream>
+#include <sstream>
 #include "Texture.h"
-
 
 using namespace std;
 
@@ -42,6 +43,16 @@ bool Texture::loadFromFile(const string &filename, PixelFormat format)
 	}
 	glGenerateMipmap(GL_TEXTURE_2D);
 	
+	//bytesFromFile
+	ifstream input(filename, std::ios::binary);
+	vector<char> bytes(
+		(std::istreambuf_iterator<char>(input)),
+		(std::istreambuf_iterator<char>()));
+	input.close();
+	//end
+
+	pixels = bytes;
+
 	return true;
 }
 
@@ -110,4 +121,17 @@ void Texture::use() const
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
 }
 
+myColor Texture::getPixel(int x, int y) {
+	if (x > widthTex || y > heightTex) {
+		return myColor(0,0,0,0);
+	}
 
+	int index = (x + y * widthTex) * 4;
+
+	unsigned int r = pixels[index] & 0xFF;
+	unsigned int g = pixels[index + 1] & 0xFF;
+	unsigned int b = pixels[index + 2] & 0xFF;
+	unsigned int a = pixels[index + 3] & 0xFF;
+
+	return myColor(r,g,b,a);
+}
