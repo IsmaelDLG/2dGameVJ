@@ -28,13 +28,71 @@ CollisionMap::~CollisionMap()
 bool CollisionMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size) const
 {
 	
+	int x, y0, y1;
+	float factorX, factorY;
+
+	x = pos.x;
+	y0 = pos.y + size.y - 1;
+	y1 = pos.y;
+
+	factorX = ((textMap->width() * 1.0f) / (displaySize.x * 1.0f));
+	factorY = ((textMap->height() * 1.0f) / (displaySize.y * 1.0f));
+
+	for (int y = y0; y >= y1; y--)
+	{
+		if ((textMap->getPixel(int(x * factorX), int(y * factorY)).getAlpha() > MAX_COLLISION) &&
+			((textMap->getPixel(int(x * factorX), int(y * factorY))).getBlack() == 0) /*el black retorna 0*/)
+		{
+			/*
+			//Debug
+			ofstream out;
+			out.open("myDebug/testCollision.txt", ios::app);
+			out << "(" << int(x*factorX)<< ", " << int(factorY*y) << ") Collision returns true. Black is: ";
+			out << (textMap->getPixel(int(x*factorX), int(y*factorY))).getBlack();
+			out << " Alpha is: ";
+			out << (textMap->getPixel(int(x*factorX), int(y*factorY))).getAlpha();
+			out << endl;
+			out.close();
+			*/
+			return true;
+		}
+	}
 	return false;
 }
 
 bool CollisionMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size) const
 {
+	int x, y0, y1;
+	float factorX, factorY;
 
-	return false;}
+	x = pos.x + size.x+1;
+	y0 = pos.y + size.y - 1;
+	y1 = pos.y;
+
+	factorX = ((textMap->width() * 1.0f) / (displaySize.x * 1.0f));
+	factorY = ((textMap->height() * 1.0f) / (displaySize.y * 1.0f));
+	
+	for (int y = y0; y >= y1; y--)
+	{
+		if ((textMap->getPixel(int(x * factorX), int(y * factorY)).getAlpha() > MAX_COLLISION) &&
+			((textMap->getPixel(int(x * factorX), int(y * factorY))).getBlack() == 0) /*el black retorna 0*/)
+		{
+			/*
+			//Debug
+			ofstream out;
+			out.open("myDebug/testCollision.txt", ios::app);
+			out << "(" << int(x*factorX)<< ", " << int(factorY*y) << ") Collision returns true. Black is: ";
+			out << (textMap->getPixel(int(x*factorX), int(y*factorY))).getBlack();
+			out << " Alpha is: ";
+			out << (textMap->getPixel(int(x*factorX), int(y*factorY))).getAlpha();
+			out << endl;
+			out.close();
+			*/
+			return true;
+		}
+	}
+	return false;
+}
 
 bool CollisionMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const
 {
