@@ -5,9 +5,10 @@
 #include <GL/glut.h>
 #include "Player.h"
 #include "Game.h"
+//debug
+#include <fstream>
 
-
-#define JUMP_ANGLE_STEP 4
+#define JUMP_ANGLE_STEP 1 
 #define JUMP_HEIGHT 96
 #define FALL_STEP 1
 
@@ -83,16 +84,16 @@ void Player::update(int deltaTime)
 	if(bJumping)
 	{
 		jumpAngle += JUMP_ANGLE_STEP;
-		if(jumpAngle == 180)
+		if (jumpAngle == 180)
 		{
 			bJumping = false;
 			posPlayer.y = startY;
 		}
-		else
-		{
+		else {
 			posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
-			if(jumpAngle > 90)
+			if (jumpAngle > 90)
 				bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
+			
 		}
 	}
 	else
@@ -128,6 +129,11 @@ void Player::setPosition(const glm::vec2 &pos)
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
-
+int Player::min(int a, int b) {
+	int ret;
+	if (a <= b) ret = a;
+	else ret = b;
+	return ret;
+}
 
 

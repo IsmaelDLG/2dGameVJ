@@ -20,12 +20,13 @@ public:
 	
 	void setMap(Level* myMap);
 	void setPosition(const glm::vec2 &pos);
+	int min(int a, int b);
 	glm::vec2 getPlayerPos() { return posPlayer; }
 	
 private:
 	bool bJumping;
 	glm::ivec2 tileMapDispl, posPlayer;
-	int jumpAngle, startY;
+	int jumpAngle, startY, jumpColide;
 	Texture spritesheet;
 	Sprite *sprite;
 	Level *map;
