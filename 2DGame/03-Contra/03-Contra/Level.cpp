@@ -77,14 +77,14 @@ void Level::loadLayers(const glm::vec2& minCoords, ShaderProgram& program)
 		glm::ivec2(mapSize.x * blockSize, mapSize.y * blockSize));
 }
 
-bool Level::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size) const
+bool Level::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const
 {
-	return collision->collisionMoveLeft(pos,size);
+	return collision->collisionMoveLeft(pos,size,posY);
 }
 
-bool Level::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size) const
+bool Level::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const
 {
-	return collision->collisionMoveRight(pos, size);
+	return collision->collisionMoveRight(pos, size, posY);
 }
 
 bool Level::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const

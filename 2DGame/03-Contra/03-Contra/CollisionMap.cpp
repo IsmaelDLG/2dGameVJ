@@ -25,14 +25,14 @@ CollisionMap::~CollisionMap()
 		delete textMap;
 }
 
-bool CollisionMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size) const
+bool CollisionMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const
 {
 	
 	int x, y0, y1;
 	float factorX, factorY;
 
 	x = pos.x;
-	y0 = pos.y + size.y - 1;
+	y0 = pos.y + size.y - 1 - int(size.y/10.0f);
 	y1 = pos.y;
 
 	factorX = ((textMap->width() * 1.0f) / (displaySize.x * 1.0f));
@@ -43,30 +43,19 @@ bool CollisionMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& si
 		if ((textMap->getPixel(int(x * factorX), int(y * factorY)).getAlpha() > MAX_COLLISION) &&
 			((textMap->getPixel(int(x * factorX), int(y * factorY))).getBlack() == 0) /*el black retorna 0*/)
 		{
-			/*
-			//Debug
-			ofstream out;
-			out.open("myDebug/testCollision.txt", ios::app);
-			out << "(" << int(x*factorX)<< ", " << int(factorY*y) << ") Collision returns true. Black is: ";
-			out << (textMap->getPixel(int(x*factorX), int(y*factorY))).getBlack();
-			out << " Alpha is: ";
-			out << (textMap->getPixel(int(x*factorX), int(y*factorY))).getAlpha();
-			out << endl;
-			out.close();
-			*/
 			return true;
 		}
 	}
 	return false;
 }
 
-bool CollisionMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size) const
+bool CollisionMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const
 {
 	int x, y0, y1;
 	float factorX, factorY;
 
 	x = pos.x + size.x+1;
-	y0 = pos.y + size.y - 1;
+	y0 = pos.y + size.y - 1 - int(size.y / 10.0f);
 	y1 = pos.y;
 
 	factorX = ((textMap->width() * 1.0f) / (displaySize.x * 1.0f));
@@ -77,17 +66,6 @@ bool CollisionMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& s
 		if ((textMap->getPixel(int(x * factorX), int(y * factorY)).getAlpha() > MAX_COLLISION) &&
 			((textMap->getPixel(int(x * factorX), int(y * factorY))).getBlack() == 0) /*el black retorna 0*/)
 		{
-			/*
-			//Debug
-			ofstream out;
-			out.open("myDebug/testCollision.txt", ios::app);
-			out << "(" << int(x*factorX)<< ", " << int(factorY*y) << ") Collision returns true. Black is: ";
-			out << (textMap->getPixel(int(x*factorX), int(y*factorY))).getBlack();
-			out << " Alpha is: ";
-			out << (textMap->getPixel(int(x*factorX), int(y*factorY))).getAlpha();
-			out << endl;
-			out.close();
-			*/
 			return true;
 		}
 	}
@@ -166,7 +144,7 @@ bool CollisionMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& si
 		if ((textMap->getPixel(int(x * factorX), int(y * factorY)).getAlpha() > MAX_COLLISION) &&
 			((textMap->getPixel(int(x * factorX), int(y * factorY))).getBlack() == 0 /*el black retorna 0*/))
 		{
-			*posY = y - size.y;
+			*posY = y - size.y - 1;
 			/*
 			//Debug
 			ofstream out;
