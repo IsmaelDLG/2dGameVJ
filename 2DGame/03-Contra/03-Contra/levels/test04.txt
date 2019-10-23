@@ -1,6 +1,6 @@
 LEVEL
 16 16							--Size of tile map in tiles
-16 16							--Tile size & block size
+32 32							--Tile size & block size
 images/CollisionMaps/test04.png				--Background Image
 images/CollisionMaps/test04.png				--Collision Map
 images/MapTiles/alphaTile.png			 	--Tilesheet

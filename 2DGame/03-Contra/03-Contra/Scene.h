@@ -11,7 +11,7 @@
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
 #define CAMERA_WIDTH 512
-#define CAMERA_HEIGHT 256
+#define CAMERA_HEIGHT 512
 
 class Scene
 {

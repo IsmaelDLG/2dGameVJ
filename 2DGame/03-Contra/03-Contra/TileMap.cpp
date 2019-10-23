@@ -25,6 +25,7 @@ TileMap::~TileMap()
 
 void TileMap::render() const
 {
+	
 	glEnable(GL_TEXTURE_2D);
 	tilesheet.use();
 	glBindVertexArray(vao);
@@ -32,6 +33,7 @@ void TileMap::render() const
 	glEnableVertexAttribArray(texCoordLocation);
 	glDrawArrays(GL_TRIANGLES, 0, 6 * mapSize.x * mapSize.y);
 	glDisable(GL_TEXTURE_2D);
+	
 }
 
 void TileMap::free()
@@ -65,6 +67,8 @@ int TileMap::getTileSize()
 	sstream >> tileSize >> blockSize;
 	getline(fin, line);
 	//no ens cal el background texture
+	getline(fin, line);
+	//no ens cal el collisionMap
 	getline(fin, line);
 	sstream.str(line);
 	sstream >> tilesheetFile;

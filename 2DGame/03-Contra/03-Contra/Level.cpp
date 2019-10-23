@@ -22,7 +22,7 @@ Level::~Level()
 
 Level::Level(const glm::vec2& minCoords, ShaderProgram& program)
 {
-	pathToTileMap = "levels/test04.txt";
+	pathToLevelFile = "levels/test04.txt";
 	loadMapData();
 	loadLayers(minCoords, program);
 }
@@ -33,7 +33,7 @@ void Level::loadMapData() {
 	string line, tilesheetFile;
 	stringstream sstream;
 
-	fin.open(pathToTileMap.c_str());
+	fin.open(pathToLevelFile.c_str());
 	if (!fin.is_open())
 		throw "Couldn't open file!";
 	getline(fin, line);
@@ -59,13 +59,22 @@ void Level::loadLayers(const glm::vec2& minCoords, ShaderProgram& program)
 	//Carrego layers
 	Texture* backText = new Texture();
 	backText->loadFromFile(pathToBackground, TEXTURE_PIXEL_FORMAT_RGB);
+	
+	/*Debug
+	ofstream out;
+	out.open("myDebug/testLayers.txt");
+	out << mapSize.x << "<-MapSize.x BlockSize->" << blockSize << endl << mapSize.y << "<-MapSize.y BlockSize->" << blockSize;
+	out.close();
+	endOfDbug */
 	background = Sprite::createSprite(glm::vec2(mapSize.x * blockSize, mapSize.y * blockSize),
 		glm::vec2(1.0f, 1.0f), backText, &program);
+	background->setNumberAnimations(0);
 		
-	front = TileMap::createTileMap(pathToTileMap, "1", minCoords, program);
-	back = TileMap::createTileMap(pathToTileMap, "2", minCoords, program);
+	front = TileMap::createTileMap(pathToLevelFile, "1", minCoords, program);
+	back = TileMap::createTileMap(pathToLevelFile, "2", minCoords, program);
 
-	collision = CollisionMap::loadCollisionMap(pathToCollisionMap, minCoords, program);
+	collision = CollisionMap::loadCollisionMap(pathToCollisionMap, minCoords, 
+		glm::ivec2(mapSize.x * blockSize, mapSize.y * blockSize));
 }
 
 bool Level::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size) const

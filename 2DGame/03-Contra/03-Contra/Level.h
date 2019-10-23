@@ -41,6 +41,6 @@ private:
 	TileMap* back;
 	Sprite* background;
 
-	string pathToTileMap, pathToBackground, pathToCollisionMap;
+	string pathToLevelFile, pathToBackground, pathToCollisionMap;
 };
 #endif // _LEVEL_INCLUDE

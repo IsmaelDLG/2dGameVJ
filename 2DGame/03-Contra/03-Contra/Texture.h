@@ -47,7 +47,7 @@ private:
 	int widthTex, heightTex;
 	GLuint texId;
 	GLint wrapS, wrapT, minFilter, magFilter;
-	vector<char> pixels;
+	unsigned char* image;
 };
 
 

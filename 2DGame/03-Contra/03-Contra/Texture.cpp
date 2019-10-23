@@ -17,7 +17,7 @@ Texture::Texture()
 
 bool Texture::loadFromFile(const string &filename, PixelFormat format)
 {
-	unsigned char *image = NULL;
+	image = NULL;
 	
 	switch(format)
 	{
@@ -42,16 +42,6 @@ bool Texture::loadFromFile(const string &filename, PixelFormat format)
 		break;
 	}
 	glGenerateMipmap(GL_TEXTURE_2D);
-	
-	//bytesFromFile
-	ifstream input(filename, std::ios::binary);
-	vector<char> bytes(
-		(std::istreambuf_iterator<char>(input)),
-		(std::istreambuf_iterator<char>()));
-	input.close();
-	//end
-
-	pixels = bytes;
 
 	return true;
 }
@@ -128,10 +118,11 @@ myColor Texture::getPixel(int x, int y) {
 
 	int index = (x + y * widthTex) * 4;
 
-	unsigned int r = pixels[index] & 0xFF;
-	unsigned int g = pixels[index + 1] & 0xFF;
-	unsigned int b = pixels[index + 2] & 0xFF;
-	unsigned int a = pixels[index + 3] & 0xFF;
+	unsigned int r = image[index] & 0xFF;
+	unsigned int g = image[index + 1] & 0xFF;
+	unsigned int b = image[index + 2] & 0xFF;
+	unsigned int a = image[index + 3] & 0xFF;
 
 	return myColor(r,g,b,a);
 }
+
