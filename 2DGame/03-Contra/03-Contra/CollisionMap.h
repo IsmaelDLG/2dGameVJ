@@ -24,4 +24,4 @@ private:
 	glm::ivec2 displaySize;
 };
 
-#endif //_COLLISION_MAP_INCLUDE
+#endif //_COLLISION_MAP_INCLUDE 
