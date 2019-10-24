@@ -133,7 +133,8 @@ void Player::update(int deltaTime)
 		else {
 			if (sprite->animation() == MOVE_LEFT)
 				sprite->changeAnimation(STAND_LEFT);
-			else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == LAY_RIGHT)
+			else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == LAY_RIGHT 
+				|| sprite->animation() == STAND_RIGHT_SHOOTING)
 				sprite->changeAnimation(STAND_RIGHT);
 		}
 	}
