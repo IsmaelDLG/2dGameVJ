@@ -22,6 +22,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	bJumping = false;
 	onTheAir = false;
+	spraygun = false;
 	goingRight = true;
 	spritesheet.loadFromFile("images/Contra_PC_Spritesheet_Full.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(0.125, 0.0625), &spritesheet, &shaderProgram);
@@ -53,9 +54,9 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 
 		sprite->setAnimationSpeed(MOVE_LEFT_SHOOTING, 8);
 		sprite->addKeyframe(MOVE_LEFT_SHOOTING, glm::vec2(0.500f, 0.5625f));
-		sprite->addKeyframe(MOVE_LEFT_SHOOTING, glm::vec2(0.375f, 0.5625f));
+		sprite->addKeyframe(MOVE_LEFT_SHOOTING, glm::vec2(0.750f, 0.625f));
 		sprite->addKeyframe(MOVE_LEFT_SHOOTING, glm::vec2(0.250f, 0.5625f));
-		sprite->addKeyframe(MOVE_LEFT_SHOOTING, glm::vec2(0.125f, 0.5625f));
+		sprite->addKeyframe(MOVE_LEFT_SHOOTING, glm::vec2(0.500f, 0.625f));
 
 		sprite->setAnimationSpeed(STAND_LEFT_SHOOTING, 8);
 		sprite->addKeyframe(STAND_LEFT_SHOOTING, glm::vec2(0.750f, 0.5625f));
@@ -87,9 +88,9 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 
 		sprite->setAnimationSpeed(MOVE_RIGHT_SHOOTING, 8);
 		sprite->addKeyframe(MOVE_RIGHT_SHOOTING, glm::vec2(0.375f, 0.0625f));
-		sprite->addKeyframe(MOVE_RIGHT_SHOOTING, glm::vec2(0.500f, 0.0625f));
+		sprite->addKeyframe(MOVE_RIGHT_SHOOTING, glm::vec2(0.125f, 0.125f));
 		sprite->addKeyframe(MOVE_RIGHT_SHOOTING, glm::vec2(0.625f, 0.0625f));
-		sprite->addKeyframe(MOVE_RIGHT_SHOOTING, glm::vec2(0.750f, 0.0625f));
+		sprite->addKeyframe(MOVE_RIGHT_SHOOTING, glm::vec2(0.375f, 0.125f));
 
 		sprite->setAnimationSpeed(STAND_RIGHT_SHOOTING, 8);
 		sprite->addKeyframe(STAND_RIGHT_SHOOTING, glm::vec2(0.125f, 0.0625f));
