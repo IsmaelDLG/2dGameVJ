@@ -35,6 +35,12 @@ void Scene::init()
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 
 	player->setMap(map);
+	/*test*/
+	test = new Enemy();
+	test->init(glm::ivec2(0.f, 0.f), texProgram);
+	test->setPosition(glm::vec2(INIT_PLAYER_X_TILES *4* map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+	test->setMap(map);
+	//end of test
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 
 	playerPos = player->getPlayerPos();
@@ -65,6 +71,9 @@ void Scene::update(int deltaTime)
 	playerPos = player->getPlayerPos();
 	currentTime += deltaTime;
 	player->update(deltaTime);
+	//test
+	test->update(deltaTime);
+	//test
 	if (player->getPlayerPos().x < offsetMinX) {
 		glm::vec2 posRestri(offsetMinX, player->getPlayerPos().y);
 		player->setPosition(posRestri);
@@ -99,6 +108,8 @@ void Scene::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
 	player->render();
+	//test
+	test->render();
 }
 
 void Scene::initShaders()

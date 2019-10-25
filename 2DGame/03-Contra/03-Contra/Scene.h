@@ -6,7 +6,8 @@
 #include "ShaderProgram.h"
 #include "Level.h"
 #include "Player.h"
-
+//Test
+#include "Enemy.h"
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
@@ -37,9 +38,9 @@ private:
 	float offsetMaxX, offsetMaxY, offsetMinX, offsetMinY;
 	glm::vec2 playerPos;
 	glm::mat4 projection;
+	Enemy* test;
 
 };
 
 
 #endif // _SCENE_INCLUDE
-

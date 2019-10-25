@@ -2,6 +2,7 @@
 
 class Enemy: public Player
 {
-	void update(int deltaTime);
+public:
+	void update(int deltaTime) override;
 };
 
