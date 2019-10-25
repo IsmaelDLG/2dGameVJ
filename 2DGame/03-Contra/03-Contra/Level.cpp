@@ -22,7 +22,7 @@ Level::~Level()
 
 Level::Level(const glm::vec2& minCoords, ShaderProgram& program)
 {
-	pathToLevelFile = "levels/test04.txt";
+	pathToLevelFile = "levels/test05.txt";
 	loadMapData();
 	loadLayers(minCoords, program);
 }

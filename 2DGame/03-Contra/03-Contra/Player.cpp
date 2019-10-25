@@ -8,9 +8,9 @@
 //debug
 #include <fstream>
 
-#define JUMP_ANGLE_STEP 1 
+#define JUMP_ANGLE_STEP 2 
 #define JUMP_HEIGHT 96
-#define FALL_STEP 1
+#define FALL_STEP 2
 
 
 enum PlayerAnims
