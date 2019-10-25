@@ -62,8 +62,14 @@ void Scene::init()
 
 void Scene::update(int deltaTime)
 {
+	playerPos = player->getPlayerPos();
 	currentTime += deltaTime;
 	player->update(deltaTime);
+	if (player->getPlayerPos().x < offsetMinX) {
+		glm::vec2 posRestri(offsetMinX, player->getPlayerPos().y);
+		player->setPosition(posRestri);
+	}
+
 	if ((player->getPlayerPos().x - playerPos.x != 0) || (player->getPlayerPos().y - playerPos.y != 0)) {
 		playerPos = player->getPlayerPos();
 		projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
@@ -75,13 +81,27 @@ void Scene::update(int deltaTime)
 		//else if (cameraY < offsetMinY) cameraY = offsetMinY;
 		cameraY = 0.f;
 
+=======
+		cameraX = (playerPos.x) - (CAMERA_WIDTH / 3);
+		cameraY = (playerPos.y) - (CAMERA_HEIGHT / 2);
+		if (cameraX > offsetMaxX) cameraX = offsetMaxX;
+		else if (cameraX < offsetMinX) cameraX = offsetMinX;
+		if (cameraY > offsetMaxY) cameraY = offsetMaxY;
+		else if (cameraY < offsetMinY) cameraY = offsetMinY;
+		offsetMinX = cameraX;
+>>>>>>> SideScrollerMap
 	}
 	else {
 		cameraX = 0.f;
 		cameraY = 0.f;
 	}
 
+<<<<<<< HEAD
 	projection = glm::translate(projection, glm::vec3(-cameraX, 0, 0.f));
+=======
+	projection = glm::translate(projection, glm::vec3(-cameraX, -cameraY, 0.f));
+	
+>>>>>>> SideScrollerMap
 }
 
 void Scene::render()

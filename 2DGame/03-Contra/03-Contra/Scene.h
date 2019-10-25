@@ -32,7 +32,7 @@ private:
 	Player *player;
 	ShaderProgram texProgram;
 	float currentTime;
-	float cameraVx, cameraVy;
+	int cameraVx, cameraVy;
 	float cameraX, cameraY;
 	float offsetMaxX, offsetMaxY, offsetMinX, offsetMinY;
 	glm::vec2 playerPos;
