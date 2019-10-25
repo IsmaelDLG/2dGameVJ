@@ -4,7 +4,9 @@
 
 #include <string>
 #include <GL/glew.h>
-
+#include <glm\detail\type_vec.hpp>
+#include <vector>
+#include "myColor.h"
 
 using namespace std;
 
@@ -35,6 +37,8 @@ public:
 	void setMagFilter(GLint value);
 	
 	void use() const;
+
+	myColor getPixel(int x, int y);
 	
 	int width() const { return widthTex; }
 	int height() const { return heightTex; }
@@ -43,7 +47,7 @@ private:
 	int widthTex, heightTex;
 	GLuint texId;
 	GLint wrapS, wrapT, minFilter, magFilter;
-
+	unsigned char* image;
 };
 
 

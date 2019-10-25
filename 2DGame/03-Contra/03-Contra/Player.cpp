@@ -1,14 +1,15 @@
 #include <cmath>
 #include <iostream>
+#include <iostream>
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include "Player.h"
 #include "Game.h"
 
-
-#define JUMP_ANGLE_STEP 4
-#define JUMP_HEIGHT 76
-#define FALL_STEP 4
+#define JUMP_ANGLE_STEP 4 
+#define JUMP_HEIGHT 72
+#define FALL_STEP 3
+#define P_SIZE 48
 
 
 enum PlayerAnims
@@ -25,7 +26,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	spraygun = false;
 	goingRight = true;
 	spritesheet.loadFromFile("images/Contra_PC_Spritesheet_Full.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(0.125, 0.0625), &spritesheet, &shaderProgram);
+	sprite = Sprite::createSprite(glm::ivec2(P_SIZE, P_SIZE), glm::vec2(0.125, 0.0625), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(15);
 
 		/* LEFT ANIMATIONS*/
@@ -121,8 +122,7 @@ void Player::update(int deltaTime)
 			}
 		}
 		posPlayer.x -= 2;
-		if(map->collisionMoveLeft(posPlayer, glm::ivec2(64, 64)))
-		{
+		if(map->collisionMoveLeft(posPlayer, glm::ivec2(P_SIZE, P_SIZE),&posPlayer.y)) {
 			posPlayer.x += 2;
 			sprite->changeAnimation(STAND_LEFT);
 		}
@@ -141,9 +141,9 @@ void Player::update(int deltaTime)
 			}
 		}
 		posPlayer.x += 2;
-		if(map->collisionMoveRight(posPlayer, glm::ivec2(64, 64)))
+		if(map->collisionMoveRight(posPlayer, glm::ivec2(P_SIZE, P_SIZE), &posPlayer.y))
 		{
-			posPlayer.x -= 2;
+			posPlayer.x -= 2 ;
 			sprite->changeAnimation(STAND_RIGHT);
 		}
 	}
@@ -202,17 +202,16 @@ void Player::update(int deltaTime)
 			bJumping = false;
 			posPlayer.y = startY;
 		}
-		else
-		{
+		else {
 			posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
 			if(jumpAngle > 90)
-				bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(64, 64), &posPlayer.y);
+				bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(P_SIZE, P_SIZE), &posPlayer.y);
 		}
 	}
 	else
 	{
 		posPlayer.y += FALL_STEP;
-		if(map->collisionMoveDown(posPlayer, glm::ivec2(64, 64), &posPlayer.y))
+		if(map->collisionMoveDown(posPlayer, glm::ivec2(P_SIZE, P_SIZE), &posPlayer.y))
 		{
 			onTheAir = false;
 			if (goingRight) {
@@ -256,6 +255,11 @@ void Player::setPosition(const glm::vec2 &pos)
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
-
+int Player::min(int a, int b) {
+	int ret;
+	if (a <= b) ret = a;
+	else ret = b;
+	return ret;
+}
 
 
