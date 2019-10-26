@@ -22,7 +22,7 @@ Level::~Level()
 
 Level::Level(const glm::vec2& minCoords, ShaderProgram& program)
 {
-	pathToLevelFile = "levels/test05.txt";
+	pathToLevelFile = "levels/level01/test05.txt";
 	loadMapData();
 	loadLayers(minCoords, program);
 }
@@ -59,13 +59,6 @@ void Level::loadLayers(const glm::vec2& minCoords, ShaderProgram& program)
 	//Carrego layers
 	Texture* backText = new Texture();
 	backText->loadFromFile(pathToBackground, TEXTURE_PIXEL_FORMAT_RGB);
-	
-	/*Debug
-	ofstream out;
-	out.open("myDebug/testLayers.txt");
-	out << mapSize.x << "<-MapSize.x BlockSize->" << blockSize << endl << mapSize.y << "<-MapSize.y BlockSize->" << blockSize;
-	out.close();
-	endOfDbug */
 	background = Sprite::createSprite(glm::vec2(mapSize.x * blockSize, mapSize.y * blockSize),
 		glm::vec2(1.0f, 1.0f), backText, &program);
 	background->setNumberAnimations(0);

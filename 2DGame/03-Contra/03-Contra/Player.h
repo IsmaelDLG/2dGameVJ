@@ -20,10 +20,12 @@ public:
 	
 	void setMap(Level* myMap);
 	void setPosition(const glm::vec2 &pos);
-	int min(int a, int b);
 	glm::vec2 getPlayerPos() { return posPlayer; }
-	
 private:
+	int min(int a, int b);
+
+private:
+
 	bool bJumping;
 	bool onTheAir, goingRight, spraygun;
 	int jumpAngle, startY;
