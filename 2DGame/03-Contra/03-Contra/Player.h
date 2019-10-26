@@ -28,11 +28,11 @@ public:
 	bool isDead() { return dead; }
 	glm::vec2 getFirePoint() { return firePoint; }
 	bool getisFiring() { return isFiring; }
+	glm::vec2 getdirection() { return direction; }
 	
 private:
-	bool bJumping, dead, isFiring;
-	bool onTheAir, goingRight, spreadGun;
-	glm::ivec2 tileMapDispl, posPlayer, firePoint;
+	bool bJumping, dead, isFiring, onTheAir, goingRight, spreadGun;
+	glm::ivec2 tileMapDispl, posPlayer, firePoint, direction;
 	int jumpAngle, startY, jumpColide;
 	int health, life;
 	Texture spritesheet;

@@ -95,8 +95,9 @@ void Scene::update(int deltaTime)
 				bullet = new Bullet();
 				bullet->init(glm::ivec2(0.f, 0.f), texProgram);
 				glm::vec2 position = player->getFirePoint();
-				bullet->setPosition(glm::vec2(position.x * map->getTileSize(), position.y * map->getTileSize()));
-				bullet->setDirection(glm::vec2(1,0));
+				bullet->setPosition(glm::vec2(position.x, position.y));
+				bullet->setDirection(player->getdirection());
+				bullet->setMap(map);
 				bullets.push_back(bullet);
 				player->setFiring(false);
 			}

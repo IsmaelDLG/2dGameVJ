@@ -29,6 +29,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	dead = false;
 	goingRight = true;
 	isFiring = false;
+	direction = glm::vec2(1,0);
 	health = 1;
 	firePoint = glm::vec2(posPlayer.x + 51.f, posPlayer.y + 36.f);
 	spritesheet.loadFromFile("images/Contra_PC_Spritesheet_Full.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -160,15 +161,18 @@ void Player::update(int deltaTime)
 			if (!onTheAir) {
 				if (Game::instance().getKey(120)) {
 					isFiring = true;
+					direction = glm::vec2(-1, 0);
 					if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
 						if (sprite->animation() != MOVE_LOOK_DOWN_LEFT)
 							sprite->changeAnimation(MOVE_LOOK_DOWN_LEFT);
 						firePoint = glm::vec2(posPlayer.x + 9, posPlayer.y + 52);
+						direction = glm::vec2(-1, 1);
 					}
 					else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
 						if (sprite->animation() != MOVE_LOOK_UP_LEFT)
 							sprite->changeAnimation(MOVE_LOOK_UP_LEFT);
 						firePoint = glm::vec2(posPlayer.x + 17, posPlayer.y + 17);
+						direction = glm::vec2(-1, -1);
 					}
 					else {
 						if (sprite->animation() != MOVE_LEFT_SHOOTING)
@@ -206,15 +210,18 @@ void Player::update(int deltaTime)
 			if (!onTheAir) {
 				if (Game::instance().getKey(120)) {
 					isFiring = true;
+					direction = glm::vec2(1, 0);
 					if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
 						if (sprite->animation() != MOVE_LOOK_DOWN_RIGHT)
 							sprite->changeAnimation(MOVE_LOOK_DOWN_RIGHT);
 						firePoint = glm::vec2(posPlayer.x + 56, posPlayer.y + 52);
+						direction = glm::vec2(1, 1);
 					}
 					else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
 						if (sprite->animation() != MOVE_LOOK_UP_RIGHT)
 							sprite->changeAnimation(MOVE_LOOK_UP_RIGHT);
 						firePoint = glm::vec2(posPlayer.x + 48, posPlayer.y + 17);
+						direction = glm::vec2(1, -1);
 					}
 					else {
 						if (sprite->animation() != MOVE_RIGHT_SHOOTING)
@@ -253,10 +260,12 @@ void Player::update(int deltaTime)
 				if (Game::instance().getKey(120)) {
 					isFiring = true;
 					if (goingRight && sprite->animation() != LAY_RIGHT_SHOOTING) {
+						direction = glm::vec2(1, 0);
 						firePoint = glm::vec2(posPlayer.x + 54, posPlayer.y + 57);
 						sprite->changeAnimation(LAY_RIGHT_SHOOTING);
 					}
 					else if (!goingRight && sprite->animation() != LAY_LEFT_SHOOTING) {
+						direction = glm::vec2(-1, 0);
 						firePoint = glm::vec2(posPlayer.x + 11, posPlayer.y + 57);
 						sprite->changeAnimation(LAY_LEFT_SHOOTING);
 					}
@@ -274,7 +283,7 @@ void Player::update(int deltaTime)
 				}
 			}
 		}
-		//else if (Game::instance().getKey(100)) { this->takeDamage(1); } debug per veure les morts
+		//else if (Game::instance().getKey(100)) { this->takeDamage(1); } //debug per veure les morts
 		else
 		{
 			if (Game::instance().getKey(120)) {
@@ -286,6 +295,7 @@ void Player::update(int deltaTime)
 				{
 					firePoint = glm::vec2(posPlayer.x + 14, posPlayer.y + 36);
 					sprite->changeAnimation(STAND_LEFT_SHOOTING);
+					direction = glm::vec2(-1, 0);
 				}
 				else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == LAY_RIGHT
 					|| sprite->animation() == LAY_RIGHT_SHOOTING || sprite->animation() == MOVE_RIGHT_SHOOTING
@@ -293,6 +303,7 @@ void Player::update(int deltaTime)
 					|| sprite->animation() == MOVE_LOOK_UP_RIGHT)
 				{
 					firePoint = glm::vec2(posPlayer.x + 51, posPlayer.y + 36);
+					direction = glm::vec2(1, 0);
 					sprite->changeAnimation(STAND_RIGHT_SHOOTING);
 				}
 			}
@@ -303,11 +314,13 @@ void Player::update(int deltaTime)
 				if (!goingRight && sprite->animation() != LOOK_DOWN_LEFT) {
 					firePoint = glm::vec2(posPlayer.x + 9, posPlayer.y + 52);
 					sprite->changeAnimation(LOOK_DOWN_LEFT);
+					direction = glm::vec2(-1, 1);
 				}
 				else if (goingRight && sprite->animation() != LOOK_DOWN_RIGHT)
 				{
 					firePoint = glm::vec2(posPlayer.x + 56, posPlayer.y + 52);
 					sprite->changeAnimation(LOOK_DOWN_RIGHT);
+					direction = glm::vec2(1, 1);
 				}
 
 			}
@@ -322,6 +335,7 @@ void Player::update(int deltaTime)
 				{
 					firePoint = glm::vec2(posPlayer.x + 48, posPlayer.y + 17);
 					sprite->changeAnimation(LOOK_UP_RIGHT);
+					direction = glm::vec2(1, -1);
 				}
 			}
 			else {
