@@ -25,9 +25,12 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	bJumping = false;
 	onTheAir = false;
-	spraygun = false;
+	spreadGun = false;
+	dead = false;
 	goingRight = true;
-	firePoint = glm::vec2(0.f, 0.f);
+	isFiring = false;
+	health = 1;
+	firePoint = glm::vec2(posPlayer.x + 51.f, posPlayer.y + 36.f);
 	spritesheet.loadFromFile("images/Contra_PC_Spritesheet_Full.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(P_SIZE, P_SIZE), glm::vec2(0.125, 0.0625), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(23);
@@ -149,245 +152,256 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 void Player::update(int deltaTime)
 {
 	sprite->update(deltaTime);
-	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT))
-	{
-		goingRight = false;
-		firePoint = glm::vec2(posPlayer.x + 14, posPlayer.y + 36);
-		if (!onTheAir) {
-			if (Game::instance().getKey(120)) {
-				if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
-					if (sprite->animation() != MOVE_LOOK_DOWN_LEFT)
-						sprite->changeAnimation(MOVE_LOOK_DOWN_LEFT);
-					firePoint = glm::vec2(posPlayer.x + 9, posPlayer.y + 52);
-				}
-				else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
-					if (sprite->animation() != MOVE_LOOK_UP_LEFT)
-						sprite->changeAnimation(MOVE_LOOK_UP_LEFT);
-					firePoint = glm::vec2(posPlayer.x + 17, posPlayer.y + 17);
-				}
-				else {
-					if (sprite->animation() != MOVE_LEFT_SHOOTING)
-						sprite->changeAnimation(MOVE_LEFT_SHOOTING);
-				}
-			}
-			else {
-				if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
-					if (sprite->animation() != MOVE_LOOK_DOWN_LEFT)
-						sprite->changeAnimation(MOVE_LOOK_DOWN_LEFT);
-					firePoint = glm::vec2(posPlayer.x + 9, posPlayer.y + 52);
-				}
-				else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
-					if (sprite->animation() != MOVE_LOOK_UP_LEFT)
-						sprite->changeAnimation(MOVE_LOOK_UP_LEFT);
-					firePoint = glm::vec2(posPlayer.x + 17, posPlayer.y + 17);
-				}
-				else {
-					if (sprite->animation() != MOVE_LEFT)
-						sprite->changeAnimation(MOVE_LEFT);
-				}
-			}
-		}
-		posPlayer.x -= 2;
-		if(map->collisionMoveLeft(posPlayer, glm::ivec2(P_SIZE, P_SIZE),&posPlayer.y)) {
-			posPlayer.x += 2;
-			sprite->changeAnimation(STAND_LEFT);
-		}
-	}
-	else if(Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
-	{
-		goingRight = true;
-		if (!onTheAir) {
-			firePoint = glm::vec2(posPlayer.x + 51, posPlayer.y + 36);
-			if (Game::instance().getKey(120)) {
-				if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
-					if (sprite->animation() != MOVE_LOOK_DOWN_RIGHT)
-						sprite->changeAnimation(MOVE_LOOK_DOWN_RIGHT);
-					firePoint = glm::vec2(posPlayer.x + 54, posPlayer.y + 52);
-				}
-				else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
-					if (sprite->animation() != MOVE_LOOK_UP_RIGHT)
-						sprite->changeAnimation(MOVE_LOOK_UP_RIGHT);
-					firePoint = glm::vec2(posPlayer.x + 17, posPlayer.y + 17);
-				}
-				else {
-					if (sprite->animation() != MOVE_RIGHT_SHOOTING)
-						sprite->changeAnimation(MOVE_RIGHT_SHOOTING);
-				}
-			}
-			else {
-				if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
-					if (sprite->animation() != MOVE_LOOK_DOWN_RIGHT)
-						sprite->changeAnimation(MOVE_LOOK_DOWN_RIGHT);
-					firePoint = glm::vec2(posPlayer.x + 9, posPlayer.y + 52);
-				}
-				else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
-					if (sprite->animation() != MOVE_LOOK_UP_RIGHT)
-						sprite->changeAnimation(MOVE_LOOK_UP_RIGHT);
-					firePoint = glm::vec2(posPlayer.x + 17, posPlayer.y + 17);
-				}
-				else {
-					if (sprite->animation() != MOVE_RIGHT)
-						sprite->changeAnimation(MOVE_RIGHT);
-				}
-			}
-		}
-		if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
-			if (sprite->animation() != MOVE_LOOK_DOWN_RIGHT)
-				sprite->changeAnimation(MOVE_LOOK_DOWN_RIGHT);
-		}
-		else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
-			if (sprite->animation() != MOVE_LOOK_UP_RIGHT)
-				sprite->changeAnimation(MOVE_LOOK_UP_RIGHT);
-			firePoint = glm::vec2(posPlayer.x + 48, posPlayer.y + 17);
-		}
-		posPlayer.x += 2;
-		if(map->collisionMoveRight(posPlayer, glm::ivec2(P_SIZE, P_SIZE), &posPlayer.y))
+	if (!dead) {
+		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 		{
-			posPlayer.x -= 2 ;
-			sprite->changeAnimation(STAND_RIGHT);
-		}
-	}
-	else if (Game::instance().getKey(122))
-	{
-		if (!onTheAir) {
-			if (Game::instance().getKey(120)) {
-				if (goingRight && sprite->animation() != LAY_RIGHT_SHOOTING) {
-					firePoint = glm::vec2(posPlayer.x + 54, posPlayer.y + 57);
-					sprite->changeAnimation(LAY_RIGHT_SHOOTING);
+			goingRight = false;
+			firePoint = glm::vec2(posPlayer.x + 14, posPlayer.y + 36);
+			if (!onTheAir) {
+				if (Game::instance().getKey(120)) {
+					isFiring = true;
+					if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
+						if (sprite->animation() != MOVE_LOOK_DOWN_LEFT)
+							sprite->changeAnimation(MOVE_LOOK_DOWN_LEFT);
+						firePoint = glm::vec2(posPlayer.x + 9, posPlayer.y + 52);
+					}
+					else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
+						if (sprite->animation() != MOVE_LOOK_UP_LEFT)
+							sprite->changeAnimation(MOVE_LOOK_UP_LEFT);
+						firePoint = glm::vec2(posPlayer.x + 17, posPlayer.y + 17);
+					}
+					else {
+						if (sprite->animation() != MOVE_LEFT_SHOOTING)
+							sprite->changeAnimation(MOVE_LEFT_SHOOTING);
+					}
 				}
-				else if (!goingRight && sprite->animation() != LAY_LEFT_SHOOTING) {
-					firePoint = glm::vec2(posPlayer.x + 11, posPlayer.y + 57);
-					sprite->changeAnimation(LAY_LEFT_SHOOTING);
+				else {
+					isFiring = false;
+					if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
+						if (sprite->animation() != MOVE_LOOK_DOWN_LEFT)
+							sprite->changeAnimation(MOVE_LOOK_DOWN_LEFT);
+						firePoint = glm::vec2(posPlayer.x + 9, posPlayer.y + 52);
+					}
+					else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
+						if (sprite->animation() != MOVE_LOOK_UP_LEFT)
+							sprite->changeAnimation(MOVE_LOOK_UP_LEFT);
+						firePoint = glm::vec2(posPlayer.x + 17, posPlayer.y + 17);
+					}
+					else {
+						if (sprite->animation() != MOVE_LEFT)
+							sprite->changeAnimation(MOVE_LEFT);
+					}
 				}
 			}
-			else {
-				if (goingRight && sprite->animation() != LAY_RIGHT) {
-					firePoint = glm::vec2(posPlayer.x + 54, posPlayer.y + 57);
-					sprite->changeAnimation(LAY_RIGHT);
-				}
-				else if (!goingRight && sprite->animation() != LAY_LEFT) {
-					firePoint = glm::vec2(posPlayer.x + 11, posPlayer.y + 57);
-					sprite->changeAnimation(LAY_LEFT);
-				}
-			}
-		}
-	}
-	else
-	{
-		if (Game::instance().getKey(120)) {
-			if (sprite->animation() == MOVE_LEFT || sprite->animation() == LAY_LEFT
-				|| sprite->animation() == LAY_LEFT_SHOOTING || sprite->animation() == MOVE_LEFT_SHOOTING
-				|| sprite->animation() == STAND_LEFT || sprite->animation() == MOVE_LOOK_DOWN_LEFT
-				|| sprite->animation() == MOVE_LOOK_UP_LEFT)
-			{
-				firePoint = glm::vec2(posPlayer.x + 14, posPlayer.y + 36);
-				sprite->changeAnimation(STAND_LEFT_SHOOTING);
-			}
-			else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == LAY_RIGHT
-				|| sprite->animation() == LAY_RIGHT_SHOOTING || sprite->animation() == MOVE_RIGHT_SHOOTING
-				|| sprite->animation() == STAND_RIGHT || sprite->animation() == MOVE_LOOK_DOWN_RIGHT
-				|| sprite->animation() == MOVE_LOOK_UP_RIGHT)
-			{
-				firePoint = glm::vec2(posPlayer.x + 51, posPlayer.y + 36);
-				sprite->changeAnimation(STAND_RIGHT_SHOOTING);
-			}
-		}
-		
-		else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
-			if (!goingRight && sprite->animation() != LOOK_DOWN_LEFT) {
-				firePoint = glm::vec2(posPlayer.x + 9, posPlayer.y + 52);
-				sprite->changeAnimation(LOOK_DOWN_LEFT);
-			}
-			else if (goingRight && sprite->animation() != LOOK_DOWN_RIGHT)
-			{
-				firePoint = glm::vec2(posPlayer.x + 54, posPlayer.y + 52);
-				sprite->changeAnimation(LOOK_DOWN_RIGHT);
-			}
-			
-		}
-		else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
-			if (!goingRight && sprite->animation() != LOOK_UP_LEFT) {
-				//firePoint = glm::vec2(posPlayer.x + 9, posPlayer.y + 52);
-				//sprite->changeAnimation(LOOK_UP_LEFT);
-			}
-			else if (goingRight && sprite->animation() != LOOK_UP_RIGHT)
-			{
-				//firePoint = glm::vec2(posPlayer.x + 54, posPlayer.y + 52);
-				sprite->changeAnimation(LOOK_UP_RIGHT);
-			}
-		}
-		else {
-			if (sprite->animation() == MOVE_LEFT || sprite->animation() == LAY_LEFT
-				|| sprite->animation() == STAND_LEFT_SHOOTING || sprite->animation() == LOOK_DOWN_LEFT 
-				|| sprite->animation() == LOOK_UP_LEFT || sprite->animation() == MOVE_LOOK_DOWN_LEFT
-				|| sprite->animation() == MOVE_LOOK_UP_LEFT)
-			{
+			posPlayer.x -= 2;
+			if (map->collisionMoveLeft(posPlayer, glm::ivec2(P_SIZE, P_SIZE), &posPlayer.y)) {
+				posPlayer.x += 2;
 				sprite->changeAnimation(STAND_LEFT);
-				firePoint = glm::vec2(posPlayer.x + 14, posPlayer.y + 36);
 			}
-			else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == LAY_RIGHT
-				|| sprite->animation() == STAND_RIGHT_SHOOTING || sprite->animation() == LOOK_DOWN_RIGHT
-				|| sprite->animation() == LOOK_UP_RIGHT || sprite->animation() == MOVE_LOOK_DOWN_RIGHT
-				|| sprite->animation() == MOVE_LOOK_UP_RIGHT)
+		}
+		else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
+		{
+			goingRight = true;
+			firePoint = glm::vec2(posPlayer.x + 51, posPlayer.y + 36);
+			if (!onTheAir) {
+				if (Game::instance().getKey(120)) {
+					isFiring = true;
+					if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
+						if (sprite->animation() != MOVE_LOOK_DOWN_RIGHT)
+							sprite->changeAnimation(MOVE_LOOK_DOWN_RIGHT);
+						firePoint = glm::vec2(posPlayer.x + 56, posPlayer.y + 52);
+					}
+					else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
+						if (sprite->animation() != MOVE_LOOK_UP_RIGHT)
+							sprite->changeAnimation(MOVE_LOOK_UP_RIGHT);
+						firePoint = glm::vec2(posPlayer.x + 48, posPlayer.y + 17);
+					}
+					else {
+						if (sprite->animation() != MOVE_RIGHT_SHOOTING)
+							sprite->changeAnimation(MOVE_RIGHT_SHOOTING);
+					}
+				}
+				else {
+					isFiring = false;
+					if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
+						if (sprite->animation() != MOVE_LOOK_DOWN_RIGHT)
+							sprite->changeAnimation(MOVE_LOOK_DOWN_RIGHT);
+						firePoint = glm::vec2(posPlayer.x + 56, posPlayer.y + 52);
+					}
+					else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
+						if (sprite->animation() != MOVE_LOOK_UP_RIGHT)
+							sprite->changeAnimation(MOVE_LOOK_UP_RIGHT);
+						firePoint = glm::vec2(posPlayer.x + 48, posPlayer.y + 17);
+					}
+					else {
+						if (sprite->animation() != MOVE_RIGHT)
+							sprite->changeAnimation(MOVE_RIGHT);
+					}
+				}
+			}
+			posPlayer.x += 2;
+			if (map->collisionMoveRight(posPlayer, glm::ivec2(P_SIZE, P_SIZE), &posPlayer.y))
 			{
-				firePoint = glm::vec2(posPlayer.x + 51, posPlayer.y + 36);
+				posPlayer.x -= 2;
 				sprite->changeAnimation(STAND_RIGHT);
-				
+				firePoint = glm::vec2(posPlayer.x + 51, posPlayer.y + 36);
 			}
 		}
-	}
-	
-	if(bJumping)
-	{
-		jumpAngle += JUMP_ANGLE_STEP;
-		if (goingRight) {
-			if (sprite->animation() != JUMPING_RIGHT)
-				sprite->changeAnimation(JUMPING_RIGHT);
-		}
-		else {
-			if (sprite->animation() != JUMPING_LEFT)
-				sprite->changeAnimation(JUMPING_LEFT);
-		}
-		if(jumpAngle == 180)
+		else if (Game::instance().getKey(122))
 		{
-			bJumping = false;
-			posPlayer.y = startY;
+			if (!onTheAir) {
+				if (Game::instance().getKey(120)) {
+					isFiring = true;
+					if (goingRight && sprite->animation() != LAY_RIGHT_SHOOTING) {
+						firePoint = glm::vec2(posPlayer.x + 54, posPlayer.y + 57);
+						sprite->changeAnimation(LAY_RIGHT_SHOOTING);
+					}
+					else if (!goingRight && sprite->animation() != LAY_LEFT_SHOOTING) {
+						firePoint = glm::vec2(posPlayer.x + 11, posPlayer.y + 57);
+						sprite->changeAnimation(LAY_LEFT_SHOOTING);
+					}
+				}
+				else {
+					isFiring = false;
+					if (goingRight && sprite->animation() != LAY_RIGHT) {
+						firePoint = glm::vec2(posPlayer.x + 54, posPlayer.y + 57);
+						sprite->changeAnimation(LAY_RIGHT);
+					}
+					else if (!goingRight && sprite->animation() != LAY_LEFT) {
+						firePoint = glm::vec2(posPlayer.x + 11, posPlayer.y + 57);
+						sprite->changeAnimation(LAY_LEFT);
+					}
+				}
+			}
 		}
-		else {
-			posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
-			if(jumpAngle > 90)
-				bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(P_SIZE, P_SIZE), &posPlayer.y);
-		}
-	}
-	else
-	{
-		posPlayer.y += FALL_STEP;
-		if(map->collisionMoveDown(posPlayer, glm::ivec2(P_SIZE, P_SIZE), &posPlayer.y))
+		//else if (Game::instance().getKey(100)) { this->takeDamage(1); } debug per veure les morts
+		else
 		{
-			onTheAir = false;
-			if (goingRight) {
-				if (sprite->animation() == JUMPING_RIGHT)
-					sprite->changeAnimation(STAND_RIGHT);
+			if (Game::instance().getKey(120)) {
+				isFiring = true;
+				if (sprite->animation() == MOVE_LEFT || sprite->animation() == LAY_LEFT
+					|| sprite->animation() == LAY_LEFT_SHOOTING || sprite->animation() == MOVE_LEFT_SHOOTING
+					|| sprite->animation() == STAND_LEFT || sprite->animation() == MOVE_LOOK_DOWN_LEFT
+					|| sprite->animation() == MOVE_LOOK_UP_LEFT)
+				{
+					firePoint = glm::vec2(posPlayer.x + 14, posPlayer.y + 36);
+					sprite->changeAnimation(STAND_LEFT_SHOOTING);
+				}
+				else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == LAY_RIGHT
+					|| sprite->animation() == LAY_RIGHT_SHOOTING || sprite->animation() == MOVE_RIGHT_SHOOTING
+					|| sprite->animation() == STAND_RIGHT || sprite->animation() == MOVE_LOOK_DOWN_RIGHT
+					|| sprite->animation() == MOVE_LOOK_UP_RIGHT)
+				{
+					firePoint = glm::vec2(posPlayer.x + 51, posPlayer.y + 36);
+					sprite->changeAnimation(STAND_RIGHT_SHOOTING);
+				}
+			}
+
+			else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
+				if (Game::instance().getKey(120)) isFiring = true;
+				else isFiring = false;
+				if (!goingRight && sprite->animation() != LOOK_DOWN_LEFT) {
+					firePoint = glm::vec2(posPlayer.x + 9, posPlayer.y + 52);
+					sprite->changeAnimation(LOOK_DOWN_LEFT);
+				}
+				else if (goingRight && sprite->animation() != LOOK_DOWN_RIGHT)
+				{
+					firePoint = glm::vec2(posPlayer.x + 56, posPlayer.y + 52);
+					sprite->changeAnimation(LOOK_DOWN_RIGHT);
+				}
+
+			}
+			else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
+				if (Game::instance().getKey(120)) isFiring = true;
+				else isFiring = false;
+				if (!goingRight && sprite->animation() != LOOK_UP_LEFT) {
+					//firePoint = glm::vec2(posPlayer.x + 9, posPlayer.y + 52);
+					//sprite->changeAnimation(LOOK_UP_LEFT);
+				}
+				else if (goingRight && sprite->animation() != LOOK_UP_RIGHT)
+				{
+					firePoint = glm::vec2(posPlayer.x + 48, posPlayer.y + 17);
+					sprite->changeAnimation(LOOK_UP_RIGHT);
+				}
 			}
 			else {
-				if (sprite->animation() == JUMPING_LEFT)
+				isFiring = false;
+				if (sprite->animation() == MOVE_LEFT || sprite->animation() == LAY_LEFT
+					|| sprite->animation() == STAND_LEFT_SHOOTING || sprite->animation() == LOOK_DOWN_LEFT
+					|| sprite->animation() == LOOK_UP_LEFT || sprite->animation() == MOVE_LOOK_DOWN_LEFT
+					|| sprite->animation() == MOVE_LOOK_UP_LEFT)
+				{
 					sprite->changeAnimation(STAND_LEFT);
-			}
-			if(Game::instance().getKey(32))
-			{
-				if(sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT)
-					sprite->changeAnimation(JUMPING_RIGHT);
-				else if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT)
-					sprite->changeAnimation(JUMPING_LEFT);
-				bJumping = true;
-				onTheAir = true;
-				jumpAngle = 0;
-				startY = posPlayer.y;
+					firePoint = glm::vec2(posPlayer.x + 14, posPlayer.y + 36);
+				}
+				else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == LAY_RIGHT
+					|| sprite->animation() == STAND_RIGHT_SHOOTING || sprite->animation() == LOOK_DOWN_RIGHT
+					|| sprite->animation() == LOOK_UP_RIGHT || sprite->animation() == MOVE_LOOK_DOWN_RIGHT
+					|| sprite->animation() == MOVE_LOOK_UP_RIGHT)
+				{
+					firePoint = glm::vec2(posPlayer.x + 51, posPlayer.y + 36);
+					sprite->changeAnimation(STAND_RIGHT);
+
+				}
 			}
 		}
+
+		if (bJumping)
+		{
+			isFiring = false;
+			jumpAngle += JUMP_ANGLE_STEP;
+			if (goingRight) {
+				if (sprite->animation() != JUMPING_RIGHT)
+					sprite->changeAnimation(JUMPING_RIGHT);
+			}
+			else {
+				if (sprite->animation() != JUMPING_LEFT)
+					sprite->changeAnimation(JUMPING_LEFT);
+			}
+			if (jumpAngle == 180)
+			{
+				bJumping = false;
+				posPlayer.y = startY;
+			}
+			else {
+				posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
+				if (jumpAngle > 90)
+					bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(P_SIZE, P_SIZE), &posPlayer.y);
+			}
+		}
+		else
+		{
+			posPlayer.y += FALL_STEP;
+			if (map->collisionMoveDown(posPlayer, glm::ivec2(P_SIZE, P_SIZE), &posPlayer.y))
+			{
+				onTheAir = false;
+				if (goingRight) {
+					if (sprite->animation() == JUMPING_RIGHT)
+						sprite->changeAnimation(STAND_RIGHT);
+				}
+				else {
+					if (sprite->animation() == JUMPING_LEFT)
+						sprite->changeAnimation(STAND_LEFT);
+				}
+				if (Game::instance().getKey(32))
+				{
+					if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT)
+						sprite->changeAnimation(JUMPING_RIGHT);
+					else if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT)
+						sprite->changeAnimation(JUMPING_LEFT);
+					bJumping = true;
+					onTheAir = true;
+					jumpAngle = 0;
+					startY = posPlayer.y;
+				}
+			}
+		}
+
+		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	}
-	
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+	else {
+		sprite->changeAnimation(DYING);
+	}
 }
 
 void Player::render()
@@ -411,6 +425,14 @@ int Player::min(int a, int b) {
 	if (a <= b) ret = a;
 	else ret = b;
 	return ret;
+}
+
+void Player::takeDamage(int dmg) {
+	health -= dmg;
+	if (health <= 0) {
+		dead = true;
+		health = 1;
+	}
 }
 
 

@@ -39,20 +39,16 @@ void Scene::init()
 
 	playerPos = player->getPlayerPos();
 	offsetMaxX = (map->getTileSize() * map->getMapsize().x) - CAMERA_WIDTH;
-	//potser aixo no cal, la càmera sempre estarà a la mateixa alçada
 	offsetMaxY = (map->getTileSize() * map->getMapsize().y) - CAMERA_HEIGHT;
 	offsetMinX = 0;
-	//potser aixo no cal, la càmera sempre estarà a la mateixa alçada
 	offsetMinY = 0;
+	deaths = 0;
 
 	cameraX = (playerPos.x) - (CAMERA_WIDTH / 2);
-	//potser aixo no cal, la càmera sempre estarà a la mateixa alçada
 	cameraY = (playerPos.y) - (CAMERA_HEIGHT / 2);
 	if (cameraX > offsetMaxX) cameraX = offsetMaxX;
 	else if (cameraX < offsetMinX) cameraX = offsetMinX;
-	//potser aixo no cal, la càmera sempre estarà a la mateixa alçada
 	if (cameraY > offsetMaxY) cameraY = offsetMaxY;
-	//potser aixo no cal, la càmera sempre estarà a la mateixa alçada
 	else if (cameraY < offsetMinY) cameraY = offsetMinY;
 
 	projection = glm::translate(projection, glm::vec3(-cameraX, -cameraY, 0.f));
@@ -62,30 +58,59 @@ void Scene::init()
 
 void Scene::update(int deltaTime)
 {
-	playerPos = player->getPlayerPos();
-	currentTime += deltaTime;
-	player->update(deltaTime);
-	if (player->getPlayerPos().x < offsetMinX) {
-		glm::vec2 posRestri(offsetMinX, player->getPlayerPos().y);
-		player->setPosition(posRestri);
-	}
+	if (deaths <= 4) {
+		if (player->isDead()) {
+			player->init(glm::ivec2(0.f, 0.f), texProgram);
+			player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+			player->setMap(map);
+			player->setState(false);
+			deaths++;
+		}
+		else {
+			playerPos = player->getPlayerPos();
+			currentTime += deltaTime;
+			player->update(deltaTime);
+			if (player->getPlayerPos().x < offsetMinX) {
+				glm::vec2 posRestri(offsetMinX, player->getPlayerPos().y);
+				player->setPosition(posRestri);
+			}
 
-	if ((player->getPlayerPos().x - playerPos.x != 0) || (player->getPlayerPos().y - playerPos.y != 0)) {
-		playerPos = player->getPlayerPos();
-		projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
-		cameraX = (playerPos.x) - (CAMERA_WIDTH / 3);
-		cameraY = (playerPos.y) - (CAMERA_HEIGHT / 2);
-		if (cameraX > offsetMaxX) cameraX = offsetMaxX;
-		else if (cameraX < offsetMinX) cameraX = offsetMinX;
-		if (cameraY > offsetMaxY) cameraY = offsetMaxY;
-		else if (cameraY < offsetMinY) cameraY = offsetMinY;
-		offsetMinX = cameraX;
+			if ((player->getPlayerPos().x - playerPos.x != 0) || (player->getPlayerPos().y - playerPos.y != 0)) {
+				playerPos = player->getPlayerPos();
+				projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
+				cameraX = (playerPos.x) - (CAMERA_WIDTH / 3);
+				cameraY = (playerPos.y) - (CAMERA_HEIGHT / 2);
+				if (cameraX > offsetMaxX) cameraX = offsetMaxX;
+				else if (cameraX < offsetMinX) cameraX = offsetMinX;
+				if (cameraY > offsetMaxY) cameraY = offsetMaxY;
+				else if (cameraY < offsetMinY) cameraY = offsetMinY;
+				offsetMinX = cameraX;
+			}
+			else {
+				cameraX = 0.f;
+				cameraY = 0.f;
+			}
+			projection = glm::translate(projection, glm::vec3(-cameraX, -cameraY, 0.f));
+			if (player->getisFiring()) {
+				bullet = new Bullet();
+				bullet->init(glm::ivec2(0.f, 0.f), texProgram);
+				glm::vec2 position = player->getFirePoint();
+				bullet->setPosition(glm::vec2(position.x * map->getTileSize(), position.y * map->getTileSize()));
+				bullet->setDirection(glm::vec2(1,0));
+				bullets.push_back(bullet);
+				player->setFiring(false);
+			}
+			if (!bullets.empty()) {
+				for (int i = 0; i < bullets.size(); i++) {
+					bullets[i]->update(deltaTime);
+				}
+			}
+		}
 	}
 	else {
-		cameraX = 0.f;
-		cameraY = 0.f;
+		cout << "gameOver" << endl;
 	}
-	projection = glm::translate(projection, glm::vec3(-cameraX, -cameraY, 0.f));
+	
 }
 
 void Scene::render()
@@ -98,7 +123,13 @@ void Scene::render()
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
-	player->render();
+	if (deaths <=4)
+		player->render();
+	if (!bullets.empty()) {
+		for (int i = 0; i < bullets.size(); i++) {
+			bullets[i]->render();
+		}
+	}
 }
 
 void Scene::initShaders()
