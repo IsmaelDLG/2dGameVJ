@@ -11,6 +11,7 @@ public:
 	~myColor();
 	unsigned int getAlpha();
 	unsigned int getBlack();
+	unsigned int getGreen();
 private:
 	unsigned int max(unsigned int r, unsigned int g, unsigned int b);
 	unsigned int min(unsigned int r, unsigned int g, unsigned int b);

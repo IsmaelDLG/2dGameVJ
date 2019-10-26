@@ -11,11 +11,17 @@
 #define INIT_PLAYER_X_TILES 13
 #define INIT_PLAYER_Y_TILES 1
 
+enum PlayerAnims
+{
+	FADE
+};
+
+
 Scene::Scene()
 {
 	map = NULL;
 	player = NULL;
-	menu = false;
+	menu = true;
 }
 
 Scene::~Scene()
@@ -24,13 +30,62 @@ Scene::~Scene()
 		delete map;
 	if(player != NULL)
 		delete player;
+	menuScreen->free();
+	button->free();
+	if (menuScreen != NULL)
+		delete menuScreen;
+	if (button != NULL)
+		delete button;
+	if (enemyCtrl != NULL)
+		delete enemyCtrl;
 }
 
 
 void Scene::init()
 {
 	initShaders();
+	cameraX = 0;
+	cameraY = 0;
+	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+	
 	if (menu) {
+		if (/*stage_one*/false) {
+
+		}
+		else if (/*stage_two*/false){
+
+		}
+		else if (/*stage_three*/false) {
+
+		}
+		else /*menu_inicial*/ {
+
+			Texture* menuTex = new Texture();
+			menuTex->loadFromFile("images/Menus/StartMenu.png", TEXTURE_PIXEL_FORMAT_RGB);
+			menuScreen = Sprite::createSprite(glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT),
+				glm::vec2(1.0f, 1.0f), menuTex, &texProgram);
+			menuScreen->setNumberAnimations(0);
+
+			//Text que parpadeja
+			Texture* startTex = new Texture();
+			startTex->loadFromFile("images/Menus/StartButton.png", TEXTURE_PIXEL_FORMAT_RGBA);
+			button = Sprite::createSprite(glm::vec2(startTex->width()/4*2.5, startTex->height()*1.5),
+				glm::vec2(0.25f, 1.f), startTex, &texProgram);
+			button->setNumberAnimations(1);
+			button->setPosition(glm::vec2(SCREEN_WIDTH / 4+12, SCREEN_HEIGHT * 3 / 4));
+			/*Fading animation*/
+			button->setAnimationSpeed(FADE, 3);
+			button->addKeyframe(FADE, glm::vec2(0.f, 0.f));
+			button->addKeyframe(FADE, glm::vec2(0.25f, 0.f));
+			button->addKeyframe(FADE, glm::vec2(0.50f, 0.f));
+			button->addKeyframe(FADE, glm::vec2(0.75f, 0.f));
+			button->addKeyframe(FADE, glm::vec2(0.75f, 0.f));
+			button->addKeyframe(FADE, glm::vec2(0.50f, 0.f));
+			button->addKeyframe(FADE, glm::vec2(0.25f, 0.f));
+			button->addKeyframe(FADE, glm::vec2(0.f, 0.f));
+			//Començo l'animació
+			button->changeAnimation(0);
+		}
 
 	}
 	else {
@@ -43,8 +98,6 @@ void Scene::init()
 
 		enemyCtrl = new EnemyManager();
 		enemyCtrl->init(map, texProgram);
-
-		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 
 		playerPos = player->getPlayerPos();
 		offsetMaxX = (map->getTileSize() * map->getMapsize().x) - CAMERA_WIDTH;
@@ -59,63 +112,105 @@ void Scene::init()
 		if (cameraY > offsetMaxY) cameraY = offsetMaxY;
 		else if (cameraY < offsetMinY) cameraY = offsetMinY;
 
-		projection = glm::translate(projection, glm::vec3(-cameraX, -cameraY, 0.f));
 
 		currentTime = 0.0f;
 	}
-	
+	projection = glm::translate(projection, glm::vec3(-cameraX, -cameraY, 0.f));
+
 }
 
 void Scene::update(int deltaTime)
 {
 	if (menu) {
+		if (/*stage_one*/false) {
 
+		}
+		else if (/*stage_two*/false) {
+
+		}
+		else if (/*stage_three*/false) {
+
+		}
+		else /*menu_inicial*/ {
+			if (Game::instance().getKey(13)) {
+				this->~Scene();
+				menu = false;
+				//comencem a jugar
+				this->init();
+			}
+			else {
+				menuScreen->update(deltaTime);
+				button->update(deltaTime);
+			}
+		}
 	}
 	else {
-		playerPos = player->getPlayerPos();
-		currentTime += deltaTime;
-		player->update(deltaTime);
-		enemyCtrl->update(deltaTime);
-
-
-		if (player->getPlayerPos().x < offsetMinX) {
-			glm::vec2 posRestri(offsetMinX, player->getPlayerPos().y);
-			player->setPosition(posRestri);
-		}
-
-		if ((player->getPlayerPos().x - playerPos.x != 0) || (player->getPlayerPos().y - playerPos.y != 0)) {
-			playerPos = player->getPlayerPos();
-			projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
-			cameraX = (playerPos.x) - (CAMERA_WIDTH / 3);
-			cameraY = (playerPos.y) - (CAMERA_HEIGHT / 2);
-			if (cameraX > offsetMaxX) cameraX = offsetMaxX;
-			else if (cameraX < offsetMinX) cameraX = offsetMinX;
-			if (cameraY > offsetMaxY) cameraY = offsetMaxY;
-			else if (cameraY < offsetMinY) cameraY = offsetMinY;
-			offsetMinX = cameraX;
+		if (player->isEndOfLevel()) {
+			this->~Scene();
+			menu = true;
+			//tornem a menu
+			this->init();
+			//estaria bé fer una anumació de victoria o algo
+			//també spawnejar un bicho que diga completed o algo
 		}
 		else {
-			cameraX = 0.f;
-			cameraY = 0.f;
+			playerPos = player->getPlayerPos();
+			currentTime += deltaTime;
+			player->update(deltaTime);
+			enemyCtrl->update(deltaTime);
+
+
+			if (player->getPlayerPos().x < offsetMinX) {
+				glm::vec2 posRestri(offsetMinX, player->getPlayerPos().y);
+				player->setPosition(posRestri);
+			}
+
+			if ((player->getPlayerPos().x - playerPos.x != 0) || (player->getPlayerPos().y - playerPos.y != 0)) {
+				playerPos = player->getPlayerPos();
+				projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
+				cameraX = (playerPos.x) - (CAMERA_WIDTH / 3);
+				cameraY = (playerPos.y) - (CAMERA_HEIGHT / 2);
+				if (cameraX > offsetMaxX) cameraX = offsetMaxX;
+				else if (cameraX < offsetMinX) cameraX = offsetMinX;
+				if (cameraY > offsetMaxY) cameraY = offsetMaxY;
+				else if (cameraY < offsetMinY) cameraY = offsetMinY;
+				offsetMinX = cameraX;
+			}
+			else {
+				cameraX = 0.f;
+				cameraY = 0.f;
+			}
 		}
-		projection = glm::translate(projection, glm::vec3(-cameraX, -cameraY, 0.f));
+		
 	}
-	
+	projection = glm::translate(projection, glm::vec3(-cameraX, -cameraY, 0.f));	
 }
 
 void Scene::render()
 {
+	glm::mat4 modelview;
+	texProgram.use();
+	texProgram.setUniformMatrix4f("projection", projection);
+	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+	modelview = glm::mat4(1.0f);
+	texProgram.setUniformMatrix4f("modelview", modelview);
+	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	if (menu) {
+		if (/*stage_one*/false) {
 
+		}
+		else if (/*stage_two*/false) {
+
+		}
+		else if (/*stage_three*/false) {
+
+		}
+		else /*menu_inicial*/ {
+			menuScreen->render();
+			button->render();
+		}
 	}
 	else {
-		glm::mat4 modelview;
-		texProgram.use();
-		texProgram.setUniformMatrix4f("projection", projection);
-		texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-		modelview = glm::mat4(1.0f);
-		texProgram.setUniformMatrix4f("modelview", modelview);
-		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 		map->render();
 		player->render();
 		enemyCtrl->render();

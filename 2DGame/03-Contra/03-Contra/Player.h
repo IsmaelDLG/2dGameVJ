@@ -22,6 +22,7 @@ public:
 	void setPosition(const glm::vec2 &pos);
 	int min(int a, int b);
 	glm::vec2 getPlayerPos() { return posPlayer; }
+	bool isEndOfLevel();
 	
 private:
 	bool bJumping;

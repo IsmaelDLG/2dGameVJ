@@ -104,3 +104,28 @@ bool CollisionMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& si
 	return false;
 }
 
+bool CollisionMap::endOfLevel(const glm::ivec2& pos, const glm::ivec2& size)
+{
+	int x0, x1, y;
+	float factorX, factorY;
+
+	x0 = pos.x;
+	x1 = (pos.x + size.x - 1);
+	y = (pos.y + size.y - 1);
+
+	factorX = ((textMap->width() * 1.0f) / (displaySize.x * 1.0f));
+	factorY = ((textMap->height() * 1.0f) / (displaySize.y * 1.0f));
+
+
+	for (int x = x0; x <= x1; x++)
+	{
+		if ((textMap->getPixel(int(x * factorX), int(y * factorY)).getAlpha() > MAX_COLLISION) &&
+			((textMap->getPixel(int(x * factorX), int(y * factorY))).getGreen() == 255))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+

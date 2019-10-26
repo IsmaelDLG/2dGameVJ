@@ -255,6 +255,10 @@ void Player::setPosition(const glm::vec2 &pos)
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
+bool Player::isEndOfLevel() {
+	return map->onEndOfLevel(posPlayer, glm::ivec2(P_SIZE, P_SIZE));
+}
+
 int Player::min(int a, int b) {
 	int ret;
 	if (a <= b) ret = a;

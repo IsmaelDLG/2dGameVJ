@@ -29,6 +29,9 @@ private:
 
 private:
 	bool menu;
+	Sprite* menuScreen;
+	Sprite* button;
+
 	Level *map;
 	Player *player;
 	EnemyManager* enemyCtrl;
