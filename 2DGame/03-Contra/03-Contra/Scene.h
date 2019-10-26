@@ -28,6 +28,7 @@ private:
 	void initShaders();
 
 private:
+	bool menu;
 	Level *map;
 	Player *player;
 	EnemyManager* enemyCtrl;
