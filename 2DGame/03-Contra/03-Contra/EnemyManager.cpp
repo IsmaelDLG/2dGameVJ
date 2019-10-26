@@ -20,41 +20,34 @@ void EnemyManager::init(Level* map, ShaderProgram& shaderProgram)
 		throw "Not an enemies file!";
 	getline(inf, line);
 	ss.str(line);
-	ss >> blockS >> diffEnemies >> nEnemies;
+	ss >> blockS >> diffEnemies;
 
 	vector<string> textPaths = vector<string> (diffEnemies);
-
+	
 	for (int i = 0; i < diffEnemies; i++) {
 		getline(inf, line);
-		ss.str(line);
-		ss >> textPaths[i];
+		textPaths[i] = line.substr(0, line.find(".png") + 4);
 	}
-	
 
-	
 	while (line.compare(0, 6, "layer") != 0) getline(inf, line);
 	
+	int i = 0, j;
 	inf.get(tile);
-	int i = 0, j = 0;
 	while (tile != '.')
 	{
+		j = 0;
 		while (tile != ';' && tile != '.')
 		{
-			//coma
-			if (tile == ',')
-				inf.get(tile);
-			//enf of coma
-
 			if (tile > '0' && tile <= '9') {
 				enemies.push_back(new Enemy());
 				enemies.back()->init(textPaths[tile - '0' - 1 ], glm::ivec2(0.f, 0.f), shaderProgram);
-				enemies.back()->setPosition(glm::vec2(blockS * i, blockS * j));
+				enemies.back()->setPosition(glm::vec2(blockS * j , blockS * 0));
 				enemies.back()->setMap(map);
 				j++;
 			}
-			else if (tile == '0')
-				j++;
+			else if (tile == '0') j++;		
 			inf.get(tile);
+
 		}
 		i++;
 		inf.get(tile);
@@ -72,6 +65,7 @@ void EnemyManager::update(int deltaTime)
 	for (it = enemies.begin(); it != enemies.end(); it++)
 	{
 		(*it)->update(deltaTime);
+		
 	}
 }
 
@@ -81,5 +75,6 @@ void EnemyManager::render()
 	for (it = enemies.begin(); it != enemies.end(); it++)
 	{
 		(*it)->render();
+		
 	}
 }

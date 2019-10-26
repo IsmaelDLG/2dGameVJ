@@ -1,2 +1,0 @@
-16 BlockSize
-2 diffEnemies

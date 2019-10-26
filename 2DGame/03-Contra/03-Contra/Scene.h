@@ -6,7 +6,6 @@
 #include "ShaderProgram.h"
 #include "Level.h"
 #include "Player.h"
-//Test
 #include "EnemyManager.h"
 
 // Scene contains all the entities of our game.
@@ -31,7 +30,7 @@ private:
 private:
 	Level *map;
 	Player *player;
-	EnemyManager *enemyMan;
+	EnemyManager* enemyCtrl;
 	ShaderProgram texProgram;
 	float currentTime;
 	int cameraVx, cameraVy;
@@ -39,7 +38,6 @@ private:
 	float offsetMaxX, offsetMaxY, offsetMinX, offsetMinY;
 	glm::vec2 playerPos;
 	glm::mat4 projection;
-	Enemy* test;
 
 };
 

@@ -15,7 +15,6 @@ Scene::Scene()
 {
 	map = NULL;
 	player = NULL;
-	enemyMan = NULL;
 }
 
 Scene::~Scene()
@@ -24,21 +23,22 @@ Scene::~Scene()
 		delete map;
 	if(player != NULL)
 		delete player;
-//	enemyMan->~enemyManager();
 }
+
 
 void Scene::init()
 {
 	initShaders();
 	map = Level::loadLevel(glm::vec2(0.f, 0.f), texProgram);
 	player = new Player();
-	player->init("images/Chars/Contra_PC_Spritesheet.png",glm::ivec2(0.f, 0.f), texProgram);
+	player->init("images/Chars/Contra_PC_Spritesheet_Full.png",glm::ivec2(0.f, 0.f), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+
 	player->setMap(map);
 
-	enemyMan = new EnemyManager();
-	enemyMan->init(map, texProgram);
-	
+	enemyCtrl = new EnemyManager();
+	enemyCtrl->init(map, texProgram);
+
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 
 	playerPos = player->getPlayerPos();
@@ -69,7 +69,8 @@ void Scene::update(int deltaTime)
 	playerPos = player->getPlayerPos();
 	currentTime += deltaTime;
 	player->update(deltaTime);
-	enemyMan->update(deltaTime);
+	enemyCtrl->update(deltaTime);
+
 
 	if (player->getPlayerPos().x < offsetMinX) {
 		glm::vec2 posRestri(offsetMinX, player->getPlayerPos().y);
@@ -105,8 +106,7 @@ void Scene::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
 	player->render();
-	enemyMan->render();
-	
+	enemyCtrl->render();
 }
 
 void Scene::initShaders()
