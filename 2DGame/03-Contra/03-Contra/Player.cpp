@@ -29,7 +29,7 @@ void Player::init(const string& path, const glm::ivec2 &tileMapPos, ShaderProgra
 	onTheAir = false;
 	spraygun = false;
 	goingRight = true;
-	spritesheet.loadFromFile("images/Contra_PC_Spritesheet_Full.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheet.loadFromFile(path, TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(P_SIZE, P_SIZE), glm::vec2(0.125, 0.0625), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(15);
 

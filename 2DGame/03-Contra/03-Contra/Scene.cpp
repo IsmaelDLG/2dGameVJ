@@ -15,6 +15,7 @@ Scene::Scene()
 {
 	map = NULL;
 	player = NULL;
+	enemyMan = NULL;
 }
 
 Scene::~Scene()
@@ -23,8 +24,8 @@ Scene::~Scene()
 		delete map;
 	if(player != NULL)
 		delete player;
+//	enemyMan->~enemyManager();
 }
-
 
 void Scene::init()
 {
@@ -35,6 +36,7 @@ void Scene::init()
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setMap(map);
 
+	enemyMan = new EnemyManager();
 	enemyMan->init(map, texProgram);
 	
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);

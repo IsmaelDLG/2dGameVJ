@@ -13,6 +13,8 @@ public:
 private:
 
 private:
+	Enemy* enemy1;
+	Enemy* enemy2;
 	list<Enemy*> enemies;
 };
 

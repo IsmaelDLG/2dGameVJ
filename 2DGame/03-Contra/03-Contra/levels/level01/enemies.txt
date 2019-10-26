@@ -1,5 +1,5 @@
 ENEMIES				--BlockSize			--Nombre d'enemics 			--Nombre d'enemics diferents
-16 2
+16 2 6
 Enemies/1.png		--Spritesheet tipus 1
 Enemies/2.png		--Spritesheet tipus 2
 layer

@@ -20,25 +20,25 @@ void EnemyManager::init(Level* map, ShaderProgram& shaderProgram)
 		throw "Not an enemies file!";
 	getline(inf, line);
 	ss.str(line);
-	ss >> blockS >> diffEnemies;
+	ss >> blockS >> diffEnemies >> nEnemies;
 
-	/*
+	vector<string> textPaths = vector<string> (diffEnemies);
+
 	for (int i = 0; i < diffEnemies; i++) {
 		getline(inf, line);
 		ss.str(line);
 		ss >> textPaths[i];
 	}
-	*/
-	vector<string> textPaths = {"images/Chars/bub.png" , "Contra_PC_Spritesheet.png" };
+	
+
 	
 	while (line.compare(0, 6, "layer") != 0) getline(inf, line);
-
+	
 	inf.get(tile);
-
 	int i = 0, j = 0;
 	while (tile != '.')
 	{
-		while (tile != ';')
+		while (tile != ';' && tile != '.')
 		{
 			//coma
 			if (tile == ',')
@@ -46,11 +46,10 @@ void EnemyManager::init(Level* map, ShaderProgram& shaderProgram)
 			//enf of coma
 
 			if (tile > '0' && tile <= '9') {
-				Enemy* myEnemy = new Enemy();
-				myEnemy->init(textPaths[1], glm::ivec2(0.f, 0.f), shaderProgram);
-				myEnemy->setPosition(glm::vec2(blockS*i, blockS*j));
-				myEnemy->setMap(map);
-				enemies.push_back(myEnemy);
+				enemies.push_back(new Enemy());
+				enemies.back()->init(textPaths[tile - '0' - 1 ], glm::ivec2(0.f, 0.f), shaderProgram);
+				enemies.back()->setPosition(glm::vec2(blockS * i, blockS * j));
+				enemies.back()->setMap(map);
 				j++;
 			}
 			else if (tile == '0')
@@ -68,6 +67,7 @@ void EnemyManager::init(Level* map, ShaderProgram& shaderProgram)
 
 void EnemyManager::update(int deltaTime)
 {
+
 	list<Enemy*>::iterator it;
 	for (it = enemies.begin(); it != enemies.end(); it++)
 	{

@@ -15,7 +15,7 @@ class Player
 
 public:
 	virtual ~Player();
-	virtual void init(const string& path, const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
+	void init(const string& path, const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
 	virtual void update(int deltaTime);
 	void render();
 	
