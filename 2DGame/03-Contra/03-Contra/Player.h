@@ -14,19 +14,16 @@ class Player
 {
 
 public:
-	virtual ~Player();
-	void init(const string& path, const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
+	void init(const string& path, const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram);
 	virtual void update(int deltaTime);
 	void render();
-	
+
 	void setMap(Level* myMap);
-	void setPosition(const glm::vec2 &pos);
-	glm::vec2 getPlayerPos() { return posPlayer; }
-private:
+	void setPosition(const glm::vec2& pos);
 	int min(int a, int b);
+	glm::vec2 getPlayerPos() { return posPlayer; }
 
 private:
-
 	bool bJumping;
 	bool onTheAir, goingRight, spraygun;
 	int jumpAngle, startY;
