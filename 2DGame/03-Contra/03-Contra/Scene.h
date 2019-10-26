@@ -7,7 +7,7 @@
 #include "Level.h"
 #include "Player.h"
 //Test
-#include "Enemy.h"
+#include "EnemyManager.h"
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
@@ -31,6 +31,7 @@ private:
 private:
 	Level *map;
 	Player *player;
+	EnemyManager *enemyMan;
 	ShaderProgram texProgram;
 	float currentTime;
 	int cameraVx, cameraVy;

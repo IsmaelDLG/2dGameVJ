@@ -85,7 +85,7 @@ int TileMap::getTileSize()
 
 	getline(fin,line);
 
- 	while (line.compare(0, 6, "layer" + layer )) getline(fin, line);
+ 	while (line.compare(0, 6, "layer" + layer ) != 0) getline(fin, line);
 
 	map = new int[(mapSize.x * mapSize.y)*3];
 

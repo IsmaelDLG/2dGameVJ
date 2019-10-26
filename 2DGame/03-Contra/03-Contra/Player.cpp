@@ -18,8 +18,12 @@ enum PlayerAnims
 	DYING, STAND_LEFT, MOVE_LEFT, JUMPING_LEFT, LAY_LEFT, LAY_LEFT_SHOOTING, MOVE_LEFT_SHOOTING, STAND_LEFT_SHOOTING,
 };
 
+Player::~Player()
+{
+	delete sprite;
+}
 
-void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
+void Player::init(const string& path, const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	bJumping = false;
 	onTheAir = false;
