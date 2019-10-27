@@ -56,7 +56,7 @@ bool CollisionMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& s
 	float factorX, factorY;
 
 	x = pos.x + size.x + 1;
-	y0 = pos.y + size.y - 1;
+	y0 = pos.y + size.y - 1 - int(size.y/10.f);
 	y1 = pos.y;
 
 	factorX = ((textMap->width() * 1.0f) / (displaySize.x * 1.0f));

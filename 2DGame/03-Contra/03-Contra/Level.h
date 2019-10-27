@@ -8,7 +8,7 @@
 
 class Level {
 public:
-	static Level* loadLevel(const glm::vec2& minCoords, ShaderProgram& program);
+	static Level* loadLevel(const string& path,const glm::vec2& minCoords, ShaderProgram& program);
 	~Level();
 
 	bool collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const;
@@ -27,7 +27,7 @@ public:
 	glm::vec2 getMapsize() const { return mapSize; }
 
 private:
-	Level(const glm::vec2& minCoords, ShaderProgram& program);
+	Level(const string& path, const glm::vec2& minCoords, ShaderProgram& program);
 
 	void loadLayers(const glm::vec2& minCoords, ShaderProgram& program);
 

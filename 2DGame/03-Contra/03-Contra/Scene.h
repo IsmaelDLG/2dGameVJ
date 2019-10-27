@@ -30,7 +30,7 @@ private:
 	void initShaders();
 
 private:
-	bool menu;
+	bool menu, begin, endStageOne, endStageTwo, endGame;
 	Sprite* menuScreen;
 	Sprite* button;
 

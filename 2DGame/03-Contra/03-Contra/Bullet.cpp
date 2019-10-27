@@ -6,7 +6,7 @@
 #include "Bullet.h"
 #include "Game.h"
 
-#define SPEED 3
+#define SPEED 4
 #define B_SIZE 16
 
 enum BulletAnims

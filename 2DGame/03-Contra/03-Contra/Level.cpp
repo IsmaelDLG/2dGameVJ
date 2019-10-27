@@ -4,10 +4,10 @@
 #include <sstream>
 #include <vector>
 
-Level* Level::loadLevel(const glm::vec2& minCoords, ShaderProgram& program) 
+Level* Level::loadLevel(const string& path, const glm::vec2& minCoords, ShaderProgram& program) 
 {
 
-	Level* map = new Level(minCoords, program);
+	Level* map = new Level(path, minCoords, program);
 
 	return map;
 }
@@ -20,9 +20,9 @@ Level::~Level()
 	background->~Sprite();
 }
 
-Level::Level(const glm::vec2& minCoords, ShaderProgram& program)
+Level::Level(const string& path, const glm::vec2& minCoords, ShaderProgram& program)
 {
-	pathToLevelFile = "levels/level01/level01.txt";
+	pathToLevelFile = path;
 	loadMapData();
 	loadLayers(minCoords, program);
 }
