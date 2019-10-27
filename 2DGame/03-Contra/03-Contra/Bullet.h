@@ -20,4 +20,3 @@ private:
 	Sprite* sprite;
 	Level* map;
 };
-
