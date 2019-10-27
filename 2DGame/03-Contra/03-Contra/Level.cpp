@@ -14,15 +14,15 @@ Level* Level::loadLevel(const glm::vec2& minCoords, ShaderProgram& program)
 
 Level::~Level()
 {
-	front->~TileMap();
+	//front->~TileMap();
 	collision->~CollisionMap();
-	back->~TileMap();
+	//back->~TileMap();
 	background->~Sprite();
 }
 
 Level::Level(const glm::vec2& minCoords, ShaderProgram& program)
 {
-	pathToLevelFile = "levels/level01/test05.txt";
+	pathToLevelFile = "levels/level01/level01.txt";
 	loadMapData();
 	loadLayers(minCoords, program);
 }
@@ -62,10 +62,10 @@ void Level::loadLayers(const glm::vec2& minCoords, ShaderProgram& program)
 	background = Sprite::createSprite(glm::vec2(mapSize.x * blockSize, mapSize.y * blockSize),
 		glm::vec2(1.0f, 1.0f), backText, &program);
 	background->setNumberAnimations(0);
-		 
+	/*
 	front = TileMap::createTileMap(pathToLevelFile, "1", minCoords, program);
 	back = TileMap::createTileMap(pathToLevelFile, "2", minCoords, program);
-
+	*/
 	collision = CollisionMap::loadCollisionMap(pathToCollisionMap, minCoords, 
 		glm::ivec2(mapSize.x * blockSize, mapSize.y * blockSize));
 }
@@ -97,14 +97,18 @@ bool Level::onEndOfLevel(const glm::ivec2& pos, const glm::ivec2& size)
 
 void Level::render() const
 {
+	/*
 	front->render();
 	back->render();
+	*/
 	background->render();
 }
 
 void Level::free()
 {
+	/*
 	background->free();
 	back->render();
+	*/
 	front->free();
 }

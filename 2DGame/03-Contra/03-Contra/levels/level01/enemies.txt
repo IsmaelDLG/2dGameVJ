@@ -1,5 +1,5 @@
-ENEMIES				--BlockSize			--Nombre d'enemics 			--Nombre d'enemics diferents
-16 3
+ENEMIES							--Nombre d'enemics 			
+16 3				--BlockSize --Nombre d'enemics diferents
 images/Chars/1.png		--Spritesheet tipus 1
 images/Chars/2.png		--Spritesheet tipus 2
 images/Chars/3.png

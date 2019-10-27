@@ -24,6 +24,8 @@ public:
 	glm::vec2 getPlayerPos() { return posPlayer; }
 	bool isEndOfLevel();
 	
+
+
 private:
 	bool bJumping;
 	bool onTheAir, goingRight, spraygun;

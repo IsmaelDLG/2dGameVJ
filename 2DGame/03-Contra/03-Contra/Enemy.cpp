@@ -1,5 +1,5 @@
 #include "Enemy.h"
-#define FALL_STEP 3
+#define FALL_STEP 4
 #define P_SIZE 48
 
 void Enemy::update(int deltaTime) {

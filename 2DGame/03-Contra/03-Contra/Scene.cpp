@@ -4,6 +4,8 @@
 #include "Scene.h"
 #include "Game.h"
 
+//debug
+#include <fstream>
 
 #define SCREEN_X 16*2
 #define SCREEN_Y 16*2
@@ -21,6 +23,9 @@ Scene::Scene()
 {
 	map = NULL;
 	player = NULL;
+	menuScreen = NULL;
+	button = NULL;
+	enemyCtrl = NULL;
 	menu = true;
 }
 
@@ -30,14 +35,16 @@ Scene::~Scene()
 		delete map;
 	if(player != NULL)
 		delete player;
-	menuScreen->free();
-	button->free();
+
 	if (menuScreen != NULL)
 		delete menuScreen;
+	/*
 	if (button != NULL)
 		delete button;
+		*/
+	/*
 	if (enemyCtrl != NULL)
-		delete enemyCtrl;
+		delete enemyCtrl;*/
 }
 
 
@@ -101,16 +108,21 @@ void Scene::init()
 
 		playerPos = player->getPlayerPos();
 		offsetMaxX = (map->getTileSize() * map->getMapsize().x) - CAMERA_WIDTH;
-		offsetMaxY = (map->getTileSize() * map->getMapsize().y) - CAMERA_HEIGHT;
+		//offsetMaxY = (map->getTileSize() * map->getMapsize().y) - CAMERA_HEIGHT;
 		offsetMinX = 0;
-		offsetMinY = 0;
+		//offsetMinY = 0;
 
 		cameraX = (playerPos.x) - (CAMERA_WIDTH / 2);
-		cameraY = (playerPos.y) - (CAMERA_HEIGHT / 2);
+		//cameraY = (playerPos.y) - (CAMERA_HEIGHT / 2);
 		if (cameraX > offsetMaxX) cameraX = offsetMaxX;
 		else if (cameraX < offsetMinX) cameraX = offsetMinX;
-		if (cameraY > offsetMaxY) cameraY = offsetMaxY;
-		else if (cameraY < offsetMinY) cameraY = offsetMinY;
+		//if (cameraY > offsetMaxY) cameraY = offsetMaxY;
+		//else if (cameraY < offsetMinY) cameraY = offsetMinY;
+		
+		
+		//La posicio en Y ha de ser fixa en el primer nivell
+		cameraY = SCREEN_HEIGHT / 4;
+
 
 
 		currentTime = 0.0f;
@@ -121,6 +133,9 @@ void Scene::init()
 
 void Scene::update(int deltaTime)
 {
+	ofstream out;
+	out.open("myDebug/peto.txt", ios::app);
+	
 	if (menu) {
 		if (/*stage_one*/false) {
 
@@ -145,6 +160,8 @@ void Scene::update(int deltaTime)
 		}
 	}
 	else {
+		out << "QUe pasa chavales,principio del update." << endl;
+		out << cameraX << " " << cameraY << endl;
 		if (player->isEndOfLevel()) {
 			this->~Scene();
 			menu = true;
@@ -154,36 +171,54 @@ void Scene::update(int deltaTime)
 			//també spawnejar un bicho que diga completed o algo
 		}
 		else {
+			
+
 			playerPos = player->getPlayerPos();
 			currentTime += deltaTime;
 			player->update(deltaTime);
 			enemyCtrl->update(deltaTime);
-
+			cameraY = 0.f;
+			
+			
 
 			if (player->getPlayerPos().x < offsetMinX) {
 				glm::vec2 posRestri(offsetMinX, player->getPlayerPos().y);
 				player->setPosition(posRestri);
 			}
+			out << "He pasado la cosa dwe restrict pos" << endl;
+			out << cameraX << " " << cameraY << endl;
+
 
 			if ((player->getPlayerPos().x - playerPos.x != 0) || (player->getPlayerPos().y - playerPos.y != 0)) {
 				playerPos = player->getPlayerPos();
 				projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 				cameraX = (playerPos.x) - (CAMERA_WIDTH / 3);
-				cameraY = (playerPos.y) - (CAMERA_HEIGHT / 2);
+				//cameraY = (playerPos.y) - (CAMERA_HEIGHT / 2);
 				if (cameraX > offsetMaxX) cameraX = offsetMaxX;
 				else if (cameraX < offsetMinX) cameraX = offsetMinX;
-				if (cameraY > offsetMaxY) cameraY = offsetMaxY;
-				else if (cameraY < offsetMinY) cameraY = offsetMinY;
+				//if (cameraY > offsetMaxY) cameraY = offsetMaxY;
+				//else if (cameraY < offsetMinY) cameraY = offsetMinY;
 				offsetMinX = cameraX;
+				out << "He entrado en el if gordo" << endl;
+				out << cameraX << " " << cameraY << endl;
+				projection = glm::translate(projection, glm::vec3(-cameraX, -SCREEN_HEIGHT/4, 0.f));
+
+
 			}
 			else {
 				cameraX = 0.f;
-				cameraY = 0.f;
+				//cameraY = 0.f;
+				out << "Me voy al else loco" << endl;
+				out << cameraX << " " << cameraY << endl;
+				projection = glm::translate(projection, glm::vec3(-cameraX, 0, 0.f));
 			}
 		}
-		
+		//camera Y fixa
+		out << "Acabo update con exito chavales" << endl;
+		out << cameraX << " " << cameraY << endl;
 	}
-	projection = glm::translate(projection, glm::vec3(-cameraX, -cameraY, 0.f));	
+	out.close();
+
 }
 
 void Scene::render()

@@ -31,6 +31,9 @@ public:
 	void addKeyframe(int animId, const glm::vec2 &frame);
 	void changeAnimation(int animId);
 	int animation() const;
+
+	glm::vec2 getRealMinPos(const glm::vec2& mySize);
+	glm::vec2 getRealSize(const glm::vec2& mySize);
 	
 	void setPosition(const glm::vec2 &pos);
 

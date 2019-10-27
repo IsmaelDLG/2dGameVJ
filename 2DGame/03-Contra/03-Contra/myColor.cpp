@@ -33,6 +33,16 @@ unsigned int myColor::getGreen()
 	return green;
 }
 
+unsigned int myColor::getBlue()
+{
+	return blue;
+}
+
+unsigned int myColor::getRed()
+{
+	return red;
+}
+
 unsigned int myColor::max(unsigned int r, unsigned int g, unsigned int b)
 {
 	unsigned int aux;

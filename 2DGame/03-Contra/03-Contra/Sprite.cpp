@@ -3,6 +3,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Sprite.h"
 
+//debug
+#include <fstream>
+#include <iostream>
+
 
 Sprite *Sprite::createSprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet,
 	Texture *spritesheet, ShaderProgram *program)
@@ -100,6 +104,63 @@ void Sprite::changeAnimation(int animId)
 int Sprite::animation() const
 {
 	return currentAnimation;
+}
+
+glm::vec2 Sprite::getRealMinPos(const glm::vec2& mySize)
+{
+	glm::vec2 margin = glm::vec2(mySize.x*0.1,mySize.y*0.05);
+	
+	glm::vec2 offPos = position;
+
+	glm::vec2 displ = animations[currentAnimation].keyframeDispl[currentKeyframe];
+
+	//busquem y minima
+	for (int y = margin.y; y < (mySize.y-margin.y); y++) {
+		for (int x = margin.x; x < (mySize.x-margin.x); x++) {
+			if (texture->getPixel(x - margin.x + displ.x, y - margin.y + displ.y).getAlpha() > 256 * 3 / 4)
+				offPos.y =  y;
+		}
+	}
+	//busquem x minim
+	for (int x = margin.x; x < (mySize.x - margin.x); x++) {
+		for (int y = margin.y; y < (mySize.y - margin.y); y++) {
+			if (texture->getPixel(x - margin.x + displ.x, y - margin.y + displ.y).getAlpha() > 256 * 3 / 4)
+				offPos.x = x;
+		}
+	}
+
+	return offPos + position;
+}
+
+glm::vec2 Sprite::getRealSize(const glm::vec2& mySize)
+{
+	glm::vec2 margin = glm::vec2(mySize.x * 0.1, mySize.y * 0.05);
+
+	glm::vec2 maxOffPos = position;
+
+	glm::vec2 displ = animations[currentAnimation].keyframeDispl[currentKeyframe];
+
+	//busquem y max
+	for (int y = mySize.y-margin.y; y > margin.y; y--) {
+		for (int x = mySize.x-margin.x; x > margin.x; x--) {
+			if (texture->getPixel(x + margin.x + displ.x, y + margin.y + displ.y).getAlpha() > 256 * 3 / 4)
+				maxOffPos.y = y;
+		}
+	}
+	//busquem x max
+	for (int x = mySize.x - margin.x; x > margin.x; x--) {
+		for (int y = mySize.y-margin.y; y > margin.y; y--) {
+			if (texture->getPixel(x + margin.x + displ.x, y + margin.y + displ.y).getAlpha() > 256 * 3 / 4)
+				maxOffPos.x = x;
+		}
+	}
+	ofstream out;
+	out.open("myDebug/col.txt", ios::app);
+	out << "My Size : " << (maxOffPos + position - getRealMinPos(mySize)).x << " " << (maxOffPos + position - getRealMinPos(mySize)).y << endl;
+	out << "My pos: " << getRealMinPos(mySize).x << " " << getRealMinPos(mySize).y << endl;
+	out.close();
+
+	return (maxOffPos + position - getRealMinPos(mySize));
 }
 
 void Sprite::setPosition(const glm::vec2 &pos)

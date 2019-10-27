@@ -92,10 +92,11 @@ bool CollisionMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& si
 
 	for (int x = x0; x <= x1; x++)
 	{
-		if ((textMap->getPixel(int(x * factorX), int(y * factorY)).getAlpha() > MAX_COLLISION) &&
-			((textMap->getPixel(int(x * factorX), int(y * factorY))).getBlack() == 0 /*el black retorna 0*/))
+		if ((textMap->getPixel(int(x * factorX), int(y * factorY)).getAlpha() > MAX_COLLISION) && (
+			((textMap->getPixel(int(x * factorX), int(y * factorY))).getBlack() == 0 /*el black retorna 0 si es 100%*/) ||
+			((textMap->getPixel(int(x * factorX), int(y * factorY))).getBlue() == 255 )))
 		{
-			*posY = y - size.y-2;
+			*posY = y - size.y - 3;
 
 			return true;
 		}
