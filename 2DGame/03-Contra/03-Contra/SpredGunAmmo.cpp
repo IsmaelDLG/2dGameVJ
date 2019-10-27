@@ -35,8 +35,10 @@ void SpredGunAmmo::update(int deltaTime)
 	sprite->update(deltaTime);
 	posAmmo.y += FALL_STEP;
 	glm::vec2 playerPos = player->getPlayerPos();
-	if (((posAmmo.x <= playerPos.x + 48) && (posAmmo.x > playerPos.x)) ||
-		(posAmmo.x + A_SIZE >= playerPos.x && posAmmo.x < playerPos.x)) {
+	if ( (((posAmmo.x <= playerPos.x + 48) && (posAmmo.x > playerPos.x)) ||
+		(posAmmo.x + A_SIZE >= playerPos.x && posAmmo.x < playerPos.x)) &&
+		(((posAmmo.y <= playerPos.y + 48) && (posAmmo.y > playerPos.y)) ||
+		((posAmmo.y + A_SIZE >= playerPos.y) && (posAmmo.y < playerPos.y))) ) {
 		pickedUp = true;
 		player->activateSG();
 	}
