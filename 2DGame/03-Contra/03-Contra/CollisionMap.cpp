@@ -7,7 +7,7 @@ using namespace std;
 #define MAX_COLLISION 64*3
 
 
-CollisionMap* CollisionMap::loadCollisionMap(const string& path, const glm::vec2& minCoords, const glm::ivec2& mapSize)
+CollisionMap* CollisionMap::loadCollisionMap(const string& path, const glm::ivec2& mapSize)
 {
 	CollisionMap* map = new CollisionMap(path, mapSize);
 	return map;
@@ -16,6 +16,7 @@ CollisionMap* CollisionMap::loadCollisionMap(const string& path, const glm::vec2
 CollisionMap::CollisionMap(const string& path, const glm::ivec2& mapSize) {
 	textMap = new Texture();
 	textMap->loadFromFile(path, TEXTURE_PIXEL_FORMAT_RGBA);
+	//esto està hardcoded?
 	displaySize = mapSize;
 }
 
@@ -32,7 +33,7 @@ bool CollisionMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& si
 	float factorX, factorY;
 
 	x = pos.x;
-	y0 = pos.y + size.y - 1 - int(size.y/10.0f);
+	y0 = pos.y + size.y - 1 - int(size.y/5.0f);
 	y1 = pos.y;
 
 	factorX = ((textMap->width() * 1.0f) / (displaySize.x * 1.0f));
@@ -55,7 +56,7 @@ bool CollisionMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& s
 	float factorX, factorY;
 
 	x = pos.x + size.x+1;
-	y0 = pos.y + size.y - 1 - int(size.y / 10.0f);
+	y0 = pos.y + size.y - 1 - int(size.y / 5.0f);
 	y1 = pos.y;
 
 	factorX = ((textMap->width() * 1.0f) / (displaySize.x * 1.0f));
@@ -82,8 +83,8 @@ bool CollisionMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& si
 	int x0, x1, y;
 	float factorX, factorY;
 	
-	x0 = pos.x;
-	x1 = (pos.x + size.x - 1);
+	x0 = pos.x + int(size.x * 0.1f);
+	x1 = (pos.x + size.x - 1 - int(size.x*0.1f));
 	y = (pos.y + size.y - 1);
 
 	factorX = ((textMap->width()*1.0f) / (displaySize.x*1.0f));
@@ -97,11 +98,9 @@ bool CollisionMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& si
 			((textMap->getPixel(int(x * factorX), int(y * factorY))).getBlue() == 255 )))
 		{
 			*posY = y - size.y - 3;
-
 			return true;
 		}
 	}
-
 	return false;
 }
 

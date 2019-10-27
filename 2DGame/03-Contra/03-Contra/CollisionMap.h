@@ -8,7 +8,7 @@
 class CollisionMap
 {
 public:
-	static CollisionMap* loadCollisionMap(const string& path, const glm::vec2& minCoords, const glm::ivec2& mapSize);
+	static CollisionMap* loadCollisionMap(const string& path, const glm::ivec2& mapSize);
 	~CollisionMap();
 	
 	bool collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const;

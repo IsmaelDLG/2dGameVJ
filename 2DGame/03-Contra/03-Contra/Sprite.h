@@ -32,8 +32,8 @@ public:
 	void changeAnimation(int animId);
 	int animation() const;
 
-	glm::vec2 getRealMinPos(const glm::vec2& mySize);
-	glm::vec2 getRealSize(const glm::vec2& mySize);
+	glm::vec2 getRealMinPos(const glm::vec2& mySize, const glm::vec2& step);
+	glm::vec2 getRealSize(const glm::vec2& mySize, const glm::vec2& step);
 	
 	void setPosition(const glm::vec2 &pos);
 

@@ -122,8 +122,8 @@ void Player::update(int deltaTime)
 			}
 		}
 		posPlayer.x -= 2;
-		if(map->collisionMoveLeft(sprite->getRealMinPos(glm::vec2(P_SIZE,P_SIZE)), 
-			sprite->getRealSize(glm::vec2(P_SIZE, P_SIZE)),&posPlayer.y)) {
+		if(map->collisionMoveLeft(sprite->getRealMinPos(glm::vec2(P_SIZE,P_SIZE),glm::vec2(-2,0)), 
+			sprite->getRealSize(glm::vec2(P_SIZE, P_SIZE), glm::vec2(-2, 0)),&posPlayer.y)) {
 			posPlayer.x += 2;
 			sprite->changeAnimation(STAND_LEFT);
 		}
@@ -142,8 +142,8 @@ void Player::update(int deltaTime)
 			}
 		}
 		posPlayer.x += 2;
-		if(map->collisionMoveRight(sprite->getRealMinPos(glm::vec2(P_SIZE, P_SIZE)),
-			sprite->getRealSize(glm::vec2(P_SIZE, P_SIZE)), &posPlayer.y))
+		if(map->collisionMoveRight(sprite->getRealMinPos(glm::vec2(P_SIZE, P_SIZE), glm::vec2(2, 0)),
+			sprite->getRealSize(glm::vec2(P_SIZE, P_SIZE), glm::vec2(-2, 0)), &posPlayer.y))
 		{
 			posPlayer.x -= 2 ;
 			sprite->changeAnimation(STAND_RIGHT);
@@ -206,16 +206,16 @@ void Player::update(int deltaTime)
 		}
 		else {
 			posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
-			if(jumpAngle > 90)
-				bJumping = !map->collisionMoveDown(sprite->getRealMinPos(glm::vec2(P_SIZE, P_SIZE)),
-					sprite->getRealSize(glm::vec2(P_SIZE, P_SIZE)), &posPlayer.y);
+			if (jumpAngle > 90)
+				bJumping = !map->collisionMoveDown(sprite->getRealMinPos(glm::vec2(P_SIZE, P_SIZE), glm::vec2(0, FALL_STEP)),
+					sprite->getRealSize(glm::vec2(P_SIZE, P_SIZE), glm::vec2(-2, 0)), &posPlayer.y);
 		}
 	}
 	else
 	{
 		posPlayer.y += FALL_STEP;
-		if(map->collisionMoveDown(sprite->getRealMinPos(glm::vec2(P_SIZE, P_SIZE)),
-			sprite->getRealSize(glm::vec2(P_SIZE, P_SIZE)), &posPlayer.y))
+		if(map->collisionMoveDown(sprite->getRealMinPos(glm::vec2(P_SIZE, P_SIZE),glm::vec2(0,FALL_STEP)),
+			sprite->getRealSize(glm::vec2(P_SIZE, P_SIZE), glm::vec2(0, FALL_STEP)), &posPlayer.y))
 		{
 			onTheAir = false;
 			if (goingRight) {

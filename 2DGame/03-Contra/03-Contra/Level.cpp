@@ -62,11 +62,12 @@ void Level::loadLayers(const glm::vec2& minCoords, ShaderProgram& program)
 	background = Sprite::createSprite(glm::vec2(mapSize.x * blockSize, mapSize.y * blockSize),
 		glm::vec2(1.0f, 1.0f), backText, &program);
 	background->setNumberAnimations(0);
+	background->setPosition(minCoords);
 	/*
 	front = TileMap::createTileMap(pathToLevelFile, "1", minCoords, program);
 	back = TileMap::createTileMap(pathToLevelFile, "2", minCoords, program);
 	*/
-	collision = CollisionMap::loadCollisionMap(pathToCollisionMap, minCoords, 
+	collision = CollisionMap::loadCollisionMap(pathToCollisionMap, 
 		glm::ivec2(mapSize.x * blockSize, mapSize.y * blockSize));
 }
 
