@@ -14,8 +14,8 @@ class Player
 {
 
 public:
-	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
-	void update(int deltaTime);
+	void init(const string& path, const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
+	virtual void update(int deltaTime);
 	void render();
 	
 	void setMap(Level* myMap);
@@ -29,19 +29,23 @@ public:
 	bool getisFiring() { return isFiring; }
 	bool isDead() { return dead; }
 	bool spreadGunOn() { return spreadGun; }
+  bool isEndOfLevel();
 	glm::vec2 getPlayerPos() { return posPlayer; }
 	glm::vec2 getFirePoint() { return firePoint; }
 	glm::vec2 getdirection() { return direction; }
 	
+
+
 private:
 	bool bJumping, dead, isFiring, onTheAir, goingRight, spreadGun;
 	glm::ivec2 tileMapDispl, posPlayer, firePoint, direction;
 	int jumpAngle, startY, jumpColide;
 	int health, life;
 	Texture spritesheet;
-	Sprite *sprite;
-	Level *map;
-
+protected:
+	Sprite* sprite;
+	glm::ivec2 posPlayer, tileMapDispl;
+	Level* map;
 };
 
 

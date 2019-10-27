@@ -1,0 +1,8 @@
+ENEMIES							--Nombre d'enemics 			
+16 3				--BlockSize --Nombre d'enemics diferents
+images/Chars/1.png		--Spritesheet tipus 1
+images/Chars/2.png		--Spritesheet tipus 2
+images/Chars/3.png
+layer
+000000000000000000000001020302010203020102030201;
+000000000000000000000000.

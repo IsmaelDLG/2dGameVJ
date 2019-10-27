@@ -8,7 +8,7 @@
 #include "Player.h"
 #include "Bullet.h"
 #include "SpredGunAmmo.h"
-
+#include "EnemyManager.h"
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
@@ -30,10 +30,15 @@ private:
 	void initShaders();
 
 private:
+	bool menu;
+	Sprite* menuScreen;
+	Sprite* button;
+
 	Level *map;
 	Player *player;
 	Bullet* bullet;
 	SpredGunAmmo* ammo;
+	EnemyManager* enemyCtrl;
 	ShaderProgram texProgram;
 	float currentTime;
 	int cameraVx, cameraVy;
@@ -48,4 +53,3 @@ private:
 
 
 #endif // _SCENE_INCLUDE
-

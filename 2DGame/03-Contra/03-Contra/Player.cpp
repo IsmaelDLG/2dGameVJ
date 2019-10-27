@@ -8,7 +8,7 @@
 
 #define JUMP_ANGLE_STEP 4 
 #define JUMP_HEIGHT 72
-#define FALL_STEP 3
+#define FALL_STEP 4
 #define P_SIZE 48
 
 
@@ -21,7 +21,7 @@ enum PlayerAnims
 };
 
 
-void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
+void Player::init(const string& path, const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	bJumping = false;
 	onTheAir = false;
@@ -32,7 +32,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	direction = glm::vec2(1,0);
 	health = 1;
 	firePoint = glm::vec2(posPlayer.x + 51.f, posPlayer.y + 36.f);
-	spritesheet.loadFromFile("images/Contra_PC_Spritesheet_Full.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheet.loadFromFile(path, TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(P_SIZE, P_SIZE), glm::vec2(0.125, 0.0625), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(23);
 
@@ -198,7 +198,8 @@ void Player::update(int deltaTime)
 				}
 			}
 			posPlayer.x -= 2;
-			if (map->collisionMoveLeft(posPlayer, glm::ivec2(P_SIZE, P_SIZE), &posPlayer.y)) {
+			if(map->collisionMoveLeft(sprite->getRealMinPos(glm::vec2(P_SIZE,P_SIZE),glm::vec2(-2,0)), 
+			sprite->getRealSize(glm::vec2(P_SIZE, P_SIZE), glm::vec2(-2, 0)),&posPlayer.y)) {
 				posPlayer.x += 2;
 				sprite->changeAnimation(STAND_LEFT);
 			}
@@ -244,10 +245,11 @@ void Player::update(int deltaTime)
 						if (sprite->animation() != MOVE_RIGHT)
 							sprite->changeAnimation(MOVE_RIGHT);
 					}
-				}
+				}		
 			}
 			posPlayer.x += 2;
-			if (map->collisionMoveRight(posPlayer, glm::ivec2(P_SIZE, P_SIZE), &posPlayer.y))
+			if(map->collisionMoveRight(sprite->getRealMinPos(glm::vec2(P_SIZE, P_SIZE), glm::vec2(2, 0)),
+			sprite->getRealSize(glm::vec2(P_SIZE, P_SIZE), glm::vec2(2, 0)), &posPlayer.y))
 			{
 				posPlayer.x -= 2;
 				sprite->changeAnimation(STAND_RIGHT);
@@ -359,7 +361,6 @@ void Player::update(int deltaTime)
 				}
 			}
 		}
-
 		if (bJumping)
 		{
 			isFiring = false;
@@ -380,13 +381,15 @@ void Player::update(int deltaTime)
 			else {
 				posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
 				if (jumpAngle > 90)
-					bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(P_SIZE, P_SIZE), &posPlayer.y);
+					bJumping = !map->collisionMoveDown(sprite->getRealMinPos(glm::vec2(P_SIZE, P_SIZE), glm::vec2(0, FALL_STEP)),
+					sprite->getRealSize(glm::vec2(P_SIZE, P_SIZE), glm::vec2(0, FALL_STEP)), &posPlayer.y);
 			}
 		}
 		else
 		{
 			posPlayer.y += FALL_STEP;
-			if (map->collisionMoveDown(posPlayer, glm::ivec2(P_SIZE, P_SIZE), &posPlayer.y))
+			if(map->collisionMoveDown(sprite->getRealMinPos(glm::vec2(P_SIZE, P_SIZE),glm::vec2(0,FALL_STEP)),
+			sprite->getRealSize(glm::vec2(P_SIZE, P_SIZE), glm::vec2(0, FALL_STEP)), &posPlayer.y))
 			{
 				onTheAir = false;
 				if (goingRight) {
@@ -432,6 +435,10 @@ void Player::setPosition(const glm::vec2 &pos)
 {
 	posPlayer = pos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+}
+
+bool Player::isEndOfLevel() {
+	return map->onEndOfLevel(posPlayer, glm::ivec2(P_SIZE, P_SIZE));
 }
 
 int Player::min(int a, int b) {

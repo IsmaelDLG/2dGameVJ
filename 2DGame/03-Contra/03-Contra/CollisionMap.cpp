@@ -7,7 +7,7 @@ using namespace std;
 #define MAX_COLLISION 64*3
 
 
-CollisionMap* CollisionMap::loadCollisionMap(const string& path, const glm::vec2& minCoords, const glm::ivec2& mapSize)
+CollisionMap* CollisionMap::loadCollisionMap(const string& path, const glm::ivec2& mapSize)
 {
 	CollisionMap* map = new CollisionMap(path, mapSize);
 	return map;
@@ -16,6 +16,7 @@ CollisionMap* CollisionMap::loadCollisionMap(const string& path, const glm::vec2
 CollisionMap::CollisionMap(const string& path, const glm::ivec2& mapSize) {
 	textMap = new Texture();
 	textMap->loadFromFile(path, TEXTURE_PIXEL_FORMAT_RGBA);
+	//esto està hardcoded?
 	displaySize = mapSize;
 }
 
@@ -60,6 +61,8 @@ bool CollisionMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& s
 
 	factorX = ((textMap->width() * 1.0f) / (displaySize.x * 1.0f));
 	factorY = ((textMap->height() * 1.0f) / (displaySize.y * 1.0f));
+
+	collisionMoveDown(pos, size, posY);
 	
 	for (int y = y0; y >= y1; y--)
 	{
@@ -82,7 +85,7 @@ bool CollisionMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& si
 	int x0, x1, y;
 	float factorX, factorY;
 	
-	x0 = pos.x;
+	x0 = pos.x + int(size.x * 0.1f);
 	x1 = (pos.x + size.x - 1);
 	y = (pos.y + size.y - 1);
 
@@ -92,11 +95,35 @@ bool CollisionMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& si
 
 	for (int x = x0; x <= x1; x++)
 	{
-		if ((textMap->getPixel(int(x * factorX), int(y * factorY)).getAlpha() > MAX_COLLISION) &&
-			((textMap->getPixel(int(x * factorX), int(y * factorY))).getBlack() == 0 /*el black retorna 0*/))
+		if ((textMap->getPixel(int(x * factorX), int(y * factorY)).getAlpha() > MAX_COLLISION) && (
+			((textMap->getPixel(int(x * factorX), int(y * factorY))).getBlack() == 0 /*el black retorna 0 si es 100%*/) ||
+			((textMap->getPixel(int(x * factorX), int(y * factorY))).getBlue() >= MAX_COLLISION )))
 		{
-			*posY = y - size.y-2;
+			*posY = y - size.y-3;
+			return true;
+		}
+	}
+	return false;
+}
 
+bool CollisionMap::endOfLevel(const glm::ivec2& pos, const glm::ivec2& size)
+{
+	int x0, x1, y;
+	float factorX, factorY;
+
+	x0 = pos.x;
+	x1 = (pos.x + size.x - 1);
+	y = (pos.y + size.y - 1);
+
+	factorX = ((textMap->width() * 1.0f) / (displaySize.x * 1.0f));
+	factorY = ((textMap->height() * 1.0f) / (displaySize.y * 1.0f));
+
+
+	for (int x = x0; x <= x1; x++)
+	{
+		if ((textMap->getPixel(int(x * factorX), int(y * factorY)).getAlpha() > MAX_COLLISION) &&
+			((textMap->getPixel(int(x * factorX), int(y * factorY))).getGreen() == 255))
+		{
 			return true;
 		}
 	}

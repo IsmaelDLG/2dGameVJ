@@ -3,6 +3,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Sprite.h"
 
+//debug
+#include <fstream>
+#include <iostream>
+
 
 Sprite *Sprite::createSprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet,
 	Texture *spritesheet, ShaderProgram *program)
@@ -100,6 +104,72 @@ void Sprite::changeAnimation(int animId)
 int Sprite::animation() const
 {
 	return currentAnimation;
+}
+
+glm::vec2 Sprite::getRealMinPos(const glm::vec2& mySize, const glm::vec2& step)
+{
+	glm::vec2 margin = glm::vec2(mySize.x*0.1f,mySize.y*0.05f);
+	
+	glm::vec2 offPos = position + step;
+
+	glm::vec2 displ = animations[currentAnimation].keyframeDispl[currentKeyframe];
+
+	//busquem y minima
+	bool found = false;
+	for (int y = margin.y;!found && y <= (mySize.y-margin.y); y++) {
+		for (int x = margin.x; !found && x <= (mySize.x-margin.x); x++) {
+			if (texture->getPixel(x - margin.x + displ.x, y - margin.y + displ.y).getAlpha() > 256 * 3 / 4) {
+				found = true;
+				offPos.y +=  y;
+			}
+				
+		}
+	}
+	//busquem x minim
+	found = false;
+	for (int x = margin.x; !found && x <= (mySize.x - margin.x); x++) {
+		for (int y = margin.y; !found && y <= (mySize.y - margin.y); y++) {
+			if (texture->getPixel(x - margin.x + displ.x, y - margin.y + displ.y).getAlpha() > 256 * 3 / 4) {
+				offPos.x += x;
+				found = true;
+			}
+		}
+	}
+
+	return offPos;
+}
+
+glm::vec2 Sprite::getRealSize(const glm::vec2& mySize, const glm::vec2& step)
+{
+	glm::vec2 margin = glm::vec2(mySize.x * 0.1f, mySize.y * 0.05f);
+
+	glm::vec2 maxPos = position + mySize + step;
+
+	glm::vec2 displ = animations[currentAnimation].keyframeDispl[currentKeyframe];
+
+	//busquem y max
+	bool found = false;
+	for (int y = mySize.y-margin.y; !found && y >= margin.y; y--) {
+		for (int x = mySize.x-margin.x; !found && x >= margin.x; x--) {
+			if (texture->getPixel(x + margin.x + displ.x, y + margin.y + displ.y).getAlpha() > 256 * 3 / 4) {
+				found = true;
+				maxPos.y -= (mySize.y - y);
+
+			}
+		}
+	}
+	//busquem x max
+	found = false;
+	for (int x = mySize.x - margin.x; !found && x >= margin.x; x--) {
+		for (int y = mySize.y-margin.y; !found && y >= margin.y; y--) {
+			if (texture->getPixel(x + margin.x + displ.x, y + margin.y + displ.y).getAlpha() > 256 * 3 / 4) {
+				found = true;
+				maxPos.x -= (mySize.x - x);
+			}
+		}
+	}
+	
+	return (maxPos - getRealMinPos(mySize, step));
 }
 
 void Sprite::setPosition(const glm::vec2 &pos)

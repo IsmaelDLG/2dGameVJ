@@ -1,0 +1,5 @@
+LEVEL
+346 32							--Size of tile map in tiles
+16 16							--Tile size & block size
+images/Backgrounds/level01.png				--Background Image
+images/CollisionMaps/level01.png				--Collision Map
