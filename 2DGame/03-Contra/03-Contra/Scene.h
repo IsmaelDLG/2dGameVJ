@@ -7,6 +7,7 @@
 #include "Level.h"
 #include "Player.h"
 #include "Bullet.h"
+#include "SpredGunAmmo.h"
 
 
 // Scene contains all the entities of our game.
@@ -32,6 +33,7 @@ private:
 	Level *map;
 	Player *player;
 	Bullet* bullet;
+	SpredGunAmmo* ammo;
 	ShaderProgram texProgram;
 	float currentTime;
 	int cameraVx, cameraVy;

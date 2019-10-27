@@ -23,6 +23,7 @@ public:
 	void takeDamage(int dmg);
 	void setState(bool alive) { dead = alive; }
 	void setFiring(bool stop) { isFiring = stop; }
+	void activateSG() { spreadGun = true; }
 
 	int min(int a, int b);
 	bool getisFiring() { return isFiring; }

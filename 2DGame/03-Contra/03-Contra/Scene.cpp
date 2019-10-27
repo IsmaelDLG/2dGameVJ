@@ -37,6 +37,12 @@ void Scene::init()
 	player->setMap(map);
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 
+	ammo = new SpredGunAmmo();
+	ammo->init(glm::ivec2(0.f, 0.f), texProgram, player);
+	ammo->setPosition(glm::vec2(30 * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+
+	ammo->setMap(map);
+
 	playerPos = player->getPlayerPos();
 	offsetMaxX = (map->getTileSize() * map->getMapsize().x) - CAMERA_WIDTH;
 	offsetMaxY = (map->getTileSize() * map->getMapsize().y) - CAMERA_HEIGHT;
@@ -59,6 +65,8 @@ void Scene::init()
 
 void Scene::update(int deltaTime)
 {
+	if (!ammo->isPickedUp())
+		ammo->update(deltaTime);
 	if (deaths <= 4) {
 		if (player->isDead()) {
 			player->init(glm::ivec2(0.f, 0.f), texProgram);
@@ -101,7 +109,7 @@ void Scene::update(int deltaTime)
 							bullet->init(glm::ivec2(0.f, 0.f), texProgram);
 							bullet->setPosition(glm::vec2(position.x, position.y));
 							glm::vec2 otherDirection = player->getdirection();
-							bullet->setDirection(glm::vec2(1, otherDirection.y));
+							bullet->setDirection(glm::vec2(1, 0));
 							bullet->setMap(map);
 							bullets.push_back(bullet);
 							player->setFiring(false);
@@ -170,6 +178,8 @@ void Scene::render()
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
+	if (!ammo->isPickedUp())
+		ammo->render();
 	if (deaths <=4)
 		player->render();
 	if (!bullets.empty()) {
