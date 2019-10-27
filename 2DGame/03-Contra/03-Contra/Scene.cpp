@@ -157,7 +157,9 @@ void Scene::update(int deltaTime)
 			}
 			if (!bullets.empty()) {
 				for (int i = 0; i < bullets.size(); i++) {
-					bullets[i]->update(deltaTime);
+					glm::vec2 posB = bullets[i]->getBulletpos();
+					if(posB.x <= offsetMaxX && posB.x >= offsetMinX)
+						bullets[i]->update(deltaTime);
 				}
 			}
 		}
@@ -184,7 +186,9 @@ void Scene::render()
 		player->render();
 	if (!bullets.empty()) {
 		for (int i = 0; i < bullets.size(); i++) {
-			bullets[i]->render();
+			glm::vec2 posB = bullets[i]->getBulletpos();
+			if (posB.x <= offsetMaxX && posB.x >= offsetMinX)
+				bullets[i]->render();
 		}
 	}
 }

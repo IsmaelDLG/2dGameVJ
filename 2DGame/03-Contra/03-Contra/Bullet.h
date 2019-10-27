@@ -14,6 +14,8 @@ public:
 	void setPosition(const glm::vec2& pos);
 	void setDirection(const glm::vec2& dir) { direction = dir; }
 
+	glm::vec2 getBulletpos() { return posBullet; }
+
 private:
 	glm::ivec2 posBullet, direction, tileMapDispl;
 	Texture spritesheet;
