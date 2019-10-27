@@ -20,16 +20,27 @@ public:
 	
 	void setMap(Level* myMap);
 	void setPosition(const glm::vec2 &pos);
+	void takeDamage(int dmg);
+	void setState(bool alive) { dead = alive; }
+	void setFiring(bool stop) { isFiring = stop; }
+	void activateSG() { spreadGun = true; }
+
 	int min(int a, int b);
+	bool getisFiring() { return isFiring; }
+	bool isDead() { return dead; }
+	bool spreadGunOn() { return spreadGun; }
+  bool isEndOfLevel();
 	glm::vec2 getPlayerPos() { return posPlayer; }
-	bool isEndOfLevel();
+	glm::vec2 getFirePoint() { return firePoint; }
+	glm::vec2 getdirection() { return direction; }
 	
 
 
 private:
-	bool bJumping;
-	bool onTheAir, goingRight, spraygun;
-	int jumpAngle, startY;
+	bool bJumping, dead, isFiring, onTheAir, goingRight, spreadGun;
+	glm::ivec2 tileMapDispl, posPlayer, firePoint, direction;
+	int jumpAngle, startY, jumpColide;
+	int health, life;
 	Texture spritesheet;
 protected:
 	Sprite* sprite;

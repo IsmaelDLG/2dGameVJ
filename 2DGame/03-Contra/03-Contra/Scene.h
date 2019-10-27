@@ -6,6 +6,8 @@
 #include "ShaderProgram.h"
 #include "Level.h"
 #include "Player.h"
+#include "Bullet.h"
+#include "SpredGunAmmo.h"
 #include "EnemyManager.h"
 
 // Scene contains all the entities of our game.
@@ -34,12 +36,16 @@ private:
 
 	Level *map;
 	Player *player;
+	Bullet* bullet;
+	SpredGunAmmo* ammo;
 	EnemyManager* enemyCtrl;
 	ShaderProgram texProgram;
 	float currentTime;
 	int cameraVx, cameraVy;
+	int deaths, playerReload;
 	float cameraX, cameraY;
 	float offsetMaxX, offsetMaxY, offsetMinX, offsetMinY;
+	vector <Bullet*> bullets;
 	glm::vec2 playerPos;
 	glm::mat4 projection;
 
