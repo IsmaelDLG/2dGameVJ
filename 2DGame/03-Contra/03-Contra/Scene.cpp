@@ -81,7 +81,10 @@ void Scene::init()
 			button->setNumberAnimations(1);
 			button->setPosition(glm::vec2(SCREEN_WIDTH / 4+12, SCREEN_HEIGHT * 3 / 4));
 			/*Fading animation*/
-			button->setAnimationSpeed(FADE, 3);
+			button->setAnimationSpeed(FADE, 6);
+			button->addKeyframe(FADE, glm::vec2(0.f, 0.f));
+			button->addKeyframe(FADE, glm::vec2(0.f, 0.f));
+			button->addKeyframe(FADE, glm::vec2(0.f, 0.f));
 			button->addKeyframe(FADE, glm::vec2(0.f, 0.f));
 			button->addKeyframe(FADE, glm::vec2(0.25f, 0.f));
 			button->addKeyframe(FADE, glm::vec2(0.50f, 0.f));
@@ -89,7 +92,7 @@ void Scene::init()
 			button->addKeyframe(FADE, glm::vec2(0.75f, 0.f));
 			button->addKeyframe(FADE, glm::vec2(0.50f, 0.f));
 			button->addKeyframe(FADE, glm::vec2(0.25f, 0.f));
-			button->addKeyframe(FADE, glm::vec2(0.f, 0.f));
+
 			//Començo l'animació
 			button->changeAnimation(0);
 		}
@@ -99,7 +102,7 @@ void Scene::init()
 		map = Level::loadLevel(glm::vec2(20.f, 0.f), texProgram);
 		player = new Player();
 		player->init("images/Chars/Contra_PC_Spritesheet_Full.png", glm::ivec2(0.f, 0.f), texProgram);
-		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES *24.5* map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 
 		player->setMap(map);
 
@@ -155,7 +158,6 @@ void Scene::update(int deltaTime)
 	}
 	else {
 		if (player->isEndOfLevel()) {
-			this->~Scene();
 			menu = true;
 			//tornem a menu
 			this->init();
