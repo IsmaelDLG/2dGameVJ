@@ -7,7 +7,7 @@
 #include "SpredGunAmmo.h"
 
 #define A_SIZE 16
-#define FALL_STEP 3
+#define FALL_STEP 4
 
 enum PlayerAnims
 {
