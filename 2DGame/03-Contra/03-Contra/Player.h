@@ -23,11 +23,13 @@ public:
 	void takeDamage(int dmg);
 	void setState(bool alive) { dead = alive; }
 	void setFiring(bool stop) { isFiring = stop; }
+
 	int min(int a, int b);
-	glm::vec2 getPlayerPos() { return posPlayer; }
-	bool isDead() { return dead; }
-	glm::vec2 getFirePoint() { return firePoint; }
 	bool getisFiring() { return isFiring; }
+	bool isDead() { return dead; }
+	bool spreadGunOn() { return spreadGun; }
+	glm::vec2 getPlayerPos() { return posPlayer; }
+	glm::vec2 getFirePoint() { return firePoint; }
 	glm::vec2 getdirection() { return direction; }
 	
 private:

@@ -43,6 +43,7 @@ void Scene::init()
 	offsetMinX = 0;
 	offsetMinY = 0;
 	deaths = 0;
+	playerReload = 8;
 
 	cameraX = (playerPos.x) - (CAMERA_WIDTH / 2);
 	cameraY = (playerPos.y) - (CAMERA_HEIGHT / 2);
@@ -92,14 +93,59 @@ void Scene::update(int deltaTime)
 			}
 			projection = glm::translate(projection, glm::vec3(-cameraX, -cameraY, 0.f));
 			if (player->getisFiring()) {
-				bullet = new Bullet();
-				bullet->init(glm::ivec2(0.f, 0.f), texProgram);
 				glm::vec2 position = player->getFirePoint();
-				bullet->setPosition(glm::vec2(position.x, position.y));
-				bullet->setDirection(player->getdirection());
-				bullet->setMap(map);
-				bullets.push_back(bullet);
-				player->setFiring(false);
+				if (playerReload == 0){
+					if (player->spreadGunOn()) {
+						if (player->getdirection().y != 0) {
+							bullet = new Bullet();
+							bullet->init(glm::ivec2(0.f, 0.f), texProgram);
+							bullet->setPosition(glm::vec2(position.x, position.y));
+							glm::vec2 otherDirection = player->getdirection();
+							bullet->setDirection(glm::vec2(1, otherDirection.y));
+							bullet->setMap(map);
+							bullets.push_back(bullet);
+							player->setFiring(false);
+
+							bullet = new Bullet();
+							bullet->init(glm::ivec2(0.f, 0.f), texProgram);
+							bullet->setPosition(glm::vec2(position.x, position.y));
+							bullet->setDirection(glm::vec2(0, otherDirection.y));
+							bullet->setMap(map);
+							bullets.push_back(bullet);
+							player->setFiring(false);
+						}
+						else {
+							bullet = new Bullet();
+							bullet->init(glm::ivec2(0.f, 0.f), texProgram);
+							bullet->setPosition(glm::vec2(position.x, position.y));
+							glm::vec2 otherDirection = player->getdirection();
+							bullet->setDirection(glm::vec2(otherDirection.x, otherDirection.y + 1));
+							bullet->setMap(map);
+							bullets.push_back(bullet);
+							player->setFiring(false);
+
+							bullet = new Bullet();
+							bullet->init(glm::ivec2(0.f, 0.f), texProgram);
+							bullet->setPosition(glm::vec2(position.x, position.y));
+							bullet->setDirection(glm::vec2(otherDirection.x, otherDirection.y - 1));
+							bullet->setMap(map);
+							bullets.push_back(bullet);
+							player->setFiring(false);
+						}
+					}
+					bullet = new Bullet();
+					bullet->init(glm::ivec2(0.f, 0.f), texProgram);
+					bullet->setPosition(glm::vec2(position.x, position.y));
+					bullet->setDirection(player->getdirection());
+					bullet->setMap(map);
+					bullets.push_back(bullet);
+					player->setFiring(false);
+					playerReload = 8;
+				}
+				else {
+					--playerReload;
+				}
+				
 			}
 			if (!bullets.empty()) {
 				for (int i = 0; i < bullets.size(); i++) {

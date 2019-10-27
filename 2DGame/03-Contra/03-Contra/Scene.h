@@ -35,7 +35,7 @@ private:
 	ShaderProgram texProgram;
 	float currentTime;
 	int cameraVx, cameraVy;
-	int deaths;
+	int deaths, playerReload;
 	float cameraX, cameraY;
 	float offsetMaxX, offsetMaxY, offsetMinX, offsetMinY;
 	vector <Bullet*> bullets;

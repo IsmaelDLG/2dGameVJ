@@ -25,7 +25,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	bJumping = false;
 	onTheAir = false;
-	spreadGun = false;
+	spreadGun = false;;
 	dead = false;
 	goingRight = true;
 	isFiring = false;
@@ -283,7 +283,7 @@ void Player::update(int deltaTime)
 				}
 			}
 		}
-		//else if (Game::instance().getKey(100)) { this->takeDamage(1); } //debug per veure les morts
+		else if (Game::instance().getKey(100)) { this->takeDamage(1); } //debug per veure les morts
 		else
 		{
 			if (Game::instance().getKey(120)) {
