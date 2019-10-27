@@ -38,7 +38,7 @@ public:
 
 private:
 	bool bJumping, dead, isFiring, onTheAir, goingRight, spreadGun;
-	glm::ivec2 tileMapDispl, posPlayer, firePoint, direction;
+	glm::ivec2 firePoint, direction;
 	int jumpAngle, startY, jumpColide;
 	int health, life;
 	Texture spritesheet;
