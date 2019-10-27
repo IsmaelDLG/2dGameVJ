@@ -90,11 +90,6 @@ bool CollisionMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& si
 	factorX = ((textMap->width()*1.0f) / (displaySize.x*1.0f));
 	factorY = ((textMap->height()*1.0f) / (displaySize.y*1.0f));
 
-	ofstream out;
-	out.open("myDebug/col.txt", ios::app);
-	out << x0 << endl << x1 << endl << y << endl << endl;
-	out.close();
-
 	for (int x = x0; x <= x1; x++)
 	{
 		if ((textMap->getPixel(int(x * factorX), int(y * factorY)).getAlpha() > MAX_COLLISION) && (
