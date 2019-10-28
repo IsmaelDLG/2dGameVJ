@@ -2,6 +2,18 @@
 #define FALL_STEP 4
 #define P_SIZE 48
 
+void Enemy::init_stats() {
+	death = false;
+	life = 5;
+}
+
+void Enemy::reduceDamage(int dmg) {
+	life -= dmg;
+	if (life <= 0) {
+		death = true;
+	}
+}
+
 void Enemy::update(int deltaTime) {
 	posPlayer.y += FALL_STEP;
 	map->collisionMoveDown(sprite->getRealMinPos(glm::vec2(P_SIZE, P_SIZE), glm::vec2(0, FALL_STEP)),

@@ -10,6 +10,10 @@
 #define JUMP_HEIGHT 72
 #define FALL_STEP 4
 #define P_SIZE 48
+#define HIT_BOX_X 23
+#define HIT_BOX_Y 9
+#define HIT_BOX_H 38
+#define HIT_BOX_W 15
 
 
 enum PlayerAnims
@@ -462,12 +466,21 @@ int Player::min(int a, int b) {
 	return ret;
 }
 
+bool Player::thereIsColision(glm::vec2 obj,glm::vec2 size) {
+	glm::vec2 realPosPlayer = glm::vec2(posPlayer.x + HIT_BOX_X, posPlayer.y + HIT_BOX_Y);
+	if ((((obj.x <= realPosPlayer.x + HIT_BOX_W) && (obj.x > realPosPlayer.x)) ||
+		(obj.x + size.x >= realPosPlayer.x && obj.x < realPosPlayer.x)) &&
+		(((obj.y <= realPosPlayer.y + HIT_BOX_H) && (obj.y > realPosPlayer.y)) ||
+		((obj.y + size.y >= realPosPlayer.y) && (obj.y < realPosPlayer.y)))) return true;
+	else return false;
+}
+
 void Player::takeDamage(int dmg) {
 	health -= dmg;
 	if (health <= 0) {
 		dead = true;
 		health = 1;
-		sprite->changeAnimation(JUMPING_RIGHT);
+		sprite->changeAnimation(DYING);
 	}
 }
 
