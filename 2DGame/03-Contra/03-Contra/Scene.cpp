@@ -509,7 +509,6 @@ void Scene::render()
 	}
 	else {
 		map->render();
-		enemyCtrl->render();
 		if (!ammo->isPickedUp()) ammo->render();
 		if (deaths <=4) player->render();
 		if (!bullets.empty()) {
@@ -522,6 +521,7 @@ void Scene::render()
 				}
 			}
 		}
+		enemyCtrl->render();
 	}
 }
 

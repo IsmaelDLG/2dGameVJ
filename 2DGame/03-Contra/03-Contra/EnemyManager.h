@@ -1,6 +1,7 @@
 #ifndef _ENEMY_MANAGER_
 #define _ENEMY_MANAGER
 #include "Enemy.h"
+#include "Kimkoh.h"
 #include "ShaderProgram.h"
 #include <list>
 #include "Bullet.h"
@@ -15,10 +16,10 @@ public:
 	//void giveBullets(vector<Bullet*> bulls) { bulletes = bulls; }
 
 private:
-	Enemy* enemy1;
-	Enemy* enemy2;
+
 	list<Enemy*> enemies;
 	list<Bullet*> enemyBullets;
+	Kimkoh* boss;
 };
 
 #endif

@@ -44,11 +44,18 @@ void EnemyManager::init(const string& path,Level* map, ShaderProgram& shaderProg
 		while (tile != ';' && tile != '.')
 		{
 			if (tile > '0' && tile <= '9') {
-				enemies.push_back(new Enemy());
-				enemies.back()->init(textPaths[tile - '0' - 1 ], glm::ivec2(0.f, 0.f), shaderProgram);
-				enemies.back()->setPosition(glm::vec2(blockS * j , blockS * 0));
-				enemies.back()->init_stats();
-				enemies.back()->setMap(map);
+				if (textPaths[tile - '0' - 1].substr(textPaths[tile - '0' - 1].length() - 10)=="Kimkoh.png") {
+					boss = new Kimkoh();
+					boss->setMap(map);
+					boss->init("images/Chars/Kimkoh.png", glm::ivec2(140, 100), shaderProgram);
+				}
+				else {
+					enemies.push_back(new Enemy());
+					enemies.back()->init(textPaths[tile - '0' - 1], glm::ivec2(0.f, 0.f), shaderProgram);
+					enemies.back()->setPosition(glm::vec2(blockS * j, blockS * 0));
+					enemies.back()->init_stats();
+					enemies.back()->setMap(map);
+				}
 				j++;
 			}
 			else if (tile == '0') j++;		
@@ -66,7 +73,7 @@ void EnemyManager::init(const string& path,Level* map, ShaderProgram& shaderProg
 
 void EnemyManager::update(int deltaTime, list<Bullet*>& bulletes, Player* pc, ShaderProgram texProgram, Level* map)
 {
-
+	
 	list<Enemy*>::iterator it;
 	for (it = enemies.begin(); it != enemies.end(); it++)
 	{
@@ -118,6 +125,9 @@ void EnemyManager::update(int deltaTime, list<Bullet*>& bulletes, Player* pc, Sh
 			}
 		}
 	}
+	if (boss != NULL)
+		boss->update(deltaTime);
+	
 }
 
 void EnemyManager::render()
@@ -139,4 +149,6 @@ void EnemyManager::render()
 			}
 		}
 	}
+	if (boss != NULL)
+		boss->render();
 }
