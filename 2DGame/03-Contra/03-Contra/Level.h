@@ -16,6 +16,8 @@ public:
 	bool collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const;
 	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const;
 
+	bool damages(const glm::ivec2& pos, const glm::ivec2& size) const;
+
 	bool onEndOfLevel(const glm::ivec2& pos, const glm::ivec2& size);
 
 	void loadMapData();

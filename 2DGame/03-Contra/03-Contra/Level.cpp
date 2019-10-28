@@ -91,6 +91,11 @@ bool Level::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* 
 	return collision->collisionMoveUp(pos,size,posY);
 }
 
+bool Level::damages(const glm::ivec2& pos, const glm::ivec2& size) const
+{
+	return collision->damageCollision(pos, size) ;
+}
+
 bool Level::onEndOfLevel(const glm::ivec2& pos, const glm::ivec2& size)
 {
 	return collision->endOfLevel(pos, size);

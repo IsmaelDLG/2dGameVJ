@@ -16,6 +16,8 @@ public:
 	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const;
 	bool collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const;
 
+	bool damageCollision(const glm::ivec2& pos, const glm::ivec2& size) const;
+
 	bool endOfLevel(const glm::ivec2& pos, const glm::ivec2& size);
 private:
 	CollisionMap(const string& path, const glm::ivec2& mapSize);

@@ -3,7 +3,7 @@
 #include <sstream>
 
 
-void EnemyManager::init(Level* map, ShaderProgram& shaderProgram)
+void EnemyManager::init(const string& path,Level* map, ShaderProgram& shaderProgram)
 {
 	ifstream inf;
 	stringstream ss;
@@ -12,9 +12,9 @@ void EnemyManager::init(Level* map, ShaderProgram& shaderProgram)
 	int diffEnemies, blockS;
 	int nEnemies;
 
-	inf.open("levels/level01/enemies.txt");
+	inf.open(path);
 	if (!inf.is_open())
-		throw "Couldn't open file!";
+		throw "Couldn't open file, idiot!";
 	getline(inf, line);
 	if (line.compare(0, 7, "ENEMIES") != 0)
 		throw "Not an enemies file!";

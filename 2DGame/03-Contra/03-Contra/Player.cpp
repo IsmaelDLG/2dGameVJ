@@ -152,6 +152,10 @@ void Player::init(const string& path, const glm::ivec2 &tileMapPos, ShaderProgra
 
 void Player::update(int deltaTime)
 {
+	if (map->damages(sprite->getRealMinPos(glm::vec2(P_SIZE,P_SIZE),glm::vec2(0.f)), 
+		sprite->getRealSize(glm::vec2(P_SIZE, P_SIZE), glm::vec2(0.f)))) {
+		this->takeDamage(1);
+	}
 	sprite->update(deltaTime);
 	if (!dead) {
 		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
@@ -380,7 +384,7 @@ void Player::update(int deltaTime)
 			}
 			else {
 				posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
-				if (jumpAngle > 90)
+				if (jumpAngle >= 90)
 					bJumping = !map->collisionMoveDown(sprite->getRealMinPos(glm::vec2(P_SIZE, P_SIZE), glm::vec2(0, FALL_STEP)),
 					sprite->getRealSize(glm::vec2(P_SIZE, P_SIZE), glm::vec2(0, FALL_STEP)), &posPlayer.y);
 			}
@@ -412,6 +416,16 @@ void Player::update(int deltaTime)
 					startY = posPlayer.y;
 				}
 			}
+			else {
+				if (sprite->animation() == STAND_RIGHT || sprite->animation() == STAND_RIGHT_SHOOTING
+					|| sprite->animation() == MOVE_RIGHT || sprite->animation() == MOVE_RIGHT_SHOOTING)
+					sprite->changeAnimation(JUMPING_RIGHT);
+				else if (sprite->animation() == STAND_LEFT || sprite->animation() == STAND_LEFT_SHOOTING
+					|| sprite->animation() == MOVE_LEFT || sprite->animation() == MOVE_LEFT_SHOOTING)
+					sprite->changeAnimation(JUMPING_LEFT);
+				onTheAir = true;
+			}
+			
 		}
 
 		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
@@ -453,6 +467,7 @@ void Player::takeDamage(int dmg) {
 	if (health <= 0) {
 		dead = true;
 		health = 1;
+		sprite->changeAnimation(JUMPING_RIGHT);
 	}
 }
 

@@ -7,7 +7,7 @@
 class EnemyManager
 {
 public:
-	void init(Level* map, ShaderProgram& shaderProgram);
+	void init(const string& path,Level* map, ShaderProgram& shaderProgram);
 	void update(int deltaTime);
 	void render();
 private:

@@ -3,15 +3,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Scene.h"
 #include "Game.h"
-
-//debug
-#include <fstream>
+#include <irrKlang.h>
 
 #define SCREEN_X 16*2
 #define SCREEN_Y 16*2
 
 #define INIT_PLAYER_X_TILES 13
-#define INIT_PLAYER_Y_TILES 1
+#define INIT_PLAYER_Y_TILES 8
 
 enum PlayerAnims
 {
@@ -119,29 +117,32 @@ void Scene::init()
 			map = Level::loadLevel("levels/level03/level03.txt", glm::vec2(0.f, 0.f), texProgram);
 			player = new Player();
 			player->init("images/Chars/Contra_PC_Spritesheet_Full.png", glm::ivec2(0.f, 0.f), texProgram);
-			player->setPosition(glm::vec2(36.f, 36.f));
-		
+			player->setPosition(glm::vec2(16.f, 0.f));
+			player->setMap(map);
+
 			ammo->setMap(map);
 			deaths = 0;
 			playerReload = 8;
 
 			enemyCtrl = new EnemyManager();
-			enemyCtrl->init(map, texProgram);
+			enemyCtrl->init("levels/level03/enemies.txt",map, texProgram);
 
 			playerPos = player->getPlayerPos();
 			offsetMaxX = (map->getTileSize() * map->getMapsize().x) - CAMERA_WIDTH;
 			offsetMinX = 0;
+			offsetMinY = 0.f;
+			offsetMaxY = 0.f;
 			cameraX = (playerPos.x) - (CAMERA_WIDTH / 2);
 			if (cameraX > offsetMaxX) cameraX = offsetMaxX;
 			else if (cameraX < offsetMinX) cameraX = offsetMinX;
-			cameraY = 16.f;
+			cameraY = 0.f;
 			currentTime = 0.0f;
 		}
 		else {
 			map = Level::loadLevel("levels/level01/level01.txt",glm::vec2(20.f, 0.f), texProgram);
 			player = new Player();
 			player->init("images/Chars/Contra_PC_Spritesheet_Full.png", glm::ivec2(0.f, 0.f), texProgram);
-			player->setPosition(glm::vec2(INIT_PLAYER_X_TILES *25* map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+			player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 
 			player->setMap(map);
 
@@ -154,7 +155,7 @@ void Scene::init()
 			playerReload = 8;
 
 			enemyCtrl = new EnemyManager();
-			enemyCtrl->init(map, texProgram);
+			enemyCtrl->init("levels/level01/enemies.txt",map, texProgram);
 
 			playerPos = player->getPlayerPos();
 			offsetMaxX = (map->getTileSize() * map->getMapsize().x) - CAMERA_WIDTH;
@@ -184,11 +185,16 @@ void Scene::update(int deltaTime)
 			}
 			else {
 				menuScreen->update(deltaTime);
-				button->update(deltaTime);
+				//button->update(deltaTime);
 			}
 		}
 		else if (endStageOne) {
 			if (Game::instance().getKey(13)) {
+				player = NULL;
+				menuScreen = NULL;
+				button = NULL;
+				map = NULL;
+				enemyCtrl = NULL;
 				this->~Scene();
 				menu = false;
 				//comencem a jugar
@@ -199,14 +205,15 @@ void Scene::update(int deltaTime)
 				button->update(deltaTime);
 			}
 		}
-		else if (/*stage_two*/false) {
+		else if (/*endStageTwo*/false) {
 
 		}
-		else if (/*stage_three*/false) {
+		else if (/*endGame*/false) {
 
 		}
 		else /*menu_inicial*/ {
 			if (Game::instance().getKey(13)) {
+				button = NULL;
 				this->~Scene();
 				menu = true;
 				begin = true;
@@ -229,7 +236,7 @@ void Scene::update(int deltaTime)
 				if (deaths != 4) {
 					if (player->isDead()) {
 						player->init("images/Chars/Contra_PC_Spritesheet_Full.png", glm::ivec2(0.f, 0.f), texProgram);
-						player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+						player->setPosition(glm::vec2(player->getPlayerPos().x, player->getPlayerPos().y*0.1));
 						player->setMap(map);
 						player->setState(false);
 						deaths++;
@@ -241,7 +248,7 @@ void Scene::update(int deltaTime)
 						enemyCtrl->update(deltaTime);
 						cameraY = 0.f;
 
-						if (player->getPlayerPos().x < offsetMinX) {
+						if (player->getPlayerPos().x < 1) {
 							glm::vec2 posRestri(offsetMinX, player->getPlayerPos().y);
 							player->setPosition(posRestri);
 						}
@@ -250,14 +257,14 @@ void Scene::update(int deltaTime)
 							playerPos = player->getPlayerPos();
 							projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 							cameraX = (playerPos.x) - (CAMERA_WIDTH / 3);
-							//cameraY = (playerPos.y) - (CAMERA_HEIGHT / 2);
+							cameraY = (playerPos.y) - (CAMERA_HEIGHT / 2);
 							if (cameraX > offsetMaxX) cameraX = offsetMaxX;
 							else if (cameraX < offsetMinX) cameraX = offsetMinX;
-							//if (cameraY > offsetMaxY) cameraY = offsetMaxY;
-							//else if (cameraY < offsetMinY) cameraY = offsetMinY;
+							if (cameraY > offsetMaxY) cameraY = offsetMaxY;
+							else if (cameraY < offsetMinY) cameraY = offsetMinY;
 							offsetMinX = cameraX;
 
-							projection = glm::translate(projection, glm::vec3(-cameraX, -SCREEN_HEIGHT / 4 - 9, 0.f));
+							projection = glm::translate(projection, glm::vec3(-cameraX, cameraY, 0.f));
 						}
 						else {
 							cameraX = 0.f;
@@ -477,9 +484,9 @@ void Scene::render()
 	if (menu) {
 		if (begin) {
 			menuScreen->render();
-			button->render();
+			//button->render();
 		}
-		if (endStageOne) {
+		else if (endStageOne) {
 			menuScreen->render();
 			button->render();
 		}
