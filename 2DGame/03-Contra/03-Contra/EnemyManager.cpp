@@ -102,17 +102,18 @@ void EnemyManager::update(int deltaTime, list<Bullet*>& bulletes, Player* pc, Sh
 			}
 		}
 		*/
+		
 
 		if (!(*it)->isKilled())
 			(*it)->update(deltaTime, pc);
 		//else enemies.erase(it);
 		if (!enemyBullets.empty()) {
-			list<Bullet*>::iterator it;
-			for (it = enemyBullets.begin(); it != enemyBullets.end(); it++) {
-				glm::vec2 posB = (*it)->getBulletpos();
-				if (!(*it)->hasHit()) {
-					if (/*posB.x <= offsetMaxX && posB.x >= offsetMinX &&*/ !(*it)->hasHit())
-						(*it)->update(deltaTime);
+			list<Bullet*>::iterator itb;
+			for (itb = enemyBullets.begin(); itb != enemyBullets.end(); itb++) {
+				glm::vec2 posB = (*itb)->getBulletpos();
+				if (!(*itb)->hasHit()) {
+					if (/*posB.x <= offsetMaxX && posB.x >= offsetMinX &&*/ !(*itb)->hasHit())
+						(*itb)->update(deltaTime);
 				}
 			}
 		}
@@ -129,12 +130,12 @@ void EnemyManager::render()
 		//else enemies.erase(it);
 	}
 	if (!enemyBullets.empty()) {
-		list<Bullet*>::iterator it;
-		for (it = enemyBullets.begin(); it != enemyBullets.end(); it++) {
-			glm::vec2 posB = (*it)->getBulletpos();
-			if (!(*it)->hasHit()) {
-				if (/*posB.x <= offsetMaxX && posB.x >= offsetMinX &&*/ !(*it)->hasHit())
-					(*it)->render();
+		list<Bullet*>::iterator itb;
+		for (itb = enemyBullets.begin(); itb != enemyBullets.end(); itb++) {
+			glm::vec2 posB = (*itb)->getBulletpos();
+			if (!(*itb)->hasHit()) {
+				if (/*posB.x <= offsetMaxX && posB.x >= offsetMinX &&*/ !(*itb)->hasHit())
+					(*itb)->render();
 			}
 		}
 	}
