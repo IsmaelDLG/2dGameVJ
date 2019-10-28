@@ -1,5 +1,6 @@
 ENEMIES							--Nombre d'enemics 			
-64 1				--BlockSize --Nombre d'enemics diferents
+16 1				--BlockSize --Nombre d'enemics diferents
 images/Chars/Kimkoh.png		--Spritesheet tipus 1
 layer
-001.
+1;
+.

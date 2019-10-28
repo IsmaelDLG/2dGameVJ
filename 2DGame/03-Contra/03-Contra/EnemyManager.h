@@ -1,6 +1,7 @@
 #ifndef _ENEMY_MANAGER_
 #define _ENEMY_MANAGER
 #include "Enemy.h"
+#include "Kimkoh.h"
 #include "ShaderProgram.h"
 #include <list>
 
@@ -13,9 +14,8 @@ public:
 private:
 
 private:
-	Enemy* enemy1;
-	Enemy* enemy2;
-	list<Enemy*> enemies;
+	Kimkoh* boss;
+	list<Player*> enemies;
 };
 
 #endif

@@ -39,10 +39,20 @@ void EnemyManager::init(const string& path,Level* map, ShaderProgram& shaderProg
 		while (tile != ';' && tile != '.')
 		{
 			if (tile > '0' && tile <= '9') {
-				enemies.push_back(new Enemy());
-				enemies.back()->init(textPaths[tile - '0' - 1 ], glm::ivec2(0.f, 0.f), shaderProgram);
-				enemies.back()->setPosition(glm::vec2(blockS * j , blockS * 0));
-				enemies.back()->setMap(map);
+				ofstream out;
+				out.open("myDebug/manager.txt", ios::app);
+				out << textPaths[tile - '0' - 1] << endl << textPaths[tile - '0' - 1].substr(textPaths[tile - '0' - 1].length() - 10) << endl;
+				out.close();
+				if (textPaths[tile - '0' - 1].substr(textPaths[tile - '0' - 1].length() - 10)=="Kimkoh.png") {
+					boss = new Kimkoh();
+					boss->setMap(map);
+					boss->init(textPaths[tile - '0' - 1], glm::ivec2(100, 100), shaderProgram);
+				}
+				else {
+					enemies.push_back(new Enemy());
+					enemies.back()->init(textPaths[tile - '0' - 1], glm::ivec2(128.f, 128.f), shaderProgram);
+					enemies.back()->setMap(map);
+				}
 				j++;
 			}
 			else if (tile == '0') j++;		
@@ -60,21 +70,24 @@ void EnemyManager::init(const string& path,Level* map, ShaderProgram& shaderProg
 
 void EnemyManager::update(int deltaTime)
 {
-
-	list<Enemy*>::iterator it;
+	
+	list<Player*>::iterator it;
 	for (it = enemies.begin(); it != enemies.end(); it++)
 	{
 		(*it)->update(deltaTime);
-		
 	}
+	if (boss != NULL)
+		boss->update(deltaTime);
+	
 }
 
 void EnemyManager::render()
 {
-	list<Enemy*>::iterator it;
+	list<Player*>::iterator it;
 	for (it = enemies.begin(); it != enemies.end(); it++)
 	{
-		(*it)->render();
-		
+		(*it)->render();	
 	}
+	if (boss != NULL)
+		boss->render();
 }
