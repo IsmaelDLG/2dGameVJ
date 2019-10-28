@@ -7,7 +7,7 @@ class Bullet
 {
 public:
 
-	void init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, Player* pc);
+	void init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, Player* pc, bool owner);
 	void update(int deltaTime);
 	void render();
 
@@ -18,10 +18,12 @@ public:
 
 	glm::vec2 getBulletpos() { return posBullet; }
 	bool hasHit() { return hit; }
+	bool bulletOwner() { return pcBullet; }
 
 private:
 	glm::ivec2 posBullet, direction, tileMapDispl;
 	bool hit;
+	bool pcBullet;
 	Player* player;
 	Texture spritesheet;
 	Sprite* sprite;

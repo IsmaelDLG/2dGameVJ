@@ -2,6 +2,11 @@
 #include <fstream>
 #include <sstream>
 
+#define HIT_BOX_BULLET_X 6
+#define HIT_BOX_BULLET_Y 6
+#define HIT_BOX_BULLET_H 3
+#define HIT_BOX_BULLET_W 5
+
 
 void EnemyManager::init(const string& path,Level* map, ShaderProgram& shaderProgram)
 {
@@ -59,20 +64,22 @@ void EnemyManager::init(const string& path,Level* map, ShaderProgram& shaderProg
 	inf.close();
 }
 
-void EnemyManager::update(int deltaTime, list<Bullet*>& bulletes)
+void EnemyManager::update(int deltaTime, list<Bullet*>& bulletes, Player* pc, ShaderProgram texProgram, Level* map)
 {
 
 	list<Enemy*>::iterator it;
 	for (it = enemies.begin(); it != enemies.end(); it++)
 	{
-		
 		if (!bulletes.empty()) {
 			list<Bullet*>::iterator bit;
 			for (bit = bulletes.begin(); bit != bulletes.end(); bit++) {
 				glm::vec2 pos = (*bit)->getBulletpos();
+				pos.x += HIT_BOX_BULLET_X;
+				pos.y += HIT_BOX_BULLET_Y;
 				if (!(*it)->isKilled()) {
 					if (!(*bit)->hasHit()) {
-						if ((*it)->thereIsColision(pos, glm::vec2(16, 16))) {
+						if ((*it)->thereIsColision(pos, glm::vec2(HIT_BOX_BULLET_W, HIT_BOX_BULLET_H)) 
+							&& (*bit)->bulletOwner()) {
 							(*it)->reduceDamage(1);
 							(*bit)->bullethit();
 						}
@@ -81,9 +88,34 @@ void EnemyManager::update(int deltaTime, list<Bullet*>& bulletes)
 			}
 		}
 		
+		/*
+		if (pc->getPlayerPos().x - (*it)->getPlayerPos().x < 30) {
+			(*it)->shootNow();
+			if ((*it)->isShooting()) {
+				glm::vec2 position = (*it)->getFirePoint();
+				Bullet* bullet = new Bullet();
+				bullet->init(glm::ivec2(0.f, 0.f), texProgram, pc, false);
+				bullet->setPosition(glm::vec2(position.x, position.y));
+				bullet->setDirection((*it)->aimingAt());
+				bullet->setMap(map);
+				enemyBullets.push_back(bullet);
+			}
+		}
+		*/
+
 		if (!(*it)->isKilled())
-			(*it)->update(deltaTime);
+			(*it)->update(deltaTime, pc);
 		//else enemies.erase(it);
+		if (!enemyBullets.empty()) {
+			list<Bullet*>::iterator it;
+			for (it = enemyBullets.begin(); it != enemyBullets.end(); it++) {
+				glm::vec2 posB = (*it)->getBulletpos();
+				if (!(*it)->hasHit()) {
+					if (/*posB.x <= offsetMaxX && posB.x >= offsetMinX &&*/ !(*it)->hasHit())
+						(*it)->update(deltaTime);
+				}
+			}
+		}
 	}
 }
 
@@ -95,5 +127,15 @@ void EnemyManager::render()
 		if (!(*it)->isKilled())
 			(*it)->render();
 		//else enemies.erase(it);
+	}
+	if (!enemyBullets.empty()) {
+		list<Bullet*>::iterator it;
+		for (it = enemyBullets.begin(); it != enemyBullets.end(); it++) {
+			glm::vec2 posB = (*it)->getBulletpos();
+			if (!(*it)->hasHit()) {
+				if (/*posB.x <= offsetMaxX && posB.x >= offsetMinX &&*/ !(*it)->hasHit())
+					(*it)->render();
+			}
+		}
 	}
 }
