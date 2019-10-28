@@ -43,16 +43,16 @@ void EnemyManager::init(const string& path,Level* map, ShaderProgram& shaderProg
 				out.open("myDebug/manager.txt", ios::app);
 				out << textPaths[tile - '0' - 1] << endl << textPaths[tile - '0' - 1].substr(textPaths[tile - '0' - 1].length() - 10) << endl;
 				out.close();
-				if (textPaths[tile - '0' - 1].substr(textPaths[tile - '0' - 1].length() - 10)=="Kimkoh.png") {
+				//if (textPaths[tile - '0' - 1].substr(textPaths[tile - '0' - 1].length() - 10)=="Kimkoh.png") {
 					boss = new Kimkoh();
 					boss->setMap(map);
-					boss->init(textPaths[tile - '0' - 1], glm::ivec2(100, 100), shaderProgram);
-				}
-				else {
+					boss->init("images/Chars/Kimkoh.png", glm::ivec2(140, 100), shaderProgram);
+				//}
+				/*else {
 					enemies.push_back(new Enemy());
-					enemies.back()->init(textPaths[tile - '0' - 1], glm::ivec2(128.f, 128.f), shaderProgram);
+					enemies.back()->init(textPaths[tile - '0' - 1], glm::ivec2(blockS*j, 0), shaderProgram);
 					enemies.back()->setMap(map);
-				}
+				}*/
 				j++;
 			}
 			else if (tile == '0') j++;		

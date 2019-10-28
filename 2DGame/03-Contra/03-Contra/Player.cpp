@@ -32,8 +32,9 @@ void Player::init(const string& path, const glm::ivec2 &tileMapPos, ShaderProgra
 	direction = glm::vec2(1,0);
 	health = 1;
 	firePoint = glm::vec2(posPlayer.x + 51.f, posPlayer.y + 36.f);
-	spritesheet.loadFromFile(path, TEXTURE_PIXEL_FORMAT_RGBA);
-	sprite = Sprite::createSprite(glm::ivec2(P_SIZE, P_SIZE), glm::vec2(0.125, 0.0625), &spritesheet, &shaderProgram);
+	spritesheet = new Texture();
+	spritesheet->loadFromFile(path, TEXTURE_PIXEL_FORMAT_RGBA);
+	sprite = Sprite::createSprite(glm::ivec2(P_SIZE, P_SIZE), glm::vec2(0.125, 0.0625), spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(23);
 
 		/* LEFT ANIMATIONS*/

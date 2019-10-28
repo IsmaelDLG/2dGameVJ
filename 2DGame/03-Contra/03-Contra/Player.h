@@ -42,7 +42,7 @@ private:
 	int life;
 protected:
 	Sprite* sprite;
-	Texture spritesheet;
+	Texture* spritesheet;
 	glm::ivec2 posPlayer, tileMapDispl, firePoint, direction;
 	int health;
 	Level* map;
