@@ -58,14 +58,26 @@ void EnemyManager::init(const string& path,Level* map, ShaderProgram& shaderProg
 	inf.close();
 }
 
-void EnemyManager::update(int deltaTime)
+void EnemyManager::update(int deltaTime, list<Bullet*>& bulletes)
 {
 
 	list<Enemy*>::iterator it;
 	for (it = enemies.begin(); it != enemies.end(); it++)
 	{
-		(*it)->update(deltaTime);
 		
+		if (!bulletes.empty()) {
+			list<Bullet*>::iterator bit;
+			for (bit = bulletes.begin(); bit != bulletes.end(); bit++) {
+				glm::vec2 pos = (*bit)->getBulletpos();
+				if ((*it)->thereIsColision(pos, 16)) {
+					(*it)->takeDamage(1);
+					(*bit)->bullethit();
+				}
+			}
+		}
+		
+		if (!(*it)->isDead())
+			(*it)->update(deltaTime);
 	}
 }
 
@@ -74,7 +86,7 @@ void EnemyManager::render()
 	list<Enemy*>::iterator it;
 	for (it = enemies.begin(); it != enemies.end(); it++)
 	{
-		(*it)->render();
-		
+		if (!(*it)->isDead())
+			(*it)->render();
 	}
 }

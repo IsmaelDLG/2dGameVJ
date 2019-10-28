@@ -177,7 +177,7 @@ void Scene::update(int deltaTime)
 	if (menu) {
 		if (begin) {
 			if (Game::instance().getKey(13)) {
-				this->~Scene();
+				//this->~Scene();
 				menu = false;
 				begin = false;
 				//comencem a jugar
@@ -195,7 +195,7 @@ void Scene::update(int deltaTime)
 				button = NULL;
 				map = NULL;
 				enemyCtrl = NULL;
-				this->~Scene();
+				//this->~Scene();
 				menu = false;
 				//comencem a jugar
 				this->init();
@@ -214,7 +214,7 @@ void Scene::update(int deltaTime)
 		else /*menu_inicial*/ {
 			if (Game::instance().getKey(13)) {
 				button = NULL;
-				this->~Scene();
+				//this->~Scene();
 				menu = true;
 				begin = true;
 				//comencem a jugar
@@ -245,7 +245,7 @@ void Scene::update(int deltaTime)
 						playerPos = player->getPlayerPos();
 						currentTime += deltaTime;
 						player->update(deltaTime);
-						enemyCtrl->update(deltaTime);
+						enemyCtrl->update(deltaTime, bullets);
 						cameraY = 0.f;
 
 						if (player->getPlayerPos().x < 1) {
@@ -276,7 +276,7 @@ void Scene::update(int deltaTime)
 								if (player->spreadGunOn()) {
 									if (player->getdirection().y != 0) {
 										bullet = new Bullet();
-										bullet->init(glm::ivec2(0.f, 0.f), texProgram);
+										bullet->init(glm::ivec2(0.f, 0.f), texProgram, player);
 										bullet->setPosition(glm::vec2(position.x, position.y));
 										glm::vec2 otherDirection = player->getdirection();
 										bullet->setDirection(glm::vec2(1, 0));
@@ -285,7 +285,7 @@ void Scene::update(int deltaTime)
 										player->setFiring(false);
 
 										bullet = new Bullet();
-										bullet->init(glm::ivec2(0.f, 0.f), texProgram);
+										bullet->init(glm::ivec2(0.f, 0.f), texProgram, player);
 										bullet->setPosition(glm::vec2(position.x, position.y));
 										bullet->setDirection(glm::vec2(0, otherDirection.y));
 										bullet->setMap(map);
@@ -294,7 +294,7 @@ void Scene::update(int deltaTime)
 									}
 									else {
 										bullet = new Bullet();
-										bullet->init(glm::ivec2(0.f, 0.f), texProgram);
+										bullet->init(glm::ivec2(0.f, 0.f), texProgram, player);
 										bullet->setPosition(glm::vec2(position.x, position.y));
 										glm::vec2 otherDirection = player->getdirection();
 										bullet->setDirection(glm::vec2(otherDirection.x, otherDirection.y + 1));
@@ -303,7 +303,7 @@ void Scene::update(int deltaTime)
 										player->setFiring(false);
 
 										bullet = new Bullet();
-										bullet->init(glm::ivec2(0.f, 0.f), texProgram);
+										bullet->init(glm::ivec2(0.f, 0.f), texProgram, player);
 										bullet->setPosition(glm::vec2(position.x, position.y));
 										bullet->setDirection(glm::vec2(otherDirection.x, otherDirection.y - 1));
 										bullet->setMap(map);
@@ -312,7 +312,7 @@ void Scene::update(int deltaTime)
 									}
 								}
 								bullet = new Bullet();
-								bullet->init(glm::ivec2(0.f, 0.f), texProgram);
+								bullet->init(glm::ivec2(0.f, 0.f), texProgram, player);
 								bullet->setPosition(glm::vec2(position.x, position.y));
 								bullet->setDirection(player->getdirection());
 								bullet->setMap(map);
@@ -326,10 +326,11 @@ void Scene::update(int deltaTime)
 
 						}
 						if (!bullets.empty()) {
-							for (int i = 0; i < bullets.size(); i++) {
-								glm::vec2 posB = bullets[i]->getBulletpos();
-								if (posB.x <= offsetMaxX && posB.x >= offsetMinX)
-									bullets[i]->update(deltaTime);
+							list<Bullet*>::iterator it;
+							for (it = bullets.begin(); it != bullets.end(); it++) {
+								glm::vec2 posB = (*it)->getBulletpos();
+								if (posB.x <= offsetMaxX && posB.x >= offsetMinX && !(*it)->hasHit())
+									(*it)->update(deltaTime);
 							}
 						}
 					}
@@ -372,7 +373,7 @@ void Scene::update(int deltaTime)
 						playerPos = player->getPlayerPos();
 						currentTime += deltaTime;
 						player->update(deltaTime);
-						enemyCtrl->update(deltaTime);
+						enemyCtrl->update(deltaTime, bullets);
 						cameraY = 0.f;
 
 						if (player->getPlayerPos().x < offsetMinX) {
@@ -403,7 +404,7 @@ void Scene::update(int deltaTime)
 								if (player->spreadGunOn()) {
 									if (player->getdirection().y != 0) {
 										bullet = new Bullet();
-										bullet->init(glm::ivec2(0.f, 0.f), texProgram);
+										bullet->init(glm::ivec2(0.f, 0.f), texProgram, player);
 										bullet->setPosition(glm::vec2(position.x, position.y));
 										glm::vec2 otherDirection = player->getdirection();
 										bullet->setDirection(glm::vec2(1, 0));
@@ -412,7 +413,7 @@ void Scene::update(int deltaTime)
 										player->setFiring(false);
 
 										bullet = new Bullet();
-										bullet->init(glm::ivec2(0.f, 0.f), texProgram);
+										bullet->init(glm::ivec2(0.f, 0.f), texProgram,player);
 										bullet->setPosition(glm::vec2(position.x, position.y));
 										bullet->setDirection(glm::vec2(0, otherDirection.y));
 										bullet->setMap(map);
@@ -421,7 +422,7 @@ void Scene::update(int deltaTime)
 									}
 									else {
 										bullet = new Bullet();
-										bullet->init(glm::ivec2(0.f, 0.f), texProgram);
+										bullet->init(glm::ivec2(0.f, 0.f), texProgram, player);
 										bullet->setPosition(glm::vec2(position.x, position.y));
 										glm::vec2 otherDirection = player->getdirection();
 										bullet->setDirection(glm::vec2(otherDirection.x, otherDirection.y + 1));
@@ -430,7 +431,7 @@ void Scene::update(int deltaTime)
 										player->setFiring(false);
 
 										bullet = new Bullet();
-										bullet->init(glm::ivec2(0.f, 0.f), texProgram);
+										bullet->init(glm::ivec2(0.f, 0.f), texProgram, player);
 										bullet->setPosition(glm::vec2(position.x, position.y));
 										bullet->setDirection(glm::vec2(otherDirection.x, otherDirection.y - 1));
 										bullet->setMap(map);
@@ -439,7 +440,7 @@ void Scene::update(int deltaTime)
 									}
 								}
 								bullet = new Bullet();
-								bullet->init(glm::ivec2(0.f, 0.f), texProgram);
+								bullet->init(glm::ivec2(0.f, 0.f), texProgram, player);
 								bullet->setPosition(glm::vec2(position.x, position.y));
 								bullet->setDirection(player->getdirection());
 								bullet->setMap(map);
@@ -453,10 +454,11 @@ void Scene::update(int deltaTime)
 
 						}
 						if (!bullets.empty()) {
-							for (int i = 0; i < bullets.size(); i++) {
-								glm::vec2 posB = bullets[i]->getBulletpos();
-								if (posB.x <= offsetMaxX && posB.x >= offsetMinX)
-									bullets[i]->update(deltaTime);
+							list<Bullet*>::iterator it;
+							for (it = bullets.begin(); it != bullets.end(); it++) {
+								glm::vec2 posB = (*it)->getBulletpos();
+								if (posB.x <= offsetMaxX && posB.x >= offsetMinX && !(*it)->hasHit())
+									(*it)->update(deltaTime);
 							}
 						}
 					}
@@ -507,11 +509,12 @@ void Scene::render()
 		if (!ammo->isPickedUp()) ammo->render();
 		if (deaths <=4) player->render();
 		if (!bullets.empty()) {
-		  for (int i = 0; i < bullets.size(); i++) {
-			glm::vec2 posB = bullets[i]->getBulletpos();
-			if (posB.x <= offsetMaxX && posB.x >= offsetMinX)
-			  bullets[i]->render();
-		  }
+			list<Bullet*>::iterator it;
+			for (it = bullets.begin(); it != bullets.end(); it++) {
+				glm::vec2 posB = (*it)->getBulletpos();
+				if (posB.x <= offsetMaxX && posB.x >= offsetMinX && !(*it)->hasHit())
+					(*it)->render();
+			}
 		}
 	}
 }

@@ -462,12 +462,20 @@ int Player::min(int a, int b) {
 	return ret;
 }
 
+bool Player::thereIsColision(glm::vec2 obj,int size) {
+	if ((((obj.x <= posPlayer.x + 48) && (obj.x > posPlayer.x)) ||
+		(obj.x + size >= posPlayer.x && obj.x < posPlayer.x)) &&
+		(((obj.y <= posPlayer.y + 48) && (obj.y > posPlayer.y)) ||
+		((obj.y + size >= posPlayer.y) && (obj.y < posPlayer.y)))) return true;
+	else return false;
+}
+
 void Player::takeDamage(int dmg) {
 	health -= dmg;
 	if (health <= 0) {
 		dead = true;
 		health = 1;
-		sprite->changeAnimation(JUMPING_RIGHT);
+		sprite->changeAnimation(DYING);
 	}
 }
 

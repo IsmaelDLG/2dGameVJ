@@ -29,7 +29,8 @@ public:
 	bool getisFiring() { return isFiring; }
 	bool isDead() { return dead; }
 	bool spreadGunOn() { return spreadGun; }
-  bool isEndOfLevel();
+	bool isEndOfLevel();
+	bool thereIsColision(glm::vec2 obj, int size);
 	glm::vec2 getPlayerPos() { return posPlayer; }
 	glm::vec2 getFirePoint() { return firePoint; }
 	glm::vec2 getdirection() { return direction; }

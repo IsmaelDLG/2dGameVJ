@@ -14,10 +14,12 @@ enum BulletAnims
 	MOVE, ENEMIE_HIT, MAP_HIT
 };
 
-void Bullet::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
+void Bullet::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, Player* pc)
 {
 	spritesheet.loadFromFile("images/Bullet.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(B_SIZE, B_SIZE), glm::vec2(0.25, 1), &spritesheet, &shaderProgram);
+	player = pc;
+	hit = false;
 	sprite->setNumberAnimations(3);
 
 	sprite->setAnimationSpeed(MOVE, 8);
@@ -90,6 +92,8 @@ void Bullet::update(int deltaTime)
 			else sprite->changeAnimation(MAP_HIT);
 		}
 	}*/
+	if (player->thereIsColision(posBullet, B_SIZE)) player->takeDamage(1);
+	//else if ()
 	sprite->changeAnimation(MOVE);
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posBullet.x-16), float(tileMapDispl.y + posBullet.y-16)));
 }

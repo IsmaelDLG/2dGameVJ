@@ -9,6 +9,7 @@
 #include "Bullet.h"
 #include "SpredGunAmmo.h"
 #include "EnemyManager.h"
+#include <list>
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
@@ -45,7 +46,7 @@ private:
 	int deaths, playerReload;
 	float cameraX, cameraY;
 	float offsetMaxX, offsetMaxY, offsetMinX, offsetMinY;
-	vector <Bullet*> bullets;
+	list <Bullet*> bullets;
 	glm::vec2 playerPos;
 	glm::mat4 projection;
 
