@@ -7,7 +7,7 @@
 #include "Game.h"
 
 #define JUMP_ANGLE_STEP 4 
-#define JUMP_HEIGHT 72
+#define JUMP_HEIGHT 82
 #define FALL_STEP 4
 #define P_SIZE 48
 #define HIT_BOX_X 23
@@ -467,11 +467,21 @@ int Player::min(int a, int b) {
 }
 
 bool Player::thereIsColision(glm::vec2 obj,glm::vec2 size) {
+	
 	glm::vec2 realPosPlayer = glm::vec2(posPlayer.x + HIT_BOX_X, posPlayer.y + HIT_BOX_Y);
+	/*
 	if ((((obj.x <= realPosPlayer.x + HIT_BOX_W) && (obj.x > realPosPlayer.x)) ||
 		(obj.x + size.x >= realPosPlayer.x && obj.x < realPosPlayer.x)) &&
 		(((obj.y <= realPosPlayer.y + HIT_BOX_H) && (obj.y > realPosPlayer.y)) ||
 		((obj.y + size.y >= realPosPlayer.y) && (obj.y < realPosPlayer.y)))) return true;
+	else return false;
+	*/
+	
+
+	if ((((realPosPlayer.x <= obj.x + size.x) && (realPosPlayer.x > obj.x)) ||
+		(realPosPlayer.x + HIT_BOX_W >= obj.x && realPosPlayer.x < obj.x)) &&
+		(((realPosPlayer.y <= obj.y + size.y) && (realPosPlayer.y > obj.y)) ||
+		((realPosPlayer.y + HIT_BOX_H >= obj.y) && (realPosPlayer.y < obj.y)))) return true;
 	else return false;
 }
 
