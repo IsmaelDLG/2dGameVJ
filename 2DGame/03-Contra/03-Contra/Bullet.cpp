@@ -8,6 +8,10 @@
 
 #define SPEED 4
 #define B_SIZE 16
+#define HIT_BOX_X 23
+#define HIT_BOX_Y 9
+#define HIT_BOX_H 38
+#define HIT_BOX_W 15
 
 enum BulletAnims
 {
@@ -92,7 +96,9 @@ void Bullet::update(int deltaTime)
 			else sprite->changeAnimation(MAP_HIT);
 		}
 	}*/
-	if (player->thereIsColision(posBullet, B_SIZE)) player->takeDamage(1);
+
+	if (player->thereIsColision(sprite->getRealMinPos(glm::vec2(B_SIZE, B_SIZE), posBullet),
+		sprite->getRealSize(glm::vec2(B_SIZE, B_SIZE), posBullet))) player->takeDamage(1);
 	//else if ()
 	sprite->changeAnimation(MOVE);
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posBullet.x-16), float(tileMapDispl.y + posBullet.y-16)));

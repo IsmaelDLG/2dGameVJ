@@ -3,13 +3,15 @@
 #define P_SIZE 48
 
 void Enemy::init_stats() {
-	dead = false;
-	health = 5;
+	death = false;
+	life = 5;
 }
 
-void Enemy::takeDamage(int dmg) {
-	health -= dmg;
-	if (health <= 0) dead = true;
+void Enemy::reduceDamage(int dmg) {
+	life -= dmg;
+	if (life <= 0) {
+		death = true;
+	}
 }
 
 void Enemy::update(int deltaTime) {

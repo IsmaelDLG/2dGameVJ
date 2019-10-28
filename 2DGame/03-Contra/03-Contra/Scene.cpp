@@ -329,8 +329,10 @@ void Scene::update(int deltaTime)
 							list<Bullet*>::iterator it;
 							for (it = bullets.begin(); it != bullets.end(); it++) {
 								glm::vec2 posB = (*it)->getBulletpos();
-								if (posB.x <= offsetMaxX && posB.x >= offsetMinX && !(*it)->hasHit())
-									(*it)->update(deltaTime);
+								if (!(*it)->hasHit()) {
+									if (posB.x <= offsetMaxX && posB.x >= offsetMinX && !(*it)->hasHit())
+										(*it)->update(deltaTime);
+								}
 							}
 						}
 					}
@@ -457,8 +459,10 @@ void Scene::update(int deltaTime)
 							list<Bullet*>::iterator it;
 							for (it = bullets.begin(); it != bullets.end(); it++) {
 								glm::vec2 posB = (*it)->getBulletpos();
-								if (posB.x <= offsetMaxX && posB.x >= offsetMinX && !(*it)->hasHit())
-									(*it)->update(deltaTime);
+								if (!(*it)->hasHit()) {
+									if (posB.x <= offsetMaxX && posB.x >= offsetMinX && !(*it)->hasHit())
+										(*it)->update(deltaTime);
+								}
 							}
 						}
 					}
@@ -512,8 +516,10 @@ void Scene::render()
 			list<Bullet*>::iterator it;
 			for (it = bullets.begin(); it != bullets.end(); it++) {
 				glm::vec2 posB = (*it)->getBulletpos();
-				if (posB.x <= offsetMaxX && posB.x >= offsetMinX && !(*it)->hasHit())
-					(*it)->render();
+				if (!(*it)->hasHit()) {
+					if (posB.x <= offsetMaxX && posB.x >= offsetMinX && !(*it)->hasHit())
+						(*it)->render();
+				}
 			}
 		}
 	}

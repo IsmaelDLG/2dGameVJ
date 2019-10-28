@@ -42,6 +42,7 @@ void EnemyManager::init(const string& path,Level* map, ShaderProgram& shaderProg
 				enemies.push_back(new Enemy());
 				enemies.back()->init(textPaths[tile - '0' - 1 ], glm::ivec2(0.f, 0.f), shaderProgram);
 				enemies.back()->setPosition(glm::vec2(blockS * j , blockS * 0));
+				enemies.back()->init_stats();
 				enemies.back()->setMap(map);
 				j++;
 			}
@@ -69,15 +70,20 @@ void EnemyManager::update(int deltaTime, list<Bullet*>& bulletes)
 			list<Bullet*>::iterator bit;
 			for (bit = bulletes.begin(); bit != bulletes.end(); bit++) {
 				glm::vec2 pos = (*bit)->getBulletpos();
-				if ((*it)->thereIsColision(pos, 16)) {
-					(*it)->takeDamage(1);
-					(*bit)->bullethit();
+				if (!(*it)->isKilled()) {
+					if (!(*bit)->hasHit()) {
+						if ((*it)->thereIsColision(pos, glm::vec2(16, 16))) {
+							(*it)->reduceDamage(1);
+							(*bit)->bullethit();
+						}
+					}
 				}
 			}
 		}
 		
-		if (!(*it)->isDead())
+		if (!(*it)->isKilled())
 			(*it)->update(deltaTime);
+		//else enemies.erase(it);
 	}
 }
 
@@ -86,7 +92,8 @@ void EnemyManager::render()
 	list<Enemy*>::iterator it;
 	for (it = enemies.begin(); it != enemies.end(); it++)
 	{
-		if (!(*it)->isDead())
+		if (!(*it)->isKilled())
 			(*it)->render();
+		//else enemies.erase(it);
 	}
 }

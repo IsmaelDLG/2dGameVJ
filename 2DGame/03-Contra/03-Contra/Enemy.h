@@ -6,14 +6,14 @@ public:
 
 	void init_stats();
 	void update(int deltaTime) override;
-	void takeDamage(int dmg);
+	void reduceDamage(int dmg);
 
-	bool isDead() { return dead; }
+	bool isKilled() { return death; }
 
 private:
 
-	int health;
-	bool dead;
+	int life;
+	bool death;
 };
 
 
