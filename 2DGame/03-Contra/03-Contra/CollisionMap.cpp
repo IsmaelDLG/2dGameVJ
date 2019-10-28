@@ -118,31 +118,32 @@ bool CollisionMap::damageCollision(const glm::ivec2& pos, const glm::ivec2& size
 
 	for (int x = x0; x <= x1; x++)
 	{
-			if ((textMap->getPixel(int(x * factorX), int(y0 * factorY)).getAlpha() > MAX_COLLISION) && 
-				(textMap->getPixel(int(x * factorX), int(y0 * factorY))).getRed() >= MAX_COLLISION)
-			{
-				return true;
-			}
-			if ((textMap->getPixel(int(x * factorX), int(y1 * factorY)).getAlpha() > MAX_COLLISION) &&
-				(textMap->getPixel(int(x * factorX), int(y1 * factorY))).getRed() >= MAX_COLLISION)
-			{
-				return true;
-			}
+		if ((textMap->getPixel(int(x * factorX), int(y0 * factorY)).getAlpha() > MAX_COLLISION) &&
+			(textMap->getPixel(int(x * factorX), int(y0 * factorY))).getRed() >= MAX_COLLISION)
+		{
+			return true;
+		}/*
+		if ((textMap->getPixel(int(x * factorX), int(y1 * factorY)).getAlpha() > MAX_COLLISION) &&
+			(textMap->getPixel(int(x * factorX), int(y1 * factorY))).getRed() >= MAX_COLLISION)
+		{
+			return true;
+		}
+}
+
+for (int y = y0; y >= y1; y--) {
+	if ((textMap->getPixel(int(x0 * factorX), int(y * factorY)).getAlpha() > MAX_COLLISION) &&
+		(textMap->getPixel(int(x0 * factorX), int(y * factorY))).getRed() >= MAX_COLLISION)
+	{
+		return true;
 	}
 
-	for (int y = y0; y >= y1; y--) {
-		if ((textMap->getPixel(int(x0 * factorX), int(y * factorY)).getAlpha() > MAX_COLLISION) &&
-			(textMap->getPixel(int(x0 * factorX), int(y * factorY))).getRed() >= MAX_COLLISION)
-		{
-			return true;
-		}
+	if ((textMap->getPixel(int(x1 * factorX), int(y * factorY)).getAlpha() > MAX_COLLISION) &&
+		(textMap->getPixel(int(x1 * factorX), int(y * factorY))).getRed() >= MAX_COLLISION)
+	{
+		return true;
+	}
 
-		if ((textMap->getPixel(int(x1 * factorX), int(y * factorY)).getAlpha() > MAX_COLLISION) &&
-			(textMap->getPixel(int(x1 * factorX), int(y * factorY))).getRed() >= MAX_COLLISION)
-		{
-			return true;
-		}
-
+}*/
 	}
 	return false;
 }

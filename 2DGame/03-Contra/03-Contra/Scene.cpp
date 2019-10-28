@@ -108,10 +108,14 @@ void Scene::init()
 		}
 		}
 	else {
-		/*if (endStageOne){
+		Texture* corTex = new Texture();
+		corTex->loadFromFile("images/heart.png",TEXTURE_PIXEL_FORMAT_RGBA);
+		vides = Sprite::createSprite(glm::vec2(16.f, 16.f),
+			glm::vec2(1.0f, 1.0f), corTex, &texProgram);
+		menuScreen->setNumberAnimations(0);
 
-		}*/
-		/*else */if (/*endStageTwo*/endStageOne) {
+
+		if (endStageOne) {
 			projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 
 			map = Level::loadLevel("levels/level03/level03.txt", glm::vec2(0.f, 0.f), texProgram);
@@ -387,18 +391,14 @@ void Scene::update(int deltaTime)
 							playerPos = player->getPlayerPos();
 							projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 							cameraX = (playerPos.x) - (CAMERA_WIDTH / 3);
-							//cameraY = (playerPos.y) - (CAMERA_HEIGHT / 2);
 							if (cameraX > offsetMaxX) cameraX = offsetMaxX;
 							else if (cameraX < offsetMinX) cameraX = offsetMinX;
-							//if (cameraY > offsetMaxY) cameraY = offsetMaxY;
-							//else if (cameraY < offsetMinY) cameraY = offsetMinY;
 							offsetMinX = cameraX;
-
 							projection = glm::translate(projection, glm::vec3(-cameraX, -SCREEN_HEIGHT / 4 - 9, 0.f));
 						}
 						else {
-							cameraX = 0.f;
-							projection = glm::translate(projection, glm::vec3(-cameraX, 0, 0.f));
+
+							projection = glm::translate(projection, glm::vec3(0, 0, 0.f));
 						}
 						if (player->getisFiring()) {
 							glm::vec2 position = player->getFirePoint();
@@ -522,7 +522,12 @@ void Scene::render()
 			}
 		}
 		enemyCtrl->render();
+		for (int i = 0; i < (4 - deaths); ++i) {
+			vides->setPosition(glm::vec2(5.0 + 1.0*cameraX + 17.5 * i, 135));
+			vides->render();
+		}
 	}
+	
 }
 
 void Scene::initShaders()

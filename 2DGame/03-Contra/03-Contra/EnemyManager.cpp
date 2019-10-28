@@ -52,7 +52,7 @@ void EnemyManager::init(const string& path,Level* map, ShaderProgram& shaderProg
 				else {
 					enemies.push_back(new Enemy());
 					enemies.back()->init(textPaths[tile - '0' - 1], glm::ivec2(0.f, 0.f), shaderProgram);
-					enemies.back()->setPosition(glm::vec2(blockS * j, blockS * 0));
+					enemies.back()->setPosition(glm::vec2(blockS * j, blockS * i));
 					enemies.back()->init_stats();
 					enemies.back()->setMap(map);
 				}
@@ -94,7 +94,6 @@ void EnemyManager::update(int deltaTime, list<Bullet*>& bulletes, Player* pc, Sh
 				}
 			}
 		}
-		
 		/*
 		if (pc->getPlayerPos().x - (*it)->getPlayerPos().x < 30) {
 			(*it)->shootNow();

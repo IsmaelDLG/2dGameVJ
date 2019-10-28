@@ -28,6 +28,7 @@ public:
 	int min(int a, int b);
 	bool getisFiring() { return isFiring; }
 	bool isDead() { return dead; }
+	int getVides() { return life; }
 	bool spreadGunOn() { return spreadGun; }
 	bool isEndOfLevel();
 	bool thereIsColision(glm::vec2 obj, glm::vec2 size);

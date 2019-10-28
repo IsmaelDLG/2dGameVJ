@@ -46,6 +46,10 @@ void Enemy::update(int deltaTime, Player* pc) {
 
 	int dist = this->posPlayer.x - pc->getPlayerPos().x;
 	glm::vec2 realPosPlayer = glm::vec2(posPlayer.x + HIT_BOX_X, posPlayer.y + HIT_BOX_Y);
+	if (map->damages(realPosPlayer, sprite->getRealSize(glm::vec2(P_SIZE, P_SIZE), glm::vec2(-1, 0))))
+		this->reduceDamage(9999);
+
+
 	if (dist <= 128 && dist > 0) {
 		aim = glm::vec2(-1, 0);
 		posPlayer.x -= 1;

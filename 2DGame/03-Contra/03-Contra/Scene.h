@@ -34,6 +34,7 @@ private:
 	bool menu, begin, endStageOne, endStageTwo, endGame;
 	Sprite* menuScreen;
 	Sprite* button;
+	Sprite* vides;
 
 	Level *map;
 	Player *player;
