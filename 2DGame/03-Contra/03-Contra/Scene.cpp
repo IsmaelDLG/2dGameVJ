@@ -112,8 +112,7 @@ void Scene::init()
 		corTex->loadFromFile("images/heart.png",TEXTURE_PIXEL_FORMAT_RGBA);
 		vides = Sprite::createSprite(glm::vec2(16.f, 16.f),
 			glm::vec2(1.0f, 1.0f), corTex, &texProgram);
-		menuScreen->setNumberAnimations(0);
-
+		vides->setNumberAnimations(0);
 
 		if (endStageOne) {
 			projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
@@ -146,7 +145,7 @@ void Scene::init()
 			map = Level::loadLevel("levels/level01/level01.txt",glm::vec2(20.f, 0.f), texProgram);
 			player = new Player();
 			player->init("images/Chars/Contra_PC_Spritesheet_Full.png", glm::ivec2(0.f, 0.f), texProgram);
-			player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+			player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * 26*map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 
 			player->setMap(map);
 
@@ -523,7 +522,10 @@ void Scene::render()
 		}
 		enemyCtrl->render(cameraX, CAMERA_WIDTH);
 		for (int i = 0; i < (4 - deaths); ++i) {
-			vides->setPosition(glm::vec2(5.0 + 1.0*cameraX + 17.5 * i, 135));
+			if (map->getMapsize().y>16)
+				vides->setPosition(glm::vec2(5.0 + 1.0*cameraX + 17.5 * i, 135));
+			else vides->setPosition(glm::vec2(5.0 + 1.0 * cameraX + 17.5 * i, 3));
+
 			vides->render();
 		}
 	}
