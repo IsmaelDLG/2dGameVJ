@@ -11,6 +11,7 @@ void Kimkoh::init(const string& path, const glm::ivec2& tileMapPos, ShaderProgra
 {
 	tileMapDispl = glm::vec2(0, 0);
 	health = 500;
+	death = false;
 	spritesheet = new Texture();
 	spritesheet->loadFromFile(path, TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(P_SIZE, P_SIZE), glm::vec2(1.f / 4.f, 1.f / 4.f),spritesheet, &shaderProgram);
@@ -45,6 +46,14 @@ void Kimkoh::update(int deltaTime)
 void Kimkoh::render()
 {
 	sprite->render();
+}
+
+void Kimkoh::reduceHealth(int dmg)
+{
+	health -= dmg;
+	if (health <= 0) {
+		death = true;
+	}
 }
 
 

@@ -94,22 +94,7 @@ void EnemyManager::update(int deltaTime, list<Bullet*>& bulletes, Player* pc, Sh
 				}
 			}
 		}
-		/*
-		if (pc->getPlayerPos().x - (*it)->getPlayerPos().x < 30) {
-			(*it)->shootNow();
-			if ((*it)->isShooting()) {
-				glm::vec2 position = (*it)->getFirePoint();
-				Bullet* bullet = new Bullet();
-				bullet->init(glm::ivec2(0.f, 0.f), texProgram, pc, false);
-				bullet->setPosition(glm::vec2(position.x, position.y));
-				bullet->setDirection((*it)->aimingAt());
-				bullet->setMap(map);
-				enemyBullets.push_back(bullet);
-			}
-		}
-		*/
 		
-
 		if (!(*it)->isKilled()) {
 			glm::vec2 enemyPos = (*it)->getPlayerPos();
 			if (enemyPos.x <= (cameraX + cameraW) && enemyPos.x >= cameraX)
@@ -118,8 +103,28 @@ void EnemyManager::update(int deltaTime, list<Bullet*>& bulletes, Player* pc, Sh
 		//else enemies.erase(it);
 		
 	}
-	if (boss != NULL)
-		boss->update(deltaTime);
+	if (boss != NULL) {
+
+		if (!bulletes.empty()) {
+			list<Bullet*>::iterator bit;
+			for (bit = bulletes.begin(); bit != bulletes.end(); bit++) {
+				glm::vec2 pos = (*bit)->getBulletpos();
+				pos.x += HIT_BOX_BULLET_X;
+				pos.y += HIT_BOX_BULLET_Y;
+				if (!boss->isKilled()) {
+					if (!(*bit)->hasHit()) {
+						if (boss->thereIsColision(pos, glm::vec2(HIT_BOX_BULLET_W, HIT_BOX_BULLET_H))
+							&& (*bit)->bulletOwner()) {
+							boss->reduceHealth(1);
+							(*bit)->bullethit();
+						}
+					}
+				}
+			}
+		}
+		if(!boss->isKilled())
+			boss->update(deltaTime);
+	}
 	
 }
 
@@ -136,6 +141,8 @@ void EnemyManager::render(int cameraX, int cameraW)
 		//else enemies.erase(it);
 	}
 	
-	if (boss != NULL)
-		boss->render();
+	if (boss != NULL) {
+		if (!boss->isKilled())
+			boss->render();
+	}
 }

@@ -39,6 +39,7 @@ private:
 	Level *map;
 	Player *player;
 	Bullet* bullet;
+	Bullet* bulletB;
 	SpredGunAmmo* ammo;
 	EnemyManager* enemyCtrl;
 	ShaderProgram texProgram;
@@ -46,8 +47,9 @@ private:
 	int cameraVx, cameraVy;
 	int deaths, playerReload;
 	float cameraX, cameraY;
-	float offsetMaxX, offsetMaxY, offsetMinX, offsetMinY;
+	float offsetMaxX, offsetMaxY, offsetMinX, offsetMinY, offsetMaxXBoss;
 	list <Bullet*> bullets;
+	list <Bullet*> bulletsBoss;
 	glm::vec2 playerPos;
 	glm::mat4 projection;
 
