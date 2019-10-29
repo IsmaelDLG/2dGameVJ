@@ -249,7 +249,7 @@ void Scene::update(int deltaTime)
 						playerPos = player->getPlayerPos();
 						currentTime += deltaTime;
 						player->update(deltaTime);
-						enemyCtrl->update(deltaTime, bullets, player, texProgram, map);
+						enemyCtrl->update(deltaTime, bullets, player, texProgram, map, cameraX, CAMERA_WIDTH);
 						cameraY = 0.f;
 
 						if (player->getPlayerPos().x < 1) {
@@ -379,7 +379,7 @@ void Scene::update(int deltaTime)
 						playerPos = player->getPlayerPos();
 						currentTime += deltaTime;
 						player->update(deltaTime);
-						enemyCtrl->update(deltaTime, bullets, player, texProgram, map);
+						enemyCtrl->update(deltaTime, bullets, player, texProgram, map, cameraX, CAMERA_WIDTH);
 						cameraY = 0.f;
 
 						if (player->getPlayerPos().x < offsetMinX) {
@@ -521,7 +521,7 @@ void Scene::render()
 				}
 			}
 		}
-		enemyCtrl->render();
+		enemyCtrl->render(cameraX, CAMERA_WIDTH);
 		for (int i = 0; i < (4 - deaths); ++i) {
 			vides->setPosition(glm::vec2(5.0 + 1.0*cameraX + 17.5 * i, 135));
 			vides->render();

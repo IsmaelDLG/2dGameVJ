@@ -71,7 +71,7 @@ void EnemyManager::init(const string& path,Level* map, ShaderProgram& shaderProg
 	inf.close();
 }
 
-void EnemyManager::update(int deltaTime, list<Bullet*>& bulletes, Player* pc, ShaderProgram texProgram, Level* map)
+void EnemyManager::update(int deltaTime, list<Bullet*>& bulletes, Player* pc, ShaderProgram texProgram, Level* map, int cameraX, int cameraW)
 {
 	
 	list<Enemy*>::iterator it;
@@ -110,44 +110,32 @@ void EnemyManager::update(int deltaTime, list<Bullet*>& bulletes, Player* pc, Sh
 		*/
 		
 
-		if (!(*it)->isKilled())
-			(*it)->update(deltaTime, pc);
-		//else enemies.erase(it);
-		if (!enemyBullets.empty()) {
-			list<Bullet*>::iterator itb;
-			for (itb = enemyBullets.begin(); itb != enemyBullets.end(); itb++) {
-				glm::vec2 posB = (*itb)->getBulletpos();
-				if (!(*itb)->hasHit()) {
-					if (/*posB.x <= offsetMaxX && posB.x >= offsetMinX &&*/ !(*itb)->hasHit())
-						(*itb)->update(deltaTime);
-				}
-			}
+		if (!(*it)->isKilled()) {
+			glm::vec2 enemyPos = (*it)->getPlayerPos();
+			if (enemyPos.x <= (cameraX + cameraW) && enemyPos.x >= cameraX)
+				(*it)->update(deltaTime, pc);
 		}
+		//else enemies.erase(it);
+		
 	}
 	if (boss != NULL)
 		boss->update(deltaTime);
 	
 }
 
-void EnemyManager::render()
+void EnemyManager::render(int cameraX, int cameraW)
 {
 	list<Enemy*>::iterator it;
 	for (it = enemies.begin(); it != enemies.end(); it++)
 	{
-		if (!(*it)->isKilled())
+		if (!(*it)->isKilled()) {
+			glm::vec2 enemyPos = (*it)->getPlayerPos();
+			if(enemyPos.x <= (cameraX +cameraW) && enemyPos.x >= cameraX)
 			(*it)->render();
+		}
 		//else enemies.erase(it);
 	}
-	if (!enemyBullets.empty()) {
-		list<Bullet*>::iterator itb;
-		for (itb = enemyBullets.begin(); itb != enemyBullets.end(); itb++) {
-			glm::vec2 posB = (*itb)->getBulletpos();
-			if (!(*itb)->hasHit()) {
-				if (/*posB.x <= offsetMaxX && posB.x >= offsetMinX &&*/ !(*itb)->hasHit())
-					(*itb)->render();
-			}
-		}
-	}
+	
 	if (boss != NULL)
 		boss->render();
 }

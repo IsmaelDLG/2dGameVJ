@@ -10,8 +10,8 @@ class EnemyManager
 {
 public:
 	void init(const string& path,Level* map, ShaderProgram& shaderProgram);
-	void update(int deltaTime, list<Bullet*>& bulletes, Player* pc, ShaderProgram texProgram, Level* map);
-	void render();
+	void update(int deltaTime, list<Bullet*>& bulletes, Player* pc, ShaderProgram texProgram, Level* map, int cameraX, int cameraW);
+	void render(int cameraX, int cameraW);
 
 	//void giveBullets(vector<Bullet*> bulls) { bulletes = bulls; }
 
