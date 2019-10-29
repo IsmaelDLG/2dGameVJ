@@ -2,10 +2,12 @@
 #include <GL/glut.h>
 #include "Game.h"
 #include <iostream>
+#pragma comment(lib, "irrKlang.lib")
 
 
 //Remove console (only works in Visual Studio)
 #pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
+#pragma comment(lib, "irrKlang.lib")
 
 
 #define TIME_PER_FRAME 1000.f / 60.f // Approx. 60 fps

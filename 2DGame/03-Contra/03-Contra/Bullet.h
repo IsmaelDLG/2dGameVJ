@@ -21,7 +21,8 @@ public:
 	bool bulletOwner() { return pcBullet; }
 
 private:
-	glm::ivec2 posBullet, direction, tileMapDispl;
+	glm::ivec2 posBullet, tileMapDispl;
+	glm::vec2  direction;
 	bool hit;
 	bool pcBullet;
 	Player* player;

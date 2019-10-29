@@ -13,6 +13,14 @@ public:
 	void update(int deltaTime, list<Bullet*>& bulletes, Player* pc, ShaderProgram texProgram, Level* map, int cameraX, int cameraW);
 	void render(int cameraX, int cameraW);
 	bool gameWon();
+
+	bool getBossFiring();
+	bool bossSpread();
+	glm::vec2 getFirePos();
+
+	void setBossFiring(bool isFiring);
+
+
 	//void giveBullets(vector<Bullet*> bulls) { bulletes = bulls; }
 
 private:

@@ -10,6 +10,8 @@
 #include "SpredGunAmmo.h"
 #include "EnemyManager.h"
 #include <list>
+#include <irrKlang.h>
+using namespace irrklang;
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
@@ -31,11 +33,11 @@ private:
 	void initShaders();
 
 private:
-	bool menu, begin, endStageOne, endStageTwo, endGame;
+	bool menu, begin, endStageOne, endStageTwo, endGame, gameOver;
 	Sprite* menuScreen;
 	Sprite* button;
 	Sprite* vides;
-
+	ISoundEngine* engine;
 	Level *map;
 	Player *player;
 	Bullet* bullet;
@@ -45,7 +47,7 @@ private:
 	ShaderProgram texProgram;
 	float currentTime;
 	int cameraVx, cameraVy;
-	int deaths, playerReload;
+	int deaths, playerReload, bossReload;
 	float cameraX, cameraY;
 	float offsetMaxX, offsetMaxY, offsetMinX, offsetMinY, offsetMaxXBoss;
 	list <Bullet*> bullets;

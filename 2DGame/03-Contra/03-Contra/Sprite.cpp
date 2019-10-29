@@ -172,6 +172,12 @@ glm::vec2 Sprite::getRealSize(const glm::vec2& mySize, const glm::vec2& step)
 	return (maxPos - getRealMinPos(mySize, step));
 }
 
+myColor Sprite::getPixelFromSheet(float x, float y)
+{
+	glm::vec2 displ = animations[currentAnimation].keyframeDispl[currentKeyframe];
+	return texture->getPixel(x + displ.x, y + displ.y);
+}
+
 void Sprite::setPosition(const glm::vec2 &pos)
 {
 	position = pos;

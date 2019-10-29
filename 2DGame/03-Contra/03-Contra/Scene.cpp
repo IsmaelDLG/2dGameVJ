@@ -3,7 +3,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Scene.h"
 #include "Game.h"
-#include <irrKlang.h>
+#include <cstdlib>
 
 #define SCREEN_X 16*2
 #define SCREEN_Y 16*2
@@ -26,7 +26,7 @@ Scene::Scene()
 	enemyCtrl = NULL;
 	menu = true;
 	begin = false;
-	endStageOne = endStageTwo = endGame = false;
+	endStageOne = endStageTwo = endGame = gameOver = false;
 }
 
 Scene::~Scene()
@@ -56,6 +56,7 @@ void Scene::init()
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	
 	if (menu) {
+		
 		//Text que parpadeja
 		Texture* startTex = new Texture();
 		startTex->loadFromFile("images/Menus/StartButton.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -78,7 +79,38 @@ void Scene::init()
 
 		//Començo l'animació
 		button->changeAnimation(0);
-		if (begin) {
+		if (gameOver) {
+			Texture* startTex = new Texture();
+			startTex->loadFromFile("images/Menus/EndButton.png", TEXTURE_PIXEL_FORMAT_RGBA);
+			button = Sprite::createSprite(glm::vec2(128.f*2.5, 128.f*2.5),
+				glm::vec2(0.25f, 1.f), startTex, &texProgram);
+			button->setNumberAnimations(1);
+			button->setPosition(glm::vec2(160+8, 256/3*2.5));
+			/*Fading animation*/
+			button->setAnimationSpeed(FADE, 6);
+			button->addKeyframe(FADE, glm::vec2(0.f, 0.f));
+			button->addKeyframe(FADE, glm::vec2(0.f, 0.f));
+			button->addKeyframe(FADE, glm::vec2(0.f, 0.f));
+			button->addKeyframe(FADE, glm::vec2(0.f, 0.f));
+			button->addKeyframe(FADE, glm::vec2(0.25f, 0.f));
+			button->addKeyframe(FADE, glm::vec2(0.50f, 0.f));
+			button->addKeyframe(FADE, glm::vec2(0.75f, 0.f));
+			button->addKeyframe(FADE, glm::vec2(0.75f, 0.f));
+			button->addKeyframe(FADE, glm::vec2(0.50f, 0.f));
+			button->addKeyframe(FADE, glm::vec2(0.25f, 0.f));
+			button->changeAnimation(1);
+
+			engine = irrklang::createIrrKlangDevice();
+			engine->play2D("sounds/game-over.wav", false);
+			Texture* menuTex = new Texture();
+			menuTex->loadFromFile("images/Menus/GameOver.png", TEXTURE_PIXEL_FORMAT_RGBA);
+			menuScreen = Sprite::createSprite(glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT),
+				glm::vec2(1.0f, 1.0f), menuTex, &texProgram);
+			menuScreen->setNumberAnimations(0);
+		}
+		else if (begin) {
+			engine = irrklang::createIrrKlangDevice();
+			engine->play2D("sounds/ground-zero.wav", true);
 			Texture* menuTex = new Texture();
 			menuTex->loadFromFile("images/Menus/Stage1.png", TEXTURE_PIXEL_FORMAT_RGB);
 			menuScreen = Sprite::createSprite(glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT),
@@ -86,6 +118,9 @@ void Scene::init()
 			menuScreen->setNumberAnimations(0);
 		}
 		else if (endStageOne) {
+			
+			engine = irrklang::createIrrKlangDevice();
+			engine->play2D("sounds/menu2.wav", true);
 			Texture* menuTex = new Texture();
 			menuTex->loadFromFile("images/Menus/Stage2.png", TEXTURE_PIXEL_FORMAT_RGB);
 			menuScreen = Sprite::createSprite(glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT),
@@ -93,6 +128,9 @@ void Scene::init()
 			menuScreen->setNumberAnimations(0);
 		}
 		else if (endStageTwo) {
+			
+			engine = irrklang::createIrrKlangDevice();
+			engine->play2D("sounds/credits.wav", true);
 			Texture* menuTex = new Texture();
 			menuTex->loadFromFile("images/Menus/Credits.png", TEXTURE_PIXEL_FORMAT_RGB);
 			menuScreen = Sprite::createSprite(glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT),
@@ -100,7 +138,8 @@ void Scene::init()
 			menuScreen->setNumberAnimations(0);
 		}
 		else /*menu_inicial*/ {
-
+			engine = irrklang::createIrrKlangDevice();
+			engine->play2D("sounds/intro.wav", true);
 			Texture* menuTex = new Texture();
 			menuTex->loadFromFile("images/Menus/StartMenu.png", TEXTURE_PIXEL_FORMAT_RGB);
 			menuScreen = Sprite::createSprite(glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT),
@@ -116,6 +155,8 @@ void Scene::init()
 		vides->setNumberAnimations(0);
 
 		if (endStageOne) {
+			engine = irrklang::createIrrKlangDevice();
+			engine->play2D("sounds/boss-battle.wav", true);
 			projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 
 			map = Level::loadLevel("levels/level03/level03.txt", glm::vec2(0.f, 0.f), texProgram);
@@ -152,7 +193,7 @@ void Scene::init()
 			map = Level::loadLevel("levels/level01/level01.txt",glm::vec2(20.f, 0.f), texProgram);
 			player = new Player();
 			player->init("images/Chars/Contra_PC_Spritesheet_Full.png", glm::ivec2(0.f, 0.f), texProgram);
-			player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * 26 *  map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+			player->setPosition(glm::vec2(INIT_PLAYER_X_TILES *26*  map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 
 			player->setMap(map);
 
@@ -185,7 +226,20 @@ void Scene::init()
 void Scene::update(int deltaTime)
 {
 	if (menu) {
-		if (begin) {
+		if (gameOver) {
+			if (Game::instance().getKey(13)) {
+				//this->~Scene();
+				menu = true;
+				begin = endStageOne = endStageTwo = gameOver = false;
+				//comencem a jugar
+				this->init();
+			}
+			else {
+				menuScreen->update(deltaTime);
+				button->update(deltaTime);
+			}
+		}
+		else if (begin) {
 			if (Game::instance().getKey(13)) {
 				//this->~Scene();
 				menu = false;
@@ -199,7 +253,8 @@ void Scene::update(int deltaTime)
 		}
 		else if (endStageOne) {
 			if (Game::instance().getKey(13)) {
-				
+				engine->stopAllSounds();
+				engine->drop();
 				player = NULL;
 				menuScreen = NULL;
 				button = NULL;
@@ -221,6 +276,8 @@ void Scene::update(int deltaTime)
 		}
 		else /*menu_inicial*/ {
 			if (Game::instance().getKey(13)) {
+				engine->stopAllSounds();
+				engine->drop();
 				button = NULL;
 				//this->~Scene();
 				menu = true;
@@ -237,6 +294,8 @@ void Scene::update(int deltaTime)
 	else {
 		if (endStageOne) {
 			if (enemyCtrl->gameWon()) {
+				engine->stopAllSounds();
+				engine->drop();
 				menu = true;
 				endStageOne = false;
 				endStageTwo = true;
@@ -281,6 +340,44 @@ void Scene::update(int deltaTime)
 						else {
 							cameraX = 0.f;
 							projection = glm::translate(projection, glm::vec3(-cameraX, 0, 0.f));
+						}
+						if (enemyCtrl->getBossFiring()) {
+							glm::vec2 bullPos = enemyCtrl->getFirePos();
+							if (bossReload == 0) {
+								if (enemyCtrl->bossSpread()) {
+									float r1 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+									r1 += 1.0f;
+									bulletB = new Bullet();
+									bulletB->init(glm::ivec2(0.f, 0.f), texProgram, player, false);
+									bulletB->setPosition(glm::vec2(bullPos.x, bullPos.y));
+									bulletB->setDirection(glm::vec2(-1.f, r1*-1.f));
+									bulletB->setMap(map);
+									bulletsBoss.push_back(bulletB);
+									enemyCtrl->setBossFiring(false);
+
+									float r2 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+									r2 += 1.0f;
+									bulletB = new Bullet();
+									bulletB->init(glm::ivec2(0.f, 0.f), texProgram, player, false);
+									bulletB->setPosition(glm::vec2(bullPos.x, bullPos.y));
+									bulletB->setDirection(glm::vec2(-1.f,r2*1.f));
+									bulletB->setMap(map);
+									bulletsBoss.push_back(bulletB);
+									enemyCtrl->setBossFiring(false);
+								}
+								float r3 = -1.f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1.f + 1.f)));								
+								bulletB = new Bullet();
+								bulletB->init(glm::ivec2(0.f, 0.f), texProgram, player, false);
+								bulletB->setPosition(glm::vec2(bullPos.x, bullPos.y));
+								bulletB->setDirection(glm::vec2(-1.f, r3));
+								bulletB->setMap(map);
+								bulletsBoss.push_back(bulletB);
+								enemyCtrl->setBossFiring(false);
+								bossReload = 64;
+							}
+							else {
+								--bossReload;
+							}
 						}
 						if (player->getisFiring()) {
 							glm::vec2 position = player->getFirePoint();
@@ -342,7 +439,7 @@ void Scene::update(int deltaTime)
 							for (it = bulletsBoss.begin(); it != bulletsBoss.end(); it++) {
 								glm::vec2 posB = (*it)->getBulletpos();
 								if (!(*it)->hasHit()) {
-									if (posB.x <= (200) && posB.x >= 0.f && !(*it)->hasHit())
+									if (posB.x <= (220) && posB.x >= 0.f && !(*it)->hasHit())
 										(*it)->update(deltaTime);
 								}
 							}
@@ -350,7 +447,10 @@ void Scene::update(int deltaTime)
 					}
 				}
 				else {
+					engine->stopAllSounds();
+					engine->drop();
 					menu = true;
+					gameOver = true;
 					this->init();
 				}
 			}
@@ -479,7 +579,10 @@ void Scene::update(int deltaTime)
 					}
 				}
 				else {
+					engine->stopAllSounds();
+					engine->drop();
 					menu = true;
+					gameOver = true;
 					this->init();
 				}
 			}
@@ -499,6 +602,10 @@ void Scene::render()
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	if (menu) {
+		if (gameOver) {
+			menuScreen->render();
+			button->render();
+		}
 		if (begin) {
 			menuScreen->render();
 			//button->render();
@@ -535,7 +642,7 @@ void Scene::render()
 				for (it = bulletsBoss.begin(); it != bulletsBoss.end(); it++) {
 					glm::vec2 posB = (*it)->getBulletpos();
 					if (!(*it)->hasHit()) {
-						if (posB.x <= 200 && posB.x >= offsetMinX && !(*it)->hasHit())
+						if (posB.x <= 220 && posB.x >= offsetMinX && !(*it)->hasHit())
 							(*it)->render();
 					}
 				}

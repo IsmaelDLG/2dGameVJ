@@ -39,7 +39,7 @@ public:
 
 
 private:
-	bool bJumping, isFiring, onTheAir, goingRight, spreadGun;
+	bool bJumping, onTheAir, goingRight;
 	int jumpAngle, startY, jumpColide;
 	int life;
 protected:
@@ -47,7 +47,7 @@ protected:
 	Texture* spritesheet;
 	glm::ivec2 posPlayer, tileMapDispl, firePoint, direction;
 	int health;
-	bool dead;
+	bool dead, isFiring, spreadGun;
 	Level* map;
 };
 

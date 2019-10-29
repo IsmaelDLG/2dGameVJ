@@ -470,20 +470,57 @@ int Player::min(int a, int b) {
 bool Player::thereIsColision(glm::vec2 obj,glm::vec2 size) {
 	
 	glm::vec2 realPosPlayer = glm::vec2(posPlayer.x + HIT_BOX_X, posPlayer.y + HIT_BOX_Y);
-	/*
-	if ((((obj.x <= realPosPlayer.x + HIT_BOX_W) && (obj.x > realPosPlayer.x)) ||
-		(obj.x + size.x >= realPosPlayer.x && obj.x < realPosPlayer.x)) &&
-		(((obj.y <= realPosPlayer.y + HIT_BOX_H) && (obj.y > realPosPlayer.y)) ||
-		((obj.y + size.y >= realPosPlayer.y) && (obj.y < realPosPlayer.y)))) return true;
-	else return false;
-	*/
-	
-
+		
 	if ((((realPosPlayer.x <= obj.x + size.x) && (realPosPlayer.x > obj.x)) ||
 		(realPosPlayer.x + HIT_BOX_W >= obj.x && realPosPlayer.x < obj.x)) &&
 		(((realPosPlayer.y <= obj.y + size.y) && (realPosPlayer.y > obj.y)) ||
-		((realPosPlayer.y + HIT_BOX_H >= obj.y) && (realPosPlayer.y < obj.y)))) return true;
+		((realPosPlayer.y + HIT_BOX_H >= obj.y) && (realPosPlayer.y < obj.y))
+			
+			
+			 
+			
+			)) return true;
+
 	else return false;
+	/*
+	int x0, x1, y0, y1;
+	float factorX, factorY;
+
+	x0 = pos.x; 
+
+
+	x1 = (pos.x + size.x - 1);
+	y0 = (pos.y + size.y - 1);
+	y1 = pos.y;
+
+	factorX = 1;
+	factorY = 1;
+
+	for (int x = x0; x <= x1; x++)
+	{
+		if (sprite->getPixelFromSheet(int(x * factorX), int(y0 * factorY)).getAlpha() > 64*3) 
+		{
+			return true;
+		}
+		if (sprite->getPixelFromSheet(int(x * factorX), int(y1 * factorY)).getAlpha() > 64*3)
+		{
+			return true;
+		}
+	}
+
+	for (int y = y0; y >= y1; y--) {
+		if (sprite->getPixelFromSheet(int(x0 * factorX), int(y * factorY)).getAlpha() > 64*3)
+		{
+			return true;
+		}
+
+		if (sprite->getPixelFromSheet(int(x1 * factorX), int(y * factorY)).getAlpha() > 64*3)
+		{
+			return true;
+		}
+
+	}
+	return false;*/
 }
 
 void Player::takeDamage(int dmg) {

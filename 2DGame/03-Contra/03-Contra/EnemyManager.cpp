@@ -28,52 +28,52 @@ void EnemyManager::init(const string& path,Level* map, ShaderProgram& shaderProg
 	ss >> blockS >> diffEnemies;
 
 	vector<string> textPaths = vector<string> (diffEnemies);
-	
-	for (int i = 0; i < diffEnemies; i++) {
-		getline(inf, line);
-		textPaths[i] = line.substr(0, line.find(".png") + 4);
-	}
 
-	while (line.compare(0, 6, "layer") != 0) getline(inf, line);
-	
-	int i = 0, j;
-	inf.get(tile);
-	while (tile != '.')
+for (int i = 0; i < diffEnemies; i++) {
+	getline(inf, line);
+	textPaths[i] = line.substr(0, line.find(".png") + 4);
+}
+
+while (line.compare(0, 6, "layer") != 0) getline(inf, line);
+
+int i = 0, j;
+inf.get(tile);
+while (tile != '.')
+{
+	j = 0;
+	while (tile != ';' && tile != '.')
 	{
-		j = 0;
-		while (tile != ';' && tile != '.')
-		{
-			if (tile > '0' && tile <= '9') {
-				if (textPaths[tile - '0' - 1].substr(textPaths[tile - '0' - 1].length() - 10)=="Kimkoh.png") {
-					boss = new Kimkoh();
-					boss->setMap(map);
-					boss->init("images/Chars/Kimkoh.png", glm::ivec2(140, 100), shaderProgram);
-				}
-				else {
-					enemies.push_back(new Enemy());
-					enemies.back()->init(textPaths[tile - '0' - 1], glm::ivec2(0.f, 0.f), shaderProgram);
-					enemies.back()->setPosition(glm::vec2(blockS * j, blockS * i));
-					enemies.back()->init_stats();
-					enemies.back()->setMap(map);
-				}
-				j++;
+		if (tile > '0' && tile <= '9') {
+			if (textPaths[tile - '0' - 1].substr(textPaths[tile - '0' - 1].length() - 10) == "Kimkoh.png") {
+				boss = new Kimkoh();
+				boss->setMap(map);
+				boss->init("images/Chars/Kimkoh.png", glm::ivec2(140, 100), shaderProgram);
 			}
-			else if (tile == '0') j++;		
-			inf.get(tile);
-
+			else {
+				enemies.push_back(new Enemy());
+				enemies.back()->init(textPaths[tile - '0' - 1], glm::ivec2(0.f, 0.f), shaderProgram);
+				enemies.back()->setPosition(glm::vec2(blockS * j, blockS * i));
+				enemies.back()->init_stats();
+				enemies.back()->setMap(map);
+			}
+			j++;
 		}
-		i++;
+		else if (tile == '0') j++;
 		inf.get(tile);
+
+	}
+	i++;
+	inf.get(tile);
 #ifndef _WIN32
-		inf.get(tile);
+	inf.get(tile);
 #endif
-	}		
-	inf.close();
+}
+inf.close();
 }
 
 void EnemyManager::update(int deltaTime, list<Bullet*>& bulletes, Player* pc, ShaderProgram texProgram, Level* map, int cameraX, int cameraW)
 {
-	
+
 	list<Enemy*>::iterator it;
 	for (it = enemies.begin(); it != enemies.end(); it++)
 	{
@@ -85,7 +85,7 @@ void EnemyManager::update(int deltaTime, list<Bullet*>& bulletes, Player* pc, Sh
 				pos.y += HIT_BOX_BULLET_Y;
 				if (!(*it)->isKilled()) {
 					if (!(*bit)->hasHit()) {
-						if ((*it)->thereIsColision(pos, glm::vec2(HIT_BOX_BULLET_W, HIT_BOX_BULLET_H)) 
+						if ((*it)->thereIsColision(pos, glm::vec2(HIT_BOX_BULLET_W, HIT_BOX_BULLET_H))
 							&& (*bit)->bulletOwner()) {
 							(*it)->reduceDamage(1);
 							(*bit)->bullethit();
@@ -103,14 +103,14 @@ void EnemyManager::update(int deltaTime, list<Bullet*>& bulletes, Player* pc, Sh
 				}
 			}
 		}
-		
+
 		if (!(*it)->isKilled()) {
 			glm::vec2 enemyPos = (*it)->getPlayerPos();
 			if (enemyPos.x <= (cameraX + cameraW) && enemyPos.x >= cameraX)
 				(*it)->update(deltaTime, pc);
 		}
 		//else enemies.erase(it);
-		
+
 	}
 	if (boss != NULL) {
 
@@ -126,6 +126,10 @@ void EnemyManager::update(int deltaTime, list<Bullet*>& bulletes, Player* pc, Sh
 							&& (*bit)->bulletOwner()) {
 							boss->reduceHealth(1);
 							(*bit)->bullethit();
+						}
+						else if (pc->thereIsColision(pos, glm::vec2(HIT_BOX_BULLET_W, HIT_BOX_BULLET_H)) &&
+							!(*bit)->bulletOwner()) {
+							pc->takeDamage(1);
 						}
 					}
 				}
@@ -160,4 +164,28 @@ bool EnemyManager::gameWon()
 		return true;
 	}
 	return false;
+}
+
+bool EnemyManager::getBossFiring()
+{
+	if (boss != NULL)
+		return boss->getisFiring();
+	return false;
+}
+
+bool EnemyManager::bossSpread()
+{
+	if (boss != NULL)
+		return boss->spreadGunOn();
+	return false;
+}
+
+glm::vec2 EnemyManager::getFirePos()
+{
+	return boss->getFirePoint();
+}
+
+void EnemyManager::setBossFiring(bool isFiring)
+{
+	boss->setFiring(isFiring);
 }

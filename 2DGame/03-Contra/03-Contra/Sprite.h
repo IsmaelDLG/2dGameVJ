@@ -34,6 +34,7 @@ public:
 
 	glm::vec2 getRealMinPos(const glm::vec2& mySize, const glm::vec2& step);
 	glm::vec2 getRealSize(const glm::vec2& mySize, const glm::vec2& step);
+	myColor getPixelFromSheet(float x, float y);
 	
 	void setPosition(const glm::vec2 &pos);
 
