@@ -7,12 +7,11 @@ class Kimkoh :
 {
 public:
 	void init(const string& path, const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) override;
-	void update(int deltaTime) override;
+	void update(int deltaTime, Player* pc);
 	void render() override;
 	void reduceHealth(int dmg);
-
-	bool isKilled() { return death; };
+	int timerZero();
 private:
-	bool death;
+	int timer;
 };
 

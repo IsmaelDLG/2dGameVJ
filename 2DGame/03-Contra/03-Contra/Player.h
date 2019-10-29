@@ -21,7 +21,7 @@ public:
 	void setMap(Level* myMap);
 	void setPosition(const glm::vec2 &pos);
 	void takeDamage(int dmg);
-	void setState(bool alive) { dead = alive; }
+	void setState(bool isdead) { dead = isdead; }
 	void setFiring(bool stop) { isFiring = stop; }
 	void activateSG() { spreadGun = true; }
 
@@ -39,7 +39,7 @@ public:
 
 
 private:
-	bool bJumping, dead, isFiring, onTheAir, goingRight, spreadGun;
+	bool bJumping, isFiring, onTheAir, goingRight, spreadGun;
 	int jumpAngle, startY, jumpColide;
 	int life;
 protected:
@@ -47,6 +47,7 @@ protected:
 	Texture* spritesheet;
 	glm::ivec2 posPlayer, tileMapDispl, firePoint, direction;
 	int health;
+	bool dead;
 	Level* map;
 };
 

@@ -92,6 +92,15 @@ void EnemyManager::update(int deltaTime, list<Bullet*>& bulletes, Player* pc, Sh
 						}
 					}
 				}
+				if (boss != NULL && boss->isDead()) {
+					if (!(*bit)->hasHit()) {
+						if (boss->thereIsColision(pos, glm::vec2(HIT_BOX_BULLET_W, HIT_BOX_BULLET_H))
+							&& (*bit)->bulletOwner()) {
+							boss->reduceHealth(1);
+							(*bit)->bullethit();
+						}
+					}
+				}
 			}
 		}
 		
@@ -111,7 +120,7 @@ void EnemyManager::update(int deltaTime, list<Bullet*>& bulletes, Player* pc, Sh
 				glm::vec2 pos = (*bit)->getBulletpos();
 				pos.x += HIT_BOX_BULLET_X;
 				pos.y += HIT_BOX_BULLET_Y;
-				if (!boss->isKilled()) {
+				if (!boss->isDead()) {
 					if (!(*bit)->hasHit()) {
 						if (boss->thereIsColision(pos, glm::vec2(HIT_BOX_BULLET_W, HIT_BOX_BULLET_H))
 							&& (*bit)->bulletOwner()) {
@@ -122,8 +131,7 @@ void EnemyManager::update(int deltaTime, list<Bullet*>& bulletes, Player* pc, Sh
 				}
 			}
 		}
-		if(!boss->isKilled())
-			boss->update(deltaTime);
+		boss->update(deltaTime,pc);
 	}
 	
 }
@@ -142,7 +150,14 @@ void EnemyManager::render(int cameraX, int cameraW)
 	}
 	
 	if (boss != NULL) {
-		if (!boss->isKilled())
-			boss->render();
+		boss->render();
 	}
+}
+
+bool EnemyManager::gameWon()
+{
+	if (boss != NULL && boss->isDead() && boss->timerZero() <= 0) {
+		return true;
+	}
+	return false;
 }

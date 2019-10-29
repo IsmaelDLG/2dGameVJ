@@ -92,11 +92,12 @@ void Scene::init()
 				glm::vec2(1.0f, 1.0f), menuTex, &texProgram);
 			menuScreen->setNumberAnimations(0);
 		}
-		else if (/*stage_two*/false) {
-
-		}
-		else if (/*stage_three*/false) {
-
+		else if (endStageTwo) {
+			Texture* menuTex = new Texture();
+			menuTex->loadFromFile("images/Menus/Credits.png", TEXTURE_PIXEL_FORMAT_RGB);
+			menuScreen = Sprite::createSprite(glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT),
+				glm::vec2(1.0f, 1.0f), menuTex, &texProgram);
+			menuScreen->setNumberAnimations(0);
 		}
 		else /*menu_inicial*/ {
 
@@ -194,7 +195,6 @@ void Scene::update(int deltaTime)
 			}
 			else {
 				menuScreen->update(deltaTime);
-				//button->update(deltaTime);
 			}
 		}
 		else if (endStageOne) {
@@ -216,11 +216,8 @@ void Scene::update(int deltaTime)
 				button->update(deltaTime);
 			}
 		}
-		else if (/*endStageTwo*/false) {
-
-		}
-		else if (/*endGame*/false) {
-
+		else if (endStageTwo) {
+			menuScreen->update(deltaTime);
 		}
 		else /*menu_inicial*/ {
 			if (Game::instance().getKey(13)) {
@@ -239,7 +236,13 @@ void Scene::update(int deltaTime)
 	}
 	else {
 		if (endStageOne) {
-			if (/*enemyCtrl->getEnemiesAlive()==0*/ false) {}
+			if (enemyCtrl->gameWon()) {
+				menu = true;
+				endStageOne = false;
+				endStageTwo = true;
+				begin = false;
+				this->init();
+			}
 			else {
 				//lluitant contra el bos
 				if (deaths != 4) {
@@ -505,10 +508,7 @@ void Scene::render()
 			button->render();
 		}
 		else if (endStageTwo) {
-
-		}
-		else if (endGame) {
-			
+			menuScreen->render();
 		}
 		else {
 			menuScreen->render();
